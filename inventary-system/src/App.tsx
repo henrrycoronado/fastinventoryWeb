@@ -10,6 +10,7 @@ import CompanySelect from './pages/CompanySelect'
 import WarehouseSelect from './pages/WarehouseSelect'
 import NotFound from './pages/NotFound'
 import InventoryDashboard from './modules/inventory/pages/InventoryDashboard'
+import ProductsPage from './modules/inventory/pages/ProductsPage'
 import SalesDashboard from './modules/sales/pages/SalesDashboard'
 import PdvDashboard from './modules/pdv/pages/PdvDashboard'
 
@@ -53,7 +54,7 @@ export default function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<AppLayout />}>
                 <Route path="/inventory/dashboard"  element={<InventoryDashboard />} />
-                <Route path="/inventory/products"   element={<div className="p-6 text-ink-primary">Productos</div>} />
+                <Route path="/inventory/products" element={<ProductsPage />} />
                 <Route path="/inventory/categories" element={<div className="p-6 text-ink-primary">Categorías</div>} />
                 <Route path="/inventory/stock"      element={<div className="p-6 text-ink-primary">Stock</div>} />
                 <Route path="/inventory/movements"  element={<div className="p-6 text-ink-primary">Movimientos</div>} />
