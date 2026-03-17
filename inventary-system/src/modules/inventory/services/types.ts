@@ -4,11 +4,22 @@ export interface GlobalCategory {
 }
 
 export interface GlobalProduct {
-  id:          number
-  categoryId:  number
-  name:        string
-  brand?:      string
-  upcBarcode?: string
+  id:                  number
+  categoryId:          number
+  name:                string
+  brand?:              string
+  upcBarcode?:         string
+  createdAt:           string
+  category?:           GlobalCategory
+  referencedByCompany?: boolean
+}
+
+export interface Sku {
+  id:               number
+  companyProductId: number
+  internalSku?:     string
+  retailPrice?:     number
+  createdAt?:       string
 }
 
 export interface CompanyProduct {
@@ -17,14 +28,9 @@ export interface CompanyProduct {
   globalProductId: number
   localNameAlias?: string
   wholesalePrice?: number
+  createdAt?:      string
   globalProduct?:  GlobalProduct
-}
-
-export interface Sku {
-  id:               number
-  companyProductId: number
-  internalSku?:     string
-  retailPrice?:     number
+  skus?:           Sku[]
 }
 
 export interface SkuAttribute {
@@ -32,7 +38,16 @@ export interface SkuAttribute {
   skuId:       number
   attributeId: number
   value:       string
+  createdAt?:  string
   attribute?:  { id: number; name: string }
+}
+
+export interface Attribute {
+  id:        number
+  companyId: number
+  name:      string
+  createdAt?: string
+  skuCount:  number
 }
 
 export interface Batch {
@@ -41,49 +56,87 @@ export interface Batch {
   batchNumber:      string
   manufactureDate?: string
   expirationDate?:  string
+  createdAt?:       string
+}
+
+export interface StockSku extends Sku {
+  companyProduct?: {
+    id:              number
+    localNameAlias?: string
+    wholesalePrice?: number
+    globalProduct?:  GlobalProduct
+  }
 }
 
 export interface Stock {
   id:                number
   warehouseId:       number
   skuId:             number
-  batchId?:          number
+  batchId?:          number | null
   quantity:          number
+  reservedQuantity:  number
   availableQuantity: number
-  sku?: Sku & {
-    companyProduct?: CompanyProduct & {
-      globalProduct?: GlobalProduct
-    }
+  lastUpdated:       string
+  sku?:              StockSku
+}
+
+export interface MovementDetailSku extends Sku {
+  companyProduct?: {
+    id:              number
+    localNameAlias?: string
+    wholesalePrice?: number
+    globalProduct?:  { id: number; name: string; brand?: string; upcBarcode?: string }
   }
-  batch?: Batch
 }
 
 export interface MovementDetail {
-  skuId:     number
-  batchId?:  number | null
-  quantity:  number
-  unitCost:  number
+  id:       number
+  skuId:    number
+  batchId?: number | null
+  quantity: number
+  unitCost: number
+  sku?:     MovementDetailSku
 }
 
 export interface Movement {
-  id:                number
-  companyId:         number
-  warehouseId:       number
+  id:                 number
+  companyId:          number
+  warehouseId:        number
   targetWarehouseId?: number | null
-  typeId:            number
-  statusId:          number
-  notes?:            string
-  createdAt:         string
-  details?:          MovementDetail[]
+  statusId:           number
+  typeId:             number
+  movementDate:       string
+  notes?:             string
+  details?:           MovementDetail[]
 }
 
 export interface KardexEntry {
+  id:           number
+  date:         string
+  typeId:       number
+  typeName:     string
+  quantity:     number
+  balanceAfter: number
+}
+
+export interface Kardex {
+  skuId:       number
+  internalSku: string
+  productName: string
+  entries:     KardexEntry[]
+}
+
+export interface Warehouse {
+  id:          number
+  companyId:   number
+  name:        string
+  createdAt?:  string
+  totalStock?: number
+}
+
+export interface MovementType {
   id:        number
-  date:      string
-  typeId:    number
-  typeName:  string
-  quantity:  number
-  unitCost:  number
-  balance:   number
-  notes?:    string
+  code:      string
+  name:      string
+  operation: '+' | '-'
 }
