@@ -3,8 +3,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import { useAppStore } from './store/useAppStore'
-
+import ProtectedRoute from './router/ProtectedRoute'
+import PublicRoute from './router/PublicRoute'
 import AppLayout from './layouts/AppLayout'
+import CompanySelect from './pages/CompanySelect'
+import WarehouseSelect from './pages/WarehouseSelect'
+import InventoryDashboard from './modules/inventory/pages/InventoryDashboard'
+import SalesDashboard from './modules/sales/pages/SalesDashboard'
+import PdvDashboard from './modules/pdv/pages/PdvDashboard'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,15 +42,37 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <BrowserRouter>
-          <Route element={<AppLayout />}>
-            <Route path="/inventory/products"  element={<div>Products</div>} />
-            <Route path="/inventory/stock"     element={<div>Stock</div>} />
-            <Route path="/inventory/movements" element={<div>Movements</div>} />
-            <Route path="/sales"               element={<div>Sales</div>} />
-            <Route path="/receipts"            element={<div>Receipts</div>} />
-            <Route path="/pdv"                 element={<div>PdV</div>} />
-            <Route path="/setup"               element={<div>Setup</div>} />
-          </Route>
+          <Routes>
+
+            <Route element={<PublicRoute />}>
+              <Route path="/" element={<CompanySelect />} />
+              <Route path="/warehouses/:companyId" element={<WarehouseSelect />} />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AppLayout />}>
+                <Route path="/inventory/dashboard" element={<InventoryDashboard />} />
+                <Route path="/inventory/products"  element={<div className="p-6 text-ink-primary">Productos</div>} />
+                <Route path="/inventory/stock"     element={<div className="p-6 text-ink-primary">Stock</div>} />
+                <Route path="/inventory/movements" element={<div className="p-6 text-ink-primary">Movimientos</div>} />
+
+                <Route path="/sales/dashboard" element={<SalesDashboard />} />
+                <Route path="/sales/list"      element={<div className="p-6 text-ink-primary">Ventas</div>} />
+                <Route path="/sales/receipts"  element={<div className="p-6 text-ink-primary">Recibos</div>} />
+                <Route path="/sales/customers" element={<div className="p-6 text-ink-primary">Clientes</div>} />
+                <Route path="/sales/sellers"   element={<div className="p-6 text-ink-primary">Vendedores</div>} />
+
+                <Route path="/pdv/dashboard" element={<PdvDashboard />} />
+                <Route path="/pdv/orders"    element={<div className="p-6 text-ink-primary">Órdenes</div>} />
+                <Route path="/pdv/tables"    element={<div className="p-6 text-ink-primary">Mesas</div>} />
+                <Route path="/pdv/menus"     element={<div className="p-6 text-ink-primary">Menús</div>} />
+                <Route path="/pdv/stations"  element={<div className="p-6 text-ink-primary">Estaciones</div>} />
+              </Route>
+            </Route>
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+
+          </Routes>
         </BrowserRouter>
         <Toaster
           position="bottom-right"
