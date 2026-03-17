@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
 import { useAppStore } from './store/useAppStore'
 
+import AppLayout from './layouts/AppLayout'
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: { retry: 1, staleTime: 1000 * 30 },
@@ -34,26 +36,15 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Navigate to="/inventory/products" replace />} />
-
-            {/* Inventory */}
+          <Route element={<AppLayout />}>
             <Route path="/inventory/products"  element={<div>Products</div>} />
             <Route path="/inventory/stock"     element={<div>Stock</div>} />
             <Route path="/inventory/movements" element={<div>Movements</div>} />
-
-            {/* Sales */}
-            <Route path="/sales"    element={<div>Sales</div>} />
-            <Route path="/receipts" element={<div>Receipts</div>} />
-
-            {/* PdV */}
-            <Route path="/pdv" element={<div>PdV</div>} />
-
-            {/* Setup */}
-            <Route path="/setup" element={<div>Setup</div>} />
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+            <Route path="/sales"               element={<div>Sales</div>} />
+            <Route path="/receipts"            element={<div>Receipts</div>} />
+            <Route path="/pdv"                 element={<div>PdV</div>} />
+            <Route path="/setup"               element={<div>Setup</div>} />
+          </Route>
         </BrowserRouter>
         <Toaster
           position="bottom-right"
