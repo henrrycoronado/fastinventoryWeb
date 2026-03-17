@@ -1,111 +1,56 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+/* ── Dark theme (default) ── */
+.dark {
+  --surface-0: #0a0d0f;
+  --surface-1: #111417;
+  --surface-2: #181c20;
+  --surface-3: #1f2428;
+  --surface-4: #272c31;
+  --surface-5: #2f353b;
+  --ink-primary:   #e8ecef;
+  --ink-secondary: #9aa3ac;
+  --ink-muted:     #5a6370;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* ── Light theme ── */
+.light {
+  --surface-0: #f4f6f8;
+  --surface-1: #ffffff;
+  --surface-2: #f0f2f4;
+  --surface-3: #e4e7ea;
+  --surface-4: #d0d5da;
+  --surface-5: #b0b8c1;
+  --ink-primary:   #0f1317;
+  --ink-secondary: #3d4a56;
+  --ink-muted:     #7a8794;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+/* ── Accent colors ── */
+.accent-green  { --color-accent: #09de81; --glow: rgba(9,222,129,0.25); }
+.accent-blue   { --color-accent: #3b82f6; --glow: rgba(59,130,246,0.25); }
+.accent-violet { --color-accent: #8b5cf6; --glow: rgba(139,92,246,0.25); }
+.accent-orange { --color-accent: #f97316; --glow: rgba(249,115,22,0.25); }
+.accent-rose   { --color-accent: #f43f5e; --glow: rgba(244,63,94,0.25); }
+.accent-cyan   { --color-accent: #06b6d4; --glow: rgba(6,182,212,0.25); }
+
+@layer base {
+  * { @apply border-surface-4; }
+  body { @apply bg-surface-0 text-ink-primary font-sans; }
+
+  ::-webkit-scrollbar       { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--surface-1); }
+  ::-webkit-scrollbar-thumb { background: var(--surface-5); border-radius: 99px; }
 }
 
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+@layer components {
+  .card        { @apply bg-surface-2 border border-surface-4 rounded-xl shadow-panel; }
+  .label       { @apply text-xs font-medium text-ink-muted uppercase tracking-wider mb-1 block; }
+  .input       { @apply bg-surface-3 border border-surface-5 rounded-lg px-3 py-2 text-sm text-ink-primary placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all w-full; }
+  .btn-primary { @apply bg-accent text-surface-0 font-medium px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 shadow-glow-sm hover:shadow-glow hover:opacity-90; }
+  .btn-ghost   { @apply bg-transparent hover:bg-surface-3 text-ink-secondary hover:text-ink-primary font-medium px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2; }
+  .btn-danger  { @apply bg-red-500/10 hover:bg-red-500/20 text-red-400 font-medium px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2; }
+  .badge       { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium; }
 }
