@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Package, ChevronRight, Trash2, Tag, Warehouse } from 'lucide-react'
+import { Search, Package, ChevronRight, Tag, Warehouse } from 'lucide-react'
 import {
   useCompanyProducts,
   useGlobalProducts, useSkus, useSkuAttributes,
