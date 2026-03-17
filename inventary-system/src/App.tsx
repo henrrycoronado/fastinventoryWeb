@@ -52,13 +52,12 @@ export default function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route element={<AppLayout />}>
-                <Route path="/inventory/dashboard"          element={<InventoryDashboard />} />
-                <Route path="/inventory/products"           element={<div className="p-6 text-ink-primary">Productos</div>} />
-                <Route path="/inventory/categories"         element={<div className="p-6 text-ink-primary">Mis Categorías</div>} />
-                <Route path="/inventory/stock"              element={<div className="p-6 text-ink-primary">Stock</div>} />
-                <Route path="/inventory/movements"          element={<div className="p-6 text-ink-primary">Movimientos</div>} />
-                <Route path="/inventory/catalog/products"   element={<div className="p-6 text-ink-primary">Productos Globales</div>} />
-                <Route path="/inventory/catalog/categories" element={<div className="p-6 text-ink-primary">Categorías Globales</div>} />
+                <Route path="/inventory/dashboard"  element={<InventoryDashboard />} />
+                <Route path="/inventory/products"   element={<div className="p-6 text-ink-primary">Productos</div>} />
+                <Route path="/inventory/categories" element={<div className="p-6 text-ink-primary">Categorías</div>} />
+                <Route path="/inventory/stock"      element={<div className="p-6 text-ink-primary">Stock</div>} />
+                <Route path="/inventory/movements"  element={<div className="p-6 text-ink-primary">Movimientos</div>} />
+                <Route path="/inventory/kardex"     element={<div className="p-6 text-ink-primary">Kardex</div>} />
 
                 <Route path="/sales/dashboard"              element={<SalesDashboard />} />
                 <Route path="/sales/list"                   element={<div className="p-6 text-ink-primary">Ventas</div>} />

@@ -9,7 +9,7 @@ import {
   ChevronDown, LayoutDashboard, Package, Boxes,
   ArrowLeftRight, ShoppingCart, ReceiptText,
   Users, UserCheck, Store, UtensilsCrossed,
-  Table2, BookOpen, Globe, Tag, FolderOpen,
+  Table2, BookOpen, Tag, ScrollText,
   Settings, UserCircle,
 } from 'lucide-react'
 
@@ -17,13 +17,12 @@ const moduleNav = {
   inventory: {
     label: 'Inventario',
     items: [
-      { label: 'Dashboard',      path: '/inventory/dashboard',          icon: LayoutDashboard },
-      { label: 'Productos',      path: '/inventory/products',           icon: Package },
-      { label: 'Mis Categorías', path: '/inventory/categories',         icon: Tag },
-      { label: 'Stock',          path: '/inventory/stock',              icon: Boxes },
-      { label: 'Movimientos',    path: '/inventory/movements',          icon: ArrowLeftRight },
-      { label: 'Prod. Globales', path: '/inventory/catalog/products',   icon: Globe },
-      { label: 'Cat. Globales',  path: '/inventory/catalog/categories', icon: FolderOpen },
+      { label: 'Dashboard',   path: '/inventory/dashboard',  icon: LayoutDashboard },
+      { label: 'Productos',   path: '/inventory/products',   icon: Package },
+      { label: 'Categorías',  path: '/inventory/categories', icon: Tag },
+      { label: 'Stock',       path: '/inventory/stock',      icon: Boxes },
+      { label: 'Movimientos', path: '/inventory/movements',  icon: ArrowLeftRight },
+      { label: 'Kardex',      path: '/inventory/kardex',     icon: ScrollText },
     ],
   },
   sales: {
