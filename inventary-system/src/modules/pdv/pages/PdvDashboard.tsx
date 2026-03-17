@@ -1,12 +1,8 @@
-import ModuleDashboard from '../../../layouts/ModuleDashboard'
-
-const cards = [
-  { label: 'Órdenes',    path: '/pdv/orders' },
-  { label: 'Mesas',      path: '/pdv/tables' },
-  { label: 'Menús',      path: '/pdv/menus' },
-  { label: 'Estaciones', path: '/pdv/stations' },
-]
-
 export default function PdvDashboard() {
-  return <ModuleDashboard moduleLabel="Punto de Venta" cards={cards} />
+  return (
+    <div className="p-6">
+      <h1 className="font-display text-2xl font-bold text-ink-primary">Dashboard Punto de Venta</h1>
+      <p className="text-sm text-ink-secondary mt-1">Resumen del módulo — contenido próximamente</p>
+    </div>
+  )
 }

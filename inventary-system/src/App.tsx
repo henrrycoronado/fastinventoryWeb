@@ -8,6 +8,7 @@ import PublicRoute from './router/PublicRoute'
 import AppLayout from './layouts/AppLayout'
 import CompanySelect from './pages/CompanySelect'
 import WarehouseSelect from './pages/WarehouseSelect'
+import NotFound from './pages/NotFound'
 import InventoryDashboard from './modules/inventory/pages/InventoryDashboard'
 import SalesDashboard from './modules/sales/pages/SalesDashboard'
 import PdvDashboard from './modules/pdv/pages/PdvDashboard'
@@ -51,26 +52,37 @@ export default function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route element={<AppLayout />}>
-                <Route path="/inventory/dashboard" element={<InventoryDashboard />} />
-                <Route path="/inventory/products"  element={<div className="p-6 text-ink-primary">Productos</div>} />
-                <Route path="/inventory/stock"     element={<div className="p-6 text-ink-primary">Stock</div>} />
-                <Route path="/inventory/movements" element={<div className="p-6 text-ink-primary">Movimientos</div>} />
+                <Route path="/inventory/dashboard"          element={<InventoryDashboard />} />
+                <Route path="/inventory/products"           element={<div className="p-6 text-ink-primary">Productos</div>} />
+                <Route path="/inventory/categories"         element={<div className="p-6 text-ink-primary">Mis Categorías</div>} />
+                <Route path="/inventory/stock"              element={<div className="p-6 text-ink-primary">Stock</div>} />
+                <Route path="/inventory/movements"          element={<div className="p-6 text-ink-primary">Movimientos</div>} />
+                <Route path="/inventory/catalog/products"   element={<div className="p-6 text-ink-primary">Productos Globales</div>} />
+                <Route path="/inventory/catalog/categories" element={<div className="p-6 text-ink-primary">Categorías Globales</div>} />
 
-                <Route path="/sales/dashboard" element={<SalesDashboard />} />
-                <Route path="/sales/list"      element={<div className="p-6 text-ink-primary">Ventas</div>} />
-                <Route path="/sales/receipts"  element={<div className="p-6 text-ink-primary">Recibos</div>} />
-                <Route path="/sales/customers" element={<div className="p-6 text-ink-primary">Clientes</div>} />
-                <Route path="/sales/sellers"   element={<div className="p-6 text-ink-primary">Vendedores</div>} />
+                <Route path="/sales/dashboard"              element={<SalesDashboard />} />
+                <Route path="/sales/list"                   element={<div className="p-6 text-ink-primary">Ventas</div>} />
+                <Route path="/sales/receipts"               element={<div className="p-6 text-ink-primary">Recibos</div>} />
+                <Route path="/sales/customers"              element={<div className="p-6 text-ink-primary">Clientes</div>} />
+                <Route path="/sales/sellers"                element={<div className="p-6 text-ink-primary">Vendedores</div>} />
+                <Route path="/sales/catalog/products"       element={<div className="p-6 text-ink-primary">Mis Productos</div>} />
+                <Route path="/sales/catalog/categories"     element={<div className="p-6 text-ink-primary">Mis Categorías</div>} />
 
-                <Route path="/pdv/dashboard" element={<PdvDashboard />} />
-                <Route path="/pdv/orders"    element={<div className="p-6 text-ink-primary">Órdenes</div>} />
-                <Route path="/pdv/tables"    element={<div className="p-6 text-ink-primary">Mesas</div>} />
-                <Route path="/pdv/menus"     element={<div className="p-6 text-ink-primary">Menús</div>} />
-                <Route path="/pdv/stations"  element={<div className="p-6 text-ink-primary">Estaciones</div>} />
+                <Route path="/pdv/dashboard"                element={<PdvDashboard />} />
+                <Route path="/pdv/orders"                   element={<div className="p-6 text-ink-primary">Órdenes</div>} />
+                <Route path="/pdv/tables"                   element={<div className="p-6 text-ink-primary">Mesas</div>} />
+                <Route path="/pdv/menus"                    element={<div className="p-6 text-ink-primary">Menús</div>} />
+                <Route path="/pdv/stations"                 element={<div className="p-6 text-ink-primary">Estaciones</div>} />
+                <Route path="/pdv/catalog/products"         element={<div className="p-6 text-ink-primary">Mis Productos</div>} />
+                <Route path="/pdv/catalog/categories"       element={<div className="p-6 text-ink-primary">Mis Categorías</div>} />
+                
+                <Route path="/company/profile"              element={<div className="p-6 text-ink-primary">Perfil Empresa</div>} />
+                <Route path="/settings"                     element={<div className="p-6 text-ink-primary">Configuración</div>} />
+
               </Route>
             </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFound />} />
 
           </Routes>
         </BrowserRouter>
