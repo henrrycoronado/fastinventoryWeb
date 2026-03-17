@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Search, Package, ChevronRight, Trash2, Tag, Warehouse } from 'lucide-react'
 import {
-  useCompanyProducts, useDeleteCompanyProduct,
+  useCompanyProducts,
   useGlobalProducts, useSkus, useSkuAttributes,
 } from '../services/inventoryHooks'
 import { useWarehouses } from '../services/inventoryHooks'
@@ -133,7 +133,6 @@ function CompanyProductExpanded({ product }: { product: CompanyProduct }) {
 // ---- Vista Mi Empresa ----
 function MyCompanyView({ search }: { search: string }) {
   const { data: products = [], isLoading } = useCompanyProducts()
-  const deleteProduct = useDeleteCompanyProduct()
   const [expandedId, setExpandedId] = useState<number | null>(null)
 
   const filtered = (products as CompanyProduct[]).filter(p => {
@@ -183,12 +182,6 @@ function MyCompanyView({ search }: { search: string }) {
             </div>
 
             <div className="flex items-center gap-2">
-              <button
-                onClick={e => { e.stopPropagation(); deleteProduct.mutate(p.id) }}
-                className="p-1.5 rounded-lg text-ink-muted hover:text-red-400 hover:bg-red-400/10 transition-colors"
-              >
-                <Trash2 size={13} />
-              </button>
               <ChevronRight
                 size={14}
                 className={`text-ink-muted transition-transform duration-200 ${expandedId === p.id ? 'rotate-90' : ''}`}

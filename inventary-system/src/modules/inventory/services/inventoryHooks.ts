@@ -35,17 +35,6 @@ export const useCreateCompanyProduct = () => {
   })
 }
 
-export const useDeleteCompanyProduct = () => {
-  const qc        = useQueryClient()
-  const companyId = useAppStore(s => s.selectedCompany?.id)
-  return useMutation({
-    mutationFn: (id: number) => inventoryApi.products.delete(companyId!, id),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['company-products', companyId] })
-      toast.success('Producto eliminado')
-    },
-  })
-}
 
 export const useCreateGlobalProduct = () => {
   const qc        = useQueryClient()
