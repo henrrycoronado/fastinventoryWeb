@@ -28,29 +28,28 @@ const moduleNav = {
   sales: {
     label: 'Ventas',
     items: [
-      { label: 'Dashboard',      path: '/sales/dashboard',           icon: LayoutDashboard },
-      { label: 'Ventas',         path: '/sales/list',                icon: ShoppingCart },
-      { label: 'Recibos',        path: '/sales/receipts',            icon: ReceiptText },
-      { label: 'Clientes',       path: '/sales/customers',           icon: Users },
-      { label: 'Vendedores',     path: '/sales/sellers',             icon: UserCheck },
-      { label: 'Mis Productos',  path: '/sales/catalog/products',    icon: Package },
-      { label: 'Mis Categorías', path: '/sales/catalog/categories',  icon: Tag },
+      { label: 'Dashboard',      path: '/sales/dashboard',          icon: LayoutDashboard },
+      { label: 'Ventas',         path: '/sales/list',               icon: ShoppingCart },
+      { label: 'Recibos',        path: '/sales/receipts',           icon: ReceiptText },
+      { label: 'Clientes',       path: '/sales/customers',          icon: Users },
+      { label: 'Vendedores',     path: '/sales/sellers',            icon: UserCheck },
+      { label: 'Mis Productos',  path: '/sales/catalog/products',   icon: Package },
+      { label: 'Mis Categorías', path: '/sales/catalog/categories', icon: Tag },
     ],
   },
   pdv: {
     label: 'Punto de Venta',
     items: [
-      { label: 'Dashboard',      path: '/pdv/dashboard',             icon: LayoutDashboard },
-      { label: 'Órdenes',        path: '/pdv/orders',                icon: Store },
-      { label: 'Mesas',          path: '/pdv/tables',                icon: Table2 },
-      { label: 'Menús',          path: '/pdv/menus',                 icon: BookOpen },
-      { label: 'Estaciones',     path: '/pdv/stations',              icon: UtensilsCrossed },
-      { label: 'Mis Productos',  path: '/pdv/catalog/products',      icon: Package },
-      { label: 'Mis Categorías', path: '/pdv/catalog/categories',    icon: Tag },
+      { label: 'Dashboard',      path: '/pdv/dashboard',            icon: LayoutDashboard },
+      { label: 'Órdenes',        path: '/pdv/orders',               icon: Store },
+      { label: 'Mesas',          path: '/pdv/tables',               icon: Table2 },
+      { label: 'Menús',          path: '/pdv/menus',                icon: BookOpen },
+      { label: 'Estaciones',     path: '/pdv/stations',             icon: UtensilsCrossed },
+      { label: 'Mis Productos',  path: '/pdv/catalog/products',     icon: Package },
+      { label: 'Mis Categorías', path: '/pdv/catalog/categories',   icon: Tag },
     ],
   },
 }
-
 
 type ModuleKey = keyof typeof moduleNav
 
@@ -79,12 +78,22 @@ function NavItem({ path, icon: Icon, label }: { path: string; icon: any; label: 
 }
 
 export default function AppLayout() {
-  const navigate     = useNavigate()
-  const location     = useLocation()
+  const navigate  = useNavigate()
+  const location  = useLocation()
   const { selectedCompany, selectedWarehouse, theme, accent, setTheme, setAccent, logout } = useAppStore()
+  const moduleSettings = useAppStore(s => s.getModuleSettings(s.selectedCompany?.id ?? 0))
 
-  const activeModule        = getActiveModule(location.pathname)
-  const { label, items }    = moduleNav[activeModule]
+  const activeModule = getActiveModule(location.pathname)
+  const { items }    = moduleNav[activeModule]
+
+  const availableModules = [
+    { key: 'inventory' as ModuleKey, label: 'Inventario',      always: true  },
+    { key: 'sales'     as ModuleKey, label: 'Ventas',          always: false, enabled: moduleSettings.salesEnabled },
+    { key: 'pdv'       as ModuleKey, label: 'Punto de Venta',  always: false, enabled: moduleSettings.pdvEnabled  },
+  ].filter(m => m.always || m.enabled)
+
+  const activeModuleLabel = availableModules.find(m => m.key === activeModule)?.label ?? 'Inventario'
+
   const [moduleOpen, setModuleOpen] = useState(false)
 
   const handleLogout = () => {
@@ -128,18 +137,18 @@ export default function AppLayout() {
               onClick={() => setModuleOpen(!moduleOpen)}
               className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-surface-3 hover:bg-surface-4 transition-colors"
             >
-              <span className="text-xs font-medium text-ink-primary">{label}</span>
+              <span className="text-xs font-medium text-ink-primary">{activeModuleLabel}</span>
               <ChevronDown size={12} className={`text-ink-muted transition-transform ${moduleOpen ? 'rotate-180' : ''}`} />
             </button>
             {moduleOpen && (
               <div className="absolute top-full left-0 right-0 mt-1 card py-1 z-20 animate-slide-up">
-                {(Object.keys(moduleNav) as ModuleKey[]).map(key => (
+                {availableModules.map(m => (
                   <button
-                    key={key}
-                    onClick={() => handleSwitchModule(key)}
+                    key={m.key}
+                    onClick={() => handleSwitchModule(m.key)}
                     className="w-full text-left px-3 py-2 text-xs text-ink-secondary hover:text-ink-primary hover:bg-surface-3 transition-colors"
                   >
-                    {moduleNav[key].label}
+                    {m.label}
                   </button>
                 ))}
               </div>
@@ -183,8 +192,8 @@ export default function AppLayout() {
             </div>
           </div>
 
-          <NavItem path="/settings"        icon={Settings}    label="Configuración" />
-          <NavItem path="/company/profile" icon={UserCircle}  label="Perfil empresa" />
+          <NavItem path="/settings"        icon={Settings}   label="Configuración" />
+          <NavItem path="/company/profile" icon={UserCircle} label="Perfil empresa" />
 
           <button
             onClick={handleLogout}

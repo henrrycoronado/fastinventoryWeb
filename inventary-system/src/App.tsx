@@ -17,6 +17,8 @@ import MovementsPage from './modules/inventory/pages/MovementsPage'
 import KardexPage from './modules/inventory/pages/KardexPage'
 import SalesDashboard from './modules/sales/pages/SalesDashboard'
 import PdvDashboard from './modules/pdv/pages/PdvDashboard'
+import Settings from './pages/Settings'
+import CompanyProfile from './pages/CompanyProfile'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,8 +82,8 @@ export default function App() {
                 <Route path="/pdv/catalog/products"         element={<div className="p-6 text-ink-primary">Mis Productos</div>} />
                 <Route path="/pdv/catalog/categories"       element={<div className="p-6 text-ink-primary">Mis Categorías</div>} />
                 
-                <Route path="/company/profile"              element={<div className="p-6 text-ink-primary">Perfil Empresa</div>} />
-                <Route path="/settings"                     element={<div className="p-6 text-ink-primary">Configuración</div>} />
+                <Route path="/company/profile" element={<CompanyProfile />} />
+                <Route path="/settings"        element={<Settings />} />
 
               </Route>
             </Route>
