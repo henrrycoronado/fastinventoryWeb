@@ -9,7 +9,7 @@ import {
   useWarehouses, useSkus, useGlobalCategories,
 } from '../services/inventoryHooks'
 import { useAppStore } from '../../../store/useAppStore'
-import { formatCurrency, formatDate } from '../../../lib/utils'
+import { formatCurrency, formatDate, isEmptyField } from '../../../lib/utils'
 import type { Movement, MovementDetail, CompanyProduct, Sku } from '../services/types'
 import { inventoryApi } from '../services/inventoryApi'
 
@@ -156,6 +156,11 @@ function CreateProductInline({ }: {
   }
   
 
+  const isValid = !isEmptyField(name)
+    && !isEmptyField(skuCode)
+    && !isEmptyField(retailPrice)
+    && !isEmptyField(wholesale)
+
   const isPending = createGlobal.isPending || createCompany.isPending
 
   return (
@@ -166,15 +171,21 @@ function CreateProductInline({ }: {
       <div className="grid grid-cols-2 gap-2">
         <div>
           <label className="label">Nombre *</label>
-          <input className="input text-xs" value={name} onChange={e => setName(e.target.value)} placeholder="Ej: Nike Air Max" />
+          <input className="input text-xs" value={name} onChange={e => setName(e.target.value)} placeholder="Ej: Nike Air Max" required/>
         </div>
         <div>
-          <label className="label">Marca</label>
-          <input className="input text-xs" value={brand} onChange={e => setBrand(e.target.value)} placeholder="Ej: Nike" />
+          <label className="label">Marca *</label>
+          <input
+            className="input text-xs"
+            value={brand}
+            onChange={e => setBrand(e.target.value)}
+            placeholder="Ej: Nike"
+            required
+          />
         </div>
         <div>
           <label className="label">UPC / Código de barras</label>
-          <input className="input text-xs font-mono" value={upc} onChange={e => setUpc(e.target.value)} placeholder="7501234567890" />
+          <input className="input text-xs font-mono" value={upc} onChange={e => setUpc(e.target.value)} placeholder="7501234567890" required/>
         </div>
         <div>
           <label className="label">Categoría</label>
@@ -187,24 +198,38 @@ function CreateProductInline({ }: {
         </div>
         <div>
           <label className="label">Alias local</label>
-          <input className="input text-xs" value={alias} onChange={e => setAlias(e.target.value)} placeholder="Nombre en tu empresa" />
+          <input className="input text-xs" value={alias} onChange={e => setAlias(e.target.value)} placeholder="Nombre en tu empresa" required/>
         </div>
         <div>
           <label className="label">Precio mayoreo</label>
-          <input className="input text-xs font-mono" type="number" step="0.01" value={wholesale} onChange={e => setWholesale(e.target.value)} placeholder="0.00" />
+          <input className="input text-xs font-mono" type="number" step="0.01" value={wholesale} onChange={e => setWholesale(e.target.value)} placeholder="0.00" required/>
         </div>
         <div>
-          <label className="label">Código SKU</label>
-          <input className="input text-xs font-mono" value={skuCode} onChange={e => setSkuCode(e.target.value)} placeholder="SKU-001" />
+          <label className="label">Código SKU *</label>
+          <input
+            className="input text-xs font-mono"
+            value={skuCode}
+            onChange={e => setSkuCode(e.target.value)}
+            placeholder="SKU-001"
+            required
+          />
         </div>
         <div>
-          <label className="label">Precio retail</label>
-          <input className="input text-xs font-mono" type="number" step="0.01" value={retailPrice} onChange={e => setRetailPrice(e.target.value)} placeholder="0.00" />
+          <label className="label">Precio retail *</label>
+          <input
+            className="input text-xs font-mono"
+            type="number"
+            step="0.01"
+            value={retailPrice}
+            onChange={e => setRetailPrice(e.target.value)}
+            placeholder="0.00"
+            required
+          />
         </div>
       </div>
       <button
         onClick={handleCreate}
-        disabled={!name.trim() || isPending}
+        disabled={!name.trim() || !brand.trim() || !skuCode.trim() || !retailPrice || isPending}
         className="btn-primary text-xs w-full justify-center"
       >
         {isPending
@@ -626,7 +651,10 @@ function NewMovementModal({ open, onClose }: { open: boolean; onClose: () => voi
           <button
             onClick={() => {
               if (step === 'products' && details.length > 0) setStep('details')
-              if (step === 'details'  && details.length > 0) setStep('confirm')
+              if (step === 'details') {
+                const allValid = details.every(d => d.quantity > 0 && d.unitCost >= 0)
+                if (allValid) setStep('confirm')
+              }
               if (step === 'confirm') handleSubmit()
             }}
             disabled={

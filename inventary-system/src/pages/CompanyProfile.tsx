@@ -162,7 +162,9 @@ export default function CompanyProfile() {
       {/* Header */}
       <div className="px-6 py-5 border-b border-surface-3">
         <h1 className="font-display text-2xl font-bold text-ink-primary">Perfil de empresa</h1>
-        <p className="text-xs text-ink-muted mt-0.5">Información y gestión de almacenes</p>
+        <p className="text-xs text-ink-muted mt-0.5">
+          Información y gestión de almacenes{company ? ` · ${company.name}` : ''}
+        </p>
       </div>
 
       <div className="px-6 py-4 space-y-6">

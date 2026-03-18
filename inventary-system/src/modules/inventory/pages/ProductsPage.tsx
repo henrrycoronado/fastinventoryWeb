@@ -1,17 +1,20 @@
 import { useState } from 'react'
-import { Search, Package, ChevronRight, Tag, Warehouse } from 'lucide-react'
+import { Search, Package, ChevronRight, Tag, Warehouse, Trash2 } from 'lucide-react'
 import {
   useCompanyProducts,
-  useGlobalProducts, useSkus, useSkuAttributes,
+  useGlobalProducts,
+  useSkus,
+  useSkuAttributes,
+  useStock,
+  useDeleteCompanyProduct,
+  useWarehouses,
 } from '../services/inventoryHooks'
-import { useWarehouses } from '../services/inventoryHooks'
 import { inventoryApi } from '../services/inventoryApi'
 import { useQuery } from '@tanstack/react-query'
 import { useAppStore } from '../../../store/useAppStore'
 import { formatCurrency } from '../../../lib/utils'
-import type { CompanyProduct, GlobalProduct, Sku } from '../services/types'
+import type { CompanyProduct, GlobalProduct, Sku, Stock } from '../services/types'
 
-// ---- helpers ----
 function Badge({ children, variant = 'gray' }: { children: React.ReactNode; variant?: 'green' | 'gray' | 'yellow' }) {
   const styles = {
     green:  'bg-accent/10 text-accent',
@@ -33,7 +36,6 @@ function SectionHeader({ title, subtitle, right }: { title: string; subtitle?: s
   )
 }
 
-// ---- SKU row expandible ----
 function SkuRow({ sku }: { sku: Sku }) {
   const { data: attrs = [] } = useSkuAttributes(sku.id)
   return (
@@ -57,33 +59,37 @@ function SkuRow({ sku }: { sku: Sku }) {
   )
 }
 
-// ---- Expanded company product ----
 function CompanyProductExpanded({ product }: { product: CompanyProduct }) {
-  const companyId   = useAppStore(s => s.selectedCompany?.id)
-  const warehouseId = useAppStore(s => s.selectedWarehouse?.id)
+  const warehouseId            = useAppStore(s => s.selectedWarehouse?.id)
   const { data: skus       = [] } = useSkus(product.id)
   const { data: warehouses = [] } = useWarehouses()
+  const { data: stockList  = [] } = useStock()
+  const deleteProduct            = useDeleteCompanyProduct()
 
-  const { data: stockList = [] } = useQuery({
-    queryKey: ['stock-all-warehouses', companyId, product.id],
+  const hasActiveStock = (skus as Sku[]).some(sku =>
+    (stockList as Stock[]).some(s => s.skuId === sku.id && s.availableQuantity > 0)
+  )
+
+  const { data: productStockList = [] } = useQuery({
+    queryKey: ['stock-all-warehouses', product.id],
     queryFn: async () => {
       const results = await Promise.all(
-        warehouses.map((w: any) =>
+        (warehouses as any[]).map((w: any) =>
           inventoryApi.stock.list(w.id).then((stocks: any[]) =>
             stocks
-              .filter((s: any) => skus.some((sk: Sku) => sk.id === s.skuId))
+              .filter((s: any) => (skus as Sku[]).some(sk => sk.id === s.skuId))
               .map((s: any) => ({ ...s, warehouseName: w.name, warehouseId: w.id }))
           )
         )
       )
       return results.flat()
     },
-    enabled: warehouses.length > 0 && skus.length > 0,
+    enabled: (warehouses as any[]).length > 0 && (skus as Sku[]).length > 0,
   })
 
-  const warehouseStock = warehouses.map((w: any) => ({
+  const warehouseStock = (warehouses as any[]).map((w: any) => ({
     ...w,
-    available: stockList
+    available: (productStockList as any[])
       .filter((s: any) => s.warehouseId === w.id)
       .reduce((acc: number, s: any) => acc + s.availableQuantity, 0),
   }))
@@ -91,21 +97,19 @@ function CompanyProductExpanded({ product }: { product: CompanyProduct }) {
   return (
     <div className="px-6 py-4 bg-surface-1/60 border-t border-surface-3 animate-slide-up space-y-4">
 
-      {/* SKUs */}
       <div>
         <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold mb-2 flex items-center gap-1.5">
           <Tag size={10} /> SKUs
         </p>
-        {skus.length === 0 ? (
+        {(skus as Sku[]).length === 0 ? (
           <p className="text-xs text-ink-muted">Sin SKUs registrados</p>
         ) : (
           <div className="space-y-1.5">
-            {skus.map((sku: Sku) => <SkuRow key={sku.id} sku={sku} />)}
+            {(skus as Sku[]).map(sku => <SkuRow key={sku.id} sku={sku} />)}
           </div>
         )}
       </div>
 
-      {/* Stock por warehouse */}
       <div>
         <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold mb-2 flex items-center gap-1.5">
           <Warehouse size={10} /> Disponibilidad por sucursal
@@ -126,11 +130,31 @@ function CompanyProductExpanded({ product }: { product: CompanyProduct }) {
         </div>
       </div>
 
+      <div className="pt-2 border-t border-surface-3 flex items-center justify-between">
+        <p className="text-xs text-ink-muted">
+          {hasActiveStock
+            ? 'No se puede eliminar: tiene stock activo en uno o más almacenes'
+            : 'Sin stock activo — puede eliminarse'
+          }
+        </p>
+        <button
+          onClick={() => deleteProduct.mutate(product.id)}
+          disabled={hasActiveStock || deleteProduct.isPending}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors ${
+            hasActiveStock
+              ? 'text-ink-muted bg-surface-4 cursor-not-allowed opacity-50'
+              : 'text-red-400 bg-red-400/10 hover:bg-red-400/20'
+          }`}
+        >
+          <Trash2 size={12} />
+          Eliminar producto
+        </button>
+      </div>
+
     </div>
   )
 }
 
-// ---- Vista Mi Empresa ----
 function MyCompanyView({ search }: { search: string }) {
   const { data: products = [], isLoading } = useCompanyProducts()
   const [expandedId, setExpandedId] = useState<number | null>(null)
@@ -164,7 +188,6 @@ function MyCompanyView({ search }: { search: string }) {
             <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
               <Package size={14} className="text-accent" />
             </div>
-
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-ink-primary truncate">
                 {p.localNameAlias ?? p.globalProduct?.name ?? `Producto #${p.id}`}
@@ -173,22 +196,17 @@ function MyCompanyView({ search }: { search: string }) {
                 {p.globalProduct?.brand ?? '—'} · {p.globalProduct?.category?.name ?? 'Sin categoría'}
               </p>
             </div>
-
             <div className="hidden md:flex items-center gap-6 text-xs text-ink-muted">
               <span>{p.skus?.length ?? 0} SKUs</span>
               <span className="font-mono text-ink-secondary">
                 {p.wholesalePrice ? formatCurrency(p.wholesalePrice) : '—'}
               </span>
             </div>
-
-            <div className="flex items-center gap-2">
-              <ChevronRight
-                size={14}
-                className={`text-ink-muted transition-transform duration-200 ${expandedId === p.id ? 'rotate-90' : ''}`}
-              />
-            </div>
+            <ChevronRight
+              size={14}
+              className={`text-ink-muted transition-transform duration-200 ${expandedId === p.id ? 'rotate-90' : ''}`}
+            />
           </div>
-
           {expandedId === p.id && <CompanyProductExpanded product={p} />}
         </div>
       ))}
@@ -196,7 +214,6 @@ function MyCompanyView({ search }: { search: string }) {
   )
 }
 
-// ---- Vista Global ----
 function GlobalView({ search }: { search: string }) {
   const { data: globalProducts = [], isLoading } = useGlobalProducts()
 
@@ -224,18 +241,15 @@ function GlobalView({ search }: { search: string }) {
           <div className="w-8 h-8 rounded-lg bg-surface-4 flex items-center justify-center shrink-0">
             <Package size={14} className="text-ink-muted" />
           </div>
-
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-ink-primary truncate">{p.name}</p>
             <p className="text-xs text-ink-muted">
               {p.brand ?? '—'} · {p.category?.name ?? 'Sin categoría'}
             </p>
           </div>
-
           <div className="hidden md:flex items-center gap-4 text-xs text-ink-muted">
             <span className="font-mono">{p.upcBarcode ?? 'Sin UPC'}</span>
           </div>
-
           <div>
             {p.referencedByCompany
               ? <Badge variant="green">En mi catálogo</Badge>
@@ -248,11 +262,10 @@ function GlobalView({ search }: { search: string }) {
   )
 }
 
-// ---- Page ----
 export default function ProductsPage() {
-  const [view, setView]     = useState<'company' | 'global'>('company')
+  const [view,   setView]   = useState<'company' | 'global'>('company')
   const [search, setSearch] = useState('')
-  const { data: products = [] }       = useCompanyProducts()
+  const { data: products       = [] } = useCompanyProducts()
   const { data: globalProducts = [] } = useGlobalProducts()
 
   return (
@@ -291,7 +304,6 @@ export default function ProductsPage() {
           </div>
         }
       />
-
       <div className="mx-6 mt-4 card overflow-hidden">
         {view === 'company'
           ? <MyCompanyView search={search} />
