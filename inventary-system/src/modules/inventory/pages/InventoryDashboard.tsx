@@ -55,14 +55,14 @@ export default function InventoryDashboard() {
   const stockBajo       = stockList.filter((s: Stock) => s.availableQuantity > 0 && s.availableQuantity <= LOW_STOCK_THRESHOLD).length
 
   const movementsByType = useMemo(() => {
-    const map: Record<string, number> = {}
-    movements.forEach((m: Movement) => {
+    const map: Record<number, number> = {}
+    ;(movements as Movement[]).forEach(m => {
       map[m.typeId] = (map[m.typeId] ?? 0) + 1
     })
-    return Object.entries(map).map(([typeId, value]) => {
-      const detail = movements.find((m: Movement) => m.typeId === Number(typeId))
-      return { name: detail?.details?.[0]?.sku?.companyProduct?.localNameAlias ?? `Tipo ${typeId}`, typeId: Number(typeId), value }
-    })
+    return Object.entries(map).map(([typeId, value]) => ({
+      name:  MOVEMENT_TYPE_LABELS[Number(typeId)]?.label ?? `Tipo ${typeId}`,
+      value,
+    }))
   }, [movements])
 
   const stockByCategory = useMemo(() => {

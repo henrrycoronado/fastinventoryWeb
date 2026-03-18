@@ -65,15 +65,19 @@ export const useAppStore = create<AppStore>()(
         sessionToken:      null,
       }),
 
-      toggleModule: (companyId, module) => set(state => ({
-        moduleSettings: {
-          ...state.moduleSettings,
-          [companyId]: {
-            ...state.moduleSettings[companyId],
-            [module]: !state.moduleSettings[companyId]?.[module],
+      toggleModule: (companyId, module) => set(state => {
+        const current = state.moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true }
+        const updated = { ...current, [module]: !current[module] }
+        if (module === 'salesEnabled' && !updated.salesEnabled) {
+          updated.pdvEnabled = false
+        }
+        return {
+          moduleSettings: {
+            ...state.moduleSettings,
+            [companyId]: updated,
           },
-        },
-      })),
+        }
+      }),
 
       getModuleSettings: (companyId) =>
         get().moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true },

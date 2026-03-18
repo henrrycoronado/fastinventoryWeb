@@ -81,9 +81,17 @@ export default function Settings() {
         <ModuleToggle
           icon={<Store size={18} />}
           label="Punto de Venta"
-          description="Órdenes de PdV, mesas, menús y estaciones."
+          description={
+            !settings.salesEnabled
+              ? 'Requiere el módulo de Ventas activo'
+              : 'Órdenes de PdV, mesas, menús y estaciones.'
+          }
           enabled={settings.pdvEnabled}
-          onToggle={() => toggleModule(companyId, 'pdvEnabled')}
+          disabled={!settings.salesEnabled}
+          onToggle={() => {
+            if (!settings.salesEnabled) return
+            toggleModule(companyId, 'pdvEnabled')
+          }}
         />
 
         <p className="text-xs text-ink-muted pt-2">
