@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useAppStore } from '../../../store/useAppStore'
 import { formatCurrency } from '../../../lib/utils'
 import type { CompanyProduct, GlobalProduct, Sku, Stock } from '../services/types'
+import ConfirmModal from '../../../atoms/ConfirmModal'
 
 function Badge({ children, variant = 'gray' }: { children: React.ReactNode; variant?: 'green' | 'gray' | 'yellow' }) {
   const styles = {
@@ -65,6 +66,8 @@ function CompanyProductExpanded({ product }: { product: CompanyProduct }) {
   const { data: warehouses = [] } = useWarehouses()
   const { data: stockList  = [] } = useStock()
   const deleteProduct            = useDeleteCompanyProduct()
+
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const hasActiveStock = (skus as Sku[]).some(sku =>
     (stockList as Stock[]).some(s => s.skuId === sku.id && s.availableQuantity > 0)
@@ -138,8 +141,8 @@ function CompanyProductExpanded({ product }: { product: CompanyProduct }) {
           }
         </p>
         <button
-          onClick={() => deleteProduct.mutate(product.id)}
-          disabled={hasActiveStock || deleteProduct.isPending}
+          onClick={() => setConfirmOpen(true)}
+          disabled={hasActiveStock}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors ${
             hasActiveStock
               ? 'text-ink-muted bg-surface-4 cursor-not-allowed opacity-50'
@@ -150,6 +153,17 @@ function CompanyProductExpanded({ product }: { product: CompanyProduct }) {
           Eliminar producto
         </button>
       </div>
+
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={() => { deleteProduct.mutate(product.id); setConfirmOpen(false) }}
+        loading={deleteProduct.isPending}
+        title="Eliminar producto"
+        description={`¿Estás seguro de eliminar "${product.localNameAlias ?? product.globalProduct?.name}"? Se eliminará del catálogo de la empresa.`}
+        confirmLabel="Eliminar producto"
+        variant="danger"
+      />
 
     </div>
   )

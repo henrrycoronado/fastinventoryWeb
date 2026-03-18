@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Building2, Warehouse, Plus, Trash2, X, AlertCircle } from 'lucide-react'
+import { Building2, Warehouse, Plus, Trash2, X } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore'
 import { companyApi, warehouseApi } from '../services/companyApi'
 import { formatDate } from '../lib/utils'
-
-const CONFIRM_PASSWORD = 'confirmar'
+import ConfirmModal from '../atoms/ConfirmModal'
 
 function NewWarehouseModal({ companyId, open, onClose }: {
   companyId: number; open: boolean; onClose: () => void
@@ -19,7 +18,6 @@ function NewWarehouseModal({ companyId, open, onClose }: {
     },
   })
   const [name, setName] = useState('')
-
   const handleClose = () => { setName(''); onClose() }
 
   if (!open) return null
@@ -62,80 +60,12 @@ function NewWarehouseModal({ companyId, open, onClose }: {
   )
 }
 
-function DeleteWarehouseModal({ companyId, warehouseId, warehouseName, open, onClose }: {
-  companyId: number; warehouseId: number; warehouseName: string; open: boolean; onClose: () => void
-}) {
-  const qc      = useQueryClient()
-  const { selectedWarehouse, setWarehouse } = useAppStore()
-  const [password,      setPassword]      = useState('')
-  const [passwordError, setPasswordError] = useState(false)
-
-  const deleteMutation = useMutation({
-    mutationFn: () => warehouseApi.delete(companyId, warehouseId),
-    onSuccess:  () => {
-      qc.invalidateQueries({ queryKey: ['warehouses', companyId] })
-      if (selectedWarehouse?.id === warehouseId) setWarehouse(null)
-      handleClose()
-    },
-  })
-
-  const handleClose = () => { setPassword(''); setPasswordError(false); onClose() }
-
-  const handleDelete = () => {
-    if (password !== CONFIRM_PASSWORD) { setPasswordError(true); return }
-    deleteMutation.mutate()
-  }
-
-  if (!open) return null
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
-      <div className="relative w-full max-w-sm card animate-slide-up">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-surface-4">
-          <h2 className="font-display font-bold text-base text-ink-primary">Eliminar almacén</h2>
-          <button onClick={handleClose} className="btn-ghost !px-2 !py-1.5"><X size={15} /></button>
-        </div>
-        <div className="px-5 py-4 space-y-4">
-          <div className="flex items-start gap-2 px-3 py-3 rounded-lg bg-red-500/10 text-red-400 text-xs">
-            <AlertCircle size={14} className="shrink-0 mt-0.5" />
-            <p>Estás por eliminar <span className="font-medium">{warehouseName}</span>. Esta acción no se puede deshacer.</p>
-          </div>
-          <div>
-            <label className="label">Confirmar acción</label>
-            <input
-              className={`input ${passwordError ? 'border-red-500 focus:ring-red-500' : ''}`}
-              type="password"
-              placeholder="Escribe: confirmar"
-              value={password}
-              onChange={e => { setPassword(e.target.value); setPasswordError(false) }}
-            />
-            {passwordError && <p className="text-xs text-red-400 mt-1">Contraseña incorrecta</p>}
-          </div>
-          <div className="flex justify-end gap-2">
-            <button onClick={handleClose} className="btn-ghost text-sm">Cancelar</button>
-            <button
-              onClick={handleDelete}
-              disabled={deleteMutation.isPending}
-              className="btn-danger text-sm"
-            >
-              {deleteMutation.isPending
-                ? <span className="w-3 h-3 rounded-full border-2 border-red-400/30 border-t-red-400 animate-spin" />
-                : <Trash2 size={13} />
-              }
-              Eliminar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function CompanyProfile() {
-  const { selectedCompany } = useAppStore()
+  const qc = useQueryClient()
+  const { selectedCompany, selectedWarehouse, setWarehouse } = useAppStore()
   const companyId = selectedCompany?.id
 
-  const { data: company    } = useQuery({
+  const { data: company } = useQuery({
     queryKey: ['company', companyId],
     queryFn:  () => companyApi.get(companyId!),
     enabled:  !!companyId,
@@ -147,8 +77,17 @@ export default function CompanyProfile() {
     enabled:  !!companyId,
   })
 
-  const [newWarehouseOpen,   setNewWarehouseOpen]   = useState(false)
-  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null)
+  const [newWarehouseOpen, setNewWarehouseOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget]         = useState<{ id: number; name: string } | null>(null)
+
+  const deleteWarehouse = useMutation({
+    mutationFn: () => warehouseApi.delete(companyId!, deleteTarget!.id),
+    onSuccess:  () => {
+      qc.invalidateQueries({ queryKey: ['warehouses', companyId] })
+      if (selectedWarehouse?.id === deleteTarget?.id) setWarehouse(null)
+      setDeleteTarget(null)
+    },
+  })
 
   if (!companyId) return (
     <div className="flex items-center justify-center h-64">
@@ -159,17 +98,15 @@ export default function CompanyProfile() {
   return (
     <div className="animate-fade-in">
 
-      {/* Header */}
       <div className="px-6 py-5 border-b border-surface-3">
         <h1 className="font-display text-2xl font-bold text-ink-primary">Perfil de empresa</h1>
         <p className="text-xs text-ink-muted mt-0.5">
-          Información y gestión de almacenes{company ? ` · ${company.name}` : ''}
+          Información y gestión de almacenes{company ? ` · ${(company as any).name}` : ''}
         </p>
       </div>
 
       <div className="px-6 py-4 space-y-6">
 
-        {/* Company info */}
         <div className="card p-5 space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
@@ -192,7 +129,6 @@ export default function CompanyProfile() {
           </div>
         </div>
 
-        {/* Warehouses */}
         <div>
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-display text-base font-bold text-ink-primary">Almacenes</h2>
@@ -221,7 +157,13 @@ export default function CompanyProfile() {
                 </div>
                 <button
                   onClick={() => setDeleteTarget({ id: w.id, name: w.name })}
-                  className="p-1.5 rounded-lg text-ink-muted hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                  disabled={(warehouses as any[]).length === 1}
+                  className={`p-1.5 rounded-lg transition-colors ${
+                    (warehouses as any[]).length === 1
+                      ? 'text-ink-muted opacity-30 cursor-not-allowed'
+                      : 'text-ink-muted hover:text-red-400 hover:bg-red-400/10'
+                  }`}
+                  title={(warehouses as any[]).length === 1 ? 'No se puede eliminar el único almacén' : 'Eliminar almacén'}
                 >
                   <Trash2 size={13} />
                 </button>
@@ -238,15 +180,17 @@ export default function CompanyProfile() {
         onClose={() => setNewWarehouseOpen(false)}
       />
 
-      {deleteTarget && (
-        <DeleteWarehouseModal
-          companyId={companyId}
-          warehouseId={deleteTarget.id}
-          warehouseName={deleteTarget.name}
-          open={!!deleteTarget}
-          onClose={() => setDeleteTarget(null)}
-        />
-      )}
+      <ConfirmModal
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => deleteWarehouse.mutate()}
+        loading={deleteWarehouse.isPending}
+        title="Eliminar almacén"
+        description={`¿Estás seguro de eliminar "${deleteTarget?.name}"? Esta acción no se puede deshacer.`}
+        confirmLabel="Eliminar almacén"
+        variant="danger"
+      />
+
     </div>
   )
 }
