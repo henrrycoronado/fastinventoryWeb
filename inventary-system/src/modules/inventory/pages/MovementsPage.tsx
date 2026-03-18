@@ -9,7 +9,7 @@ import {
   useWarehouses, useSkus, useGlobalCategories,
 } from '../services/inventoryHooks'
 import { useAppStore } from '../../../store/useAppStore'
-import { formatCurrency, formatDate, isEmptyField } from '../../../lib/utils'
+import { formatCurrency, formatDate } from '../../../lib/utils'
 import type { Movement, MovementDetail, CompanyProduct, Sku } from '../services/types'
 import { inventoryApi } from '../services/inventoryApi'
 
@@ -140,8 +140,8 @@ function CreateProductInline({ }: {
       wholesalePrice:  wholesale ? parseFloat(wholesale) : undefined,
     })
     const skus = (cp as any).skus ?? []
-    let skuId: number = 0
-    let skuLabel: string = ""
+    var skuId: number = 0
+    var skuLabel: string = ""
     if (skus.length > 0) {
       skuId    = skus[0].id
       skuLabel = skus[0].internalSku ?? `SKU #${skus[0].id}`
@@ -154,12 +154,7 @@ function CreateProductInline({ }: {
         skuLabel = (newSku as any).internalSku ?? `SKU #${(newSku as any).id}`
     }
   }
-  
 
-  const isValid = !isEmptyField(name)
-    && !isEmptyField(skuCode)
-    && !isEmptyField(retailPrice)
-    && !isEmptyField(wholesale)
 
   const isPending = createGlobal.isPending || createCompany.isPending
 

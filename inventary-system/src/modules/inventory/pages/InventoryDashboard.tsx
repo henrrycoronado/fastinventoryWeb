@@ -53,6 +53,15 @@ export default function InventoryDashboard() {
   const totalDisponible = stockList.reduce((acc: number, s: Stock) => acc + s.availableQuantity, 0)
   const sinStock        = stockList.filter((s: Stock) => s.availableQuantity === 0).length
   const stockBajo       = stockList.filter((s: Stock) => s.availableQuantity > 0 && s.availableQuantity <= LOW_STOCK_THRESHOLD).length
+  
+  const MOVEMENT_TYPE_LABELS: Record<number, { label: string; isEntry: boolean }> = {
+    1: { label: 'Entrada por Compra',  isEntry: true  },
+    2: { label: 'Salida por Venta',    isEntry: false },
+    3: { label: 'Ajuste Positivo',     isEntry: true  },
+    4: { label: 'Ajuste Negativo',     isEntry: false },
+    5: { label: 'Traspaso Salida',     isEntry: false },
+    6: { label: 'Traspaso Entrada',    isEntry: true  },
+  }
 
   const movementsByType = useMemo(() => {
     const map: Record<number, number> = {}
@@ -93,15 +102,6 @@ export default function InventoryDashboard() {
       .slice(0, 8),
     [stockList]
   )
-
-  const MOVEMENT_TYPE_LABELS: Record<number, { label: string; isEntry: boolean }> = {
-    1: { label: 'Entrada por Compra',  isEntry: true  },
-    2: { label: 'Salida por Venta',    isEntry: false },
-    3: { label: 'Ajuste Positivo',     isEntry: true  },
-    4: { label: 'Ajuste Negativo',     isEntry: false },
-    5: { label: 'Traspaso Salida',     isEntry: false },
-    6: { label: 'Traspaso Entrada',    isEntry: true  },
-  }
 
   return (
     <div className="p-6 space-y-6 animate-fade-in">
