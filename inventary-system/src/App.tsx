@@ -14,6 +14,7 @@ import ProductsPage from './modules/inventory/pages/ProductsPage'
 import CategoriesPage from './modules/inventory/pages/CategoriesPage'
 import StockPage from './modules/inventory/pages/StockPage'
 import MovementsPage from './modules/inventory/pages/MovementsPage'
+import KardexPage from './modules/inventory/pages/KardexPage'
 import SalesDashboard from './modules/sales/pages/SalesDashboard'
 import PdvDashboard from './modules/pdv/pages/PdvDashboard'
 
@@ -61,7 +62,7 @@ export default function App() {
                 <Route path="/inventory/categories" element={<CategoriesPage />} />
                 <Route path="/inventory/stock" element={<StockPage />} />
                 <Route path="/inventory/movements" element={<MovementsPage />} />
-                <Route path="/inventory/kardex"     element={<div className="p-6 text-ink-primary">Kardex</div>} />
+                <Route path="/inventory/kardex" element={<KardexPage />} />
 
                 <Route path="/sales/dashboard"              element={<SalesDashboard />} />
                 <Route path="/sales/list"                   element={<div className="p-6 text-ink-primary">Ventas</div>} />
