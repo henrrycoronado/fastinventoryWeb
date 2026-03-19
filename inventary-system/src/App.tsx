@@ -16,9 +16,14 @@ import StockPage from './modules/inventory/pages/StockPage'
 import MovementsPage from './modules/inventory/pages/MovementsPage'
 import KardexPage from './modules/inventory/pages/KardexPage'
 import SalesDashboard from './modules/sales/pages/SalesDashboard'
+import CustomersPage from './modules/sales/pages/CustomersPage'
+import SellersPage from './modules/sales/pages/SellersPage'
 import PdvDashboard from './modules/pdv/pages/PdvDashboard'
 import Settings from './pages/Settings'
 import CompanyProfile from './pages/CompanyProfile'
+import SalesListPage from './modules/sales/pages/SalesListPage'
+import SalesProductsPage from './modules/sales/pages/SalesProductsPage'
+import SalesCategoriesPage from './modules/sales/pages/SalesCategoriesPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,12 +72,11 @@ export default function App() {
                 <Route path="/inventory/kardex" element={<KardexPage />} />
 
                 <Route path="/sales/dashboard"              element={<SalesDashboard />} />
-                <Route path="/sales/list"                   element={<div className="p-6 text-ink-primary">Ventas</div>} />
-                <Route path="/sales/receipts"               element={<div className="p-6 text-ink-primary">Recibos</div>} />
-                <Route path="/sales/customers"              element={<div className="p-6 text-ink-primary">Clientes</div>} />
-                <Route path="/sales/sellers"                element={<div className="p-6 text-ink-primary">Vendedores</div>} />
-                <Route path="/sales/catalog/products"       element={<div className="p-6 text-ink-primary">Mis Productos</div>} />
-                <Route path="/sales/catalog/categories"     element={<div className="p-6 text-ink-primary">Mis Categorías</div>} />
+                <Route path="/sales/list" element={<SalesListPage />} />
+                <Route path="/sales/customers"  element={<CustomersPage />} />
+                <Route path="/sales/sellers"    element={<SellersPage />} />
+                <Route path="/sales/catalog/products"       element={<SalesProductsPage />} />
+                <Route path="/sales/catalog/categories"     element={<SalesCategoriesPage />} />
 
                 <Route path="/pdv/dashboard"                element={<PdvDashboard />} />
                 <Route path="/pdv/orders"                   element={<div className="p-6 text-ink-primary">Órdenes</div>} />

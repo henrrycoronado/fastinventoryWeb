@@ -20,28 +20,72 @@ export function MovementBadge({ typeId }: { typeId: number }) {
 }
 
 export function MovementExpanded({ movement }: { movement: Movement }) {
+  const { data: warehouses = [] } = useWarehouses()
+  
+  const sourceWarehouse = (warehouses as any[]).find(w => w.id === movement.warehouseId)
+  const targetWarehouse = (warehouses as any[]).find(w => w.id === movement.targetWarehouseId)
+  
+  const isTransfer = movement.typeId === 5 || movement.typeId === 6
+  const totalUnits = movement.details?.reduce((acc, d) => acc + (d.quantity || 0), 0) || 0
+  const totalValue = movement.details?.reduce((acc, d) => acc + ((d.quantity || 0) * (d.unitCost || 0)), 0) || 0
+
   return (
-    <div className="px-6 py-4 bg-surface-1/60 border-t border-surface-3 animate-slide-up">
-      <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold mb-3">Detalle de productos</p>
-      {!movement.details?.length ? <p className="text-xs text-ink-muted">Sin detalles</p> : (
-        <div className="space-y-2">
-          {movement.details.map((d: MovementDetail) => {
-            const nombre = d.sku?.companyProduct?.localNameAlias ?? d.sku?.companyProduct?.globalProduct?.name ?? `SKU ${d.skuId}`
-            return (
-              <div key={d.id} className="flex items-center gap-4 bg-surface-3 rounded-lg px-4 py-3">
-                <div className="flex-1 min-w-0"><p className="text-xs font-medium text-ink-primary truncate">{nombre}</p><p className="text-xs font-mono text-ink-muted">{d.sku?.internalSku ?? `#${d.skuId}`}</p></div>
-                <div className="flex items-center gap-6 text-xs text-ink-secondary shrink-0">
-                  <div className="text-right"><p className="text-ink-muted">Cant.</p><p className="font-mono font-medium text-ink-primary">{d.quantity}</p></div>
-                  <div className="text-right"><p className="text-ink-muted">Costo</p><p className="font-mono font-medium text-ink-primary">{formatCurrency(d.unitCost)}</p></div>
-                  <div className="text-right"><p className="text-ink-muted">Subtotal</p><p className="font-mono font-medium text-accent">{formatCurrency(d.quantity * d.unitCost)}</p></div>
+    <div className="px-6 py-5 bg-surface-1/60 border-t border-surface-3 animate-slide-up space-y-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-4 border-b border-surface-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold">Origen</p>
+          <p className="text-sm font-medium text-ink-primary mt-1">{sourceWarehouse?.name || '—'}</p>
+        </div>
+        {isTransfer && (
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold">Destino</p>
+            <p className="text-sm font-medium text-ink-primary mt-1">{targetWarehouse?.name || 'No especificado'}</p>
+          </div>
+        )}
+        <div>
+          <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold">Total Unidades</p>
+          <p className="text-sm font-mono font-medium text-ink-primary mt-1">{totalUnits} uds</p>
+        </div>
+        <div>
+          <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold">Valor Total</p>
+          <p className="text-sm font-mono font-medium text-accent mt-1">{formatCurrency(totalValue)}</p>
+        </div>
+      </div>
+      <div>
+        <p className="text-[10px] uppercase tracking-widest text-ink-muted font-semibold mb-3">Detalle de productos</p>
+        
+        {!movement.details || movement.details.length === 0 ? (
+          <div className="flex items-center gap-2 px-4 py-3 bg-yellow-500/10 text-yellow-400 rounded-lg text-xs">
+            <AlertCircle size={14} />
+            <span>No se cargaron los detalles del producto (Pendiente de revisión en backend).</span>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {movement.details.map((d: MovementDetail) => {
+              const nombre = d.sku?.companyProduct?.localNameAlias ?? d.sku?.companyProduct?.globalProduct?.name ?? `SKU ${d.skuId}`
+              return (
+                <div key={d.id} className="flex items-center gap-4 bg-surface-3 rounded-lg px-4 py-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-ink-primary truncate">{nombre}</p>
+                    <p className="text-xs font-mono text-ink-muted">{d.sku?.internalSku ?? `#${d.skuId}`}</p>
+                  </div>
+                  <div className="flex items-center gap-6 text-xs text-ink-secondary shrink-0">
+                    <div className="text-right"><p className="text-ink-muted">Cant.</p><p className="font-mono font-medium text-ink-primary">{d.quantity}</p></div>
+                    <div className="text-right"><p className="text-ink-muted">Costo unit.</p><p className="font-mono font-medium text-ink-primary">{formatCurrency(d.unitCost)}</p></div>
+                    <div className="text-right"><p className="text-ink-muted">Subtotal</p><p className="font-mono font-medium text-accent">{formatCurrency(d.quantity * d.unitCost)}</p></div>
+                  </div>
                 </div>
-              </div>
-            )
-          })}
-          <div className="flex justify-end pt-1"><div className="text-xs text-ink-muted">Total: <span className="font-mono font-bold text-ink-primary ml-1">{formatCurrency((movement.details ?? []).reduce((a, d) => a + d.quantity * d.unitCost, 0))}</span></div></div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+      {movement.notes && (
+        <div className="px-4 py-3 rounded-lg bg-surface-3 text-xs text-ink-secondary">
+          <span className="font-semibold text-ink-muted block mb-1">Observaciones:</span>
+          {movement.notes}
         </div>
       )}
-      {movement.notes && <div className="mt-3 px-3 py-2 rounded-lg bg-surface-3 text-xs text-ink-secondary"><span className="text-ink-muted">Notas: </span>{movement.notes}</div>}
     </div>
   )
 }

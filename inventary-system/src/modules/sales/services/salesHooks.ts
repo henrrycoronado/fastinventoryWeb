@@ -93,13 +93,16 @@ export const useCreateSale = () => {
 }
 
 export const useConfirmSale = () => {
-  const qc        = useQueryClient()
+  const qc = useQueryClient()
   const companyId = useAppStore(s => s.selectedCompany?.id)
   return useMutation({
     mutationFn: (id: number) => salesApi.sales.confirm(companyId!, id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['sales', companyId] })
       qc.invalidateQueries({ queryKey: ['stock'] })
+      qc.invalidateQueries({ queryKey: ['movements'] })
+      qc.invalidateQueries({ queryKey: ['kardex'] })
+      
       toast.success('Venta confirmada — stock descontado')
     },
   })

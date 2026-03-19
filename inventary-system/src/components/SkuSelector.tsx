@@ -21,7 +21,16 @@ function ProductSkuRow({ product, expanded, onExpand, onSelectSku }: any) {
       {expanded && (
         <div className="bg-surface-1 px-4 pb-2 space-y-1">
           {(skus as Sku[]).map(sku => (
-            <button key={sku.id} onClick={() => onSelectSku({ skuId: sku.id, skuLabel: sku.internalSku ?? `SKU #${sku.id}`, productName: nombre })} className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-accent/10 transition-colors group">
+            <button 
+              key={sku.id} 
+              onClick={() => onSelectSku({ 
+                skuId: sku.id, 
+                skuLabel: sku.internalSku ?? `SKU #${sku.id}`, 
+                productName: nombre,
+                price: sku.retailPrice || 0
+              })} 
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-accent/10 transition-colors group"
+            >
               <span className="text-xs font-mono text-ink-secondary group-hover:text-accent">{sku.internalSku ?? `SKU #${sku.id}`}</span>
               <span className="text-xs text-ink-muted">{sku.retailPrice ? formatCurrency(sku.retailPrice) : '—'}</span>
             </button>

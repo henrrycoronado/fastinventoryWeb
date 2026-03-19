@@ -61,13 +61,20 @@ export default function MovementsPage() {
           <div className="divide-y divide-surface-3">
             {sorted.map((m: Movement) => {
               const isExpanded = expandedId === m.id
+              const totalUnits = m.details?.reduce((acc, d) => acc + (d.quantity || 0), 0) || 0
+              const totalItems = m.details?.length || 0
+
               return (
                 <div key={m.id}>
                   <div className="grid grid-cols-5 items-center px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : m.id)}>
                     <MovementBadge typeId={m.typeId} />
                     <span className="text-xs text-ink-secondary">{formatDate(m.movementDate)}</span>
                     <span className="text-xs text-ink-secondary">{selectedWarehouse?.name}</span>
-                    <span className="text-xs text-ink-secondary">{m.details?.length ?? 0} ítem(s)</span>
+                    <div className="text-xs text-ink-secondary">
+                      <p className="font-medium text-ink-primary">{totalUnits} ud(s)</p>
+                      <p className="text-[10px] text-ink-muted">en {totalItems} ítem(s)</p>
+                    </div>
+
                     <div className="flex items-center justify-between"><span className="text-xs text-ink-muted truncate max-w-[120px]">{m.notes ?? '—'}</span><ChevronRight size={13} className={`text-ink-muted transition-transform duration-200 shrink-0 ${isExpanded ? 'rotate-90' : ''}`} /></div>
                   </div>
                   {isExpanded && <MovementExpanded movement={m} />}

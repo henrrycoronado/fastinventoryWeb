@@ -7,7 +7,7 @@ import type { AccentColor } from '../config/theme'
 import {
   Building2, Warehouse, Sun, Moon, LogOut,
   ChevronDown, LayoutDashboard, Package, Boxes,
-  ArrowLeftRight, ShoppingCart, ReceiptText,
+  ArrowLeftRight, ShoppingCart,
   Users, UserCheck, Store, UtensilsCrossed,
   Table2, BookOpen, Tag, ScrollText,
   Settings, UserCircle,
@@ -62,7 +62,6 @@ export default function AppLayout() {
       items: [
         { label: 'Dashboard',      path: '/sales/dashboard',          icon: LayoutDashboard },
         { label: 'Ventas',         path: '/sales/list',               icon: ShoppingCart },
-        { label: 'Recibos',        path: '/sales/receipts',           icon: ReceiptText },
         ...(moduleSettings.clientsEnabled ? [{ label: 'Clientes',    path: '/sales/customers',         icon: Users     }] : []),
         ...(moduleSettings.sellersEnabled ? [{ label: 'Vendedores',  path: '/sales/sellers',           icon: UserCheck }] : []),
         { label: 'Mis Productos',  path: '/sales/catalog/products',   icon: Package },
