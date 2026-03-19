@@ -111,50 +111,51 @@ function MovementExpanded({ movement }: { movement: Movement }) {
 }
 
 // ── Create product inline ───────────────────────────────────────────────────
-function CreateProductInline({ }: {
+function CreateProductInline({ onCreated }: {
   onCreated: (sku: { skuId: number; skuLabel: string; productName: string }) => void
 }) {
   const { data: categories = [] } = useGlobalCategories()
   const createGlobal  = useCreateGlobalProduct()
   const createCompany = useCreateCompanyProduct()
 
-  const [name,       setName]       = useState('')
-  const [brand,      setBrand]      = useState('')
-  const [upc,        setUpc]        = useState('')
-  const [catId,      setCatId]      = useState('')
-  const [skuCode,    setSkuCode]    = useState('')
+  const [name,        setName]        = useState('')
+  const [brand,       setBrand]       = useState('')
+  const [upc,         setUpc]         = useState('')
+  const [catId,       setCatId]       = useState('')
+  const [skuCode,     setSkuCode]     = useState('')
   const [retailPrice, setRetailPrice] = useState('')
-  const [wholesale,  setWholesale]  = useState('')
-  const [alias,      setAlias]      = useState('')
+  const [wholesale,   setWholesale]   = useState('')
+  const [alias,       setAlias]       = useState('')
 
   const handleCreate = async () => {
     if (!name.trim()) return
-    const gp  = await createGlobal.mutateAsync({
-      name, brand: brand || undefined,
-      upcBarcode: upc || undefined,
+    const gp = await createGlobal.mutateAsync({
+      name,
+      brand:      brand || undefined,
+      upcBarcode: upc   || undefined,
       categoryId: catId ? parseInt(catId) : undefined,
     })
     const cp = await createCompany.mutateAsync({
       globalProductId: (gp as any).id,
-      localNameAlias:  alias || undefined,
+      localNameAlias:  alias     || undefined,
       wholesalePrice:  wholesale ? parseFloat(wholesale) : undefined,
     })
     const skus = (cp as any).skus ?? []
-    var skuId: number = 0
-    var skuLabel: string = ""
+    let skuId:    number
+    let skuLabel: string
     if (skus.length > 0) {
       skuId    = skus[0].id
       skuLabel = skus[0].internalSku ?? `SKU #${skus[0].id}`
     } else {
-        const newSku = await inventoryApi.skus.create((cp as any).id, {
-            internalSku: skuCode || undefined,
-            retailPrice: retailPrice ? parseFloat(retailPrice) : undefined,
-        })
-        skuId    = (newSku as any).id
-        skuLabel = (newSku as any).internalSku ?? `SKU #${(newSku as any).id}`
+      const newSku = await inventoryApi.skus.create((cp as any).id, {
+        internalSku: skuCode    || undefined,
+        retailPrice: retailPrice ? parseFloat(retailPrice) : undefined,
+      })
+      skuId    = (newSku as any).id
+      skuLabel = (newSku as any).internalSku ?? `SKU #${(newSku as any).id}`
     }
+    onCreated({ skuId, skuLabel, productName: alias || name })
   }
-
 
   const isPending = createGlobal.isPending || createCompany.isPending
 
@@ -166,21 +167,15 @@ function CreateProductInline({ }: {
       <div className="grid grid-cols-2 gap-2">
         <div>
           <label className="label">Nombre *</label>
-          <input className="input text-xs" value={name} onChange={e => setName(e.target.value)} placeholder="Ej: Nike Air Max" required/>
+          <input className="input text-xs" value={name} onChange={e => setName(e.target.value)} placeholder="Ej: Nike Air Max" />
         </div>
         <div>
-          <label className="label">Marca *</label>
-          <input
-            className="input text-xs"
-            value={brand}
-            onChange={e => setBrand(e.target.value)}
-            placeholder="Ej: Nike"
-            required
-          />
+          <label className="label">Marca</label>
+          <input className="input text-xs" value={brand} onChange={e => setBrand(e.target.value)} placeholder="Ej: Nike" />
         </div>
         <div>
           <label className="label">UPC / Código de barras</label>
-          <input className="input text-xs font-mono" value={upc} onChange={e => setUpc(e.target.value)} placeholder="7501234567890" required/>
+          <input className="input text-xs font-mono" value={upc} onChange={e => setUpc(e.target.value)} placeholder="7501234567890" />
         </div>
         <div>
           <label className="label">Categoría</label>
@@ -193,38 +188,24 @@ function CreateProductInline({ }: {
         </div>
         <div>
           <label className="label">Alias local</label>
-          <input className="input text-xs" value={alias} onChange={e => setAlias(e.target.value)} placeholder="Nombre en tu empresa" required/>
+          <input className="input text-xs" value={alias} onChange={e => setAlias(e.target.value)} placeholder="Nombre en tu empresa" />
         </div>
         <div>
           <label className="label">Precio mayoreo</label>
-          <input className="input text-xs font-mono" type="number" step="0.01" value={wholesale} onChange={e => setWholesale(e.target.value)} placeholder="0.00" required/>
+          <input className="input text-xs font-mono" type="number" step="0.01" value={wholesale} onChange={e => setWholesale(e.target.value)} placeholder="0.00" />
         </div>
         <div>
           <label className="label">Código SKU *</label>
-          <input
-            className="input text-xs font-mono"
-            value={skuCode}
-            onChange={e => setSkuCode(e.target.value)}
-            placeholder="SKU-001"
-            required
-          />
+          <input className="input text-xs font-mono" value={skuCode} onChange={e => setSkuCode(e.target.value)} placeholder="SKU-001" />
         </div>
         <div>
           <label className="label">Precio retail *</label>
-          <input
-            className="input text-xs font-mono"
-            type="number"
-            step="0.01"
-            value={retailPrice}
-            onChange={e => setRetailPrice(e.target.value)}
-            placeholder="0.00"
-            required
-          />
+          <input className="input text-xs font-mono" type="number" step="0.01" value={retailPrice} onChange={e => setRetailPrice(e.target.value)} placeholder="0.00" />
         </div>
       </div>
       <button
         onClick={handleCreate}
-        disabled={!name.trim() || !brand.trim() || !skuCode.trim() || !retailPrice || isPending}
+        disabled={!name.trim() || !skuCode.trim() || !retailPrice || isPending}
         className="btn-primary text-xs w-full justify-center"
       >
         {isPending
