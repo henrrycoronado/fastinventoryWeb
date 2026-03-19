@@ -5,8 +5,10 @@ import type { ThemeMode, AccentColor } from '../config/theme'
 import type { Company, Warehouse } from '../services/types'
 
 interface ModuleSettings {
-  salesEnabled: boolean
-  pdvEnabled:   boolean
+  salesEnabled:   boolean
+  pdvEnabled:     boolean
+  clientsEnabled: boolean
+  sellersEnabled: boolean
 }
 
 interface AppStore {
@@ -25,7 +27,7 @@ interface AppStore {
   logout:       () => void
 
   moduleSettings: Record<number, ModuleSettings>
-  toggleModule:   (companyId: number, module: 'salesEnabled' | 'pdvEnabled') => void
+  toggleModule:   (companyId: number, module: 'salesEnabled' | 'pdvEnabled' | 'clientsEnabled' | 'sellersEnabled') => void
   getModuleSettings: (companyId: number) => ModuleSettings
 }
 
@@ -53,8 +55,10 @@ export const useAppStore = create<AppStore>()(
         moduleSettings: {
           ...state.moduleSettings,
           [company.id]: state.moduleSettings[company.id] ?? {
-            salesEnabled: true,
-            pdvEnabled:   true,
+            salesEnabled:   true,
+            pdvEnabled:     true,
+            clientsEnabled: true,
+            sellersEnabled: true,
           },
         },
       })),
@@ -66,7 +70,7 @@ export const useAppStore = create<AppStore>()(
       }),
 
       toggleModule: (companyId, module) => set(state => {
-        const current = state.moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true }
+        const current = state.moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true, clientsEnabled: true, sellersEnabled: true }
         const updated = { ...current, [module]: !current[module] }
         if (module === 'salesEnabled' && !updated.salesEnabled) {
           updated.pdvEnabled = false
@@ -80,7 +84,7 @@ export const useAppStore = create<AppStore>()(
       }),
 
       getModuleSettings: (companyId) =>
-        get().moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true },
+        get().moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true, clientsEnabled: true, sellersEnabled: true },
     }),
     {
       name: 'inventary-app',

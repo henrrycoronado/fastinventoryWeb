@@ -1,5 +1,5 @@
 import { useAppStore } from '../store/useAppStore'
-import { ShoppingCart, Store, Package, ToggleLeft, ToggleRight } from 'lucide-react'
+import { ShoppingCart, Store, Package, ToggleLeft, ToggleRight, Users, UserCheck } from 'lucide-react'
 
 interface ModuleToggleProps {
   icon:        React.ReactNode
@@ -91,6 +91,34 @@ export default function Settings() {
           onToggle={() => {
             if (!settings.salesEnabled) return
             toggleModule(companyId, 'pdvEnabled')
+          }}
+        />
+
+        <p className="text-xs text-ink-muted uppercase tracking-wider font-semibold pt-2">
+          Módulo Ventas — opciones
+        </p>
+
+        <ModuleToggle
+          icon={<Users size={18} />}
+          label="Clientes"
+          description="Registro y gestión de clientes para las ventas."
+          enabled={settings.clientsEnabled}
+          disabled={!settings.salesEnabled}
+          onToggle={() => {
+            if (!settings.salesEnabled) return
+            toggleModule(companyId, 'clientsEnabled')
+          }}
+        />
+
+        <ModuleToggle
+          icon={<UserCheck size={18} />}
+          label="Vendedores"
+          description="Registro y gestión de vendedores asignados a ventas."
+          enabled={settings.sellersEnabled}
+          disabled={!settings.salesEnabled}
+          onToggle={() => {
+            if (!settings.salesEnabled) return
+            toggleModule(companyId, 'sellersEnabled')
           }}
         />
 

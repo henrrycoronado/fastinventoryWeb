@@ -13,45 +13,7 @@ import {
   Settings, UserCircle,
 } from 'lucide-react'
 
-const moduleNav = {
-  inventory: {
-    label: 'Inventario',
-    items: [
-      { label: 'Dashboard',   path: '/inventory/dashboard',  icon: LayoutDashboard },
-      { label: 'Productos',   path: '/inventory/products',   icon: Package },
-      { label: 'Categorías',  path: '/inventory/categories', icon: Tag },
-      { label: 'Stock',       path: '/inventory/stock',      icon: Boxes },
-      { label: 'Movimientos', path: '/inventory/movements',  icon: ArrowLeftRight },
-      { label: 'Kardex',      path: '/inventory/kardex',     icon: ScrollText },
-    ],
-  },
-  sales: {
-    label: 'Ventas',
-    items: [
-      { label: 'Dashboard',      path: '/sales/dashboard',          icon: LayoutDashboard },
-      { label: 'Ventas',         path: '/sales/list',               icon: ShoppingCart },
-      { label: 'Recibos',        path: '/sales/receipts',           icon: ReceiptText },
-      { label: 'Clientes',       path: '/sales/customers',          icon: Users },
-      { label: 'Vendedores',     path: '/sales/sellers',            icon: UserCheck },
-      { label: 'Mis Productos',  path: '/sales/catalog/products',   icon: Package },
-      { label: 'Mis Categorías', path: '/sales/catalog/categories', icon: Tag },
-    ],
-  },
-  pdv: {
-    label: 'Punto de Venta',
-    items: [
-      { label: 'Dashboard',      path: '/pdv/dashboard',            icon: LayoutDashboard },
-      { label: 'Órdenes',        path: '/pdv/orders',               icon: Store },
-      { label: 'Mesas',          path: '/pdv/tables',               icon: Table2 },
-      { label: 'Menús',          path: '/pdv/menus',                icon: BookOpen },
-      { label: 'Estaciones',     path: '/pdv/stations',             icon: UtensilsCrossed },
-      { label: 'Mis Productos',  path: '/pdv/catalog/products',     icon: Package },
-      { label: 'Mis Categorías', path: '/pdv/catalog/categories',   icon: Tag },
-    ],
-  },
-}
-
-type ModuleKey = keyof typeof moduleNav
+type ModuleKey = 'inventory' | 'sales' | 'pdv'
 
 function getActiveModule(pathname: string): ModuleKey {
   if (pathname.startsWith('/sales')) return 'sales'
@@ -82,6 +44,44 @@ export default function AppLayout() {
   const location  = useLocation()
   const { selectedCompany, selectedWarehouse, theme, accent, setTheme, setAccent, logout } = useAppStore()
   const moduleSettings = useAppStore(s => s.getModuleSettings(s.selectedCompany?.id ?? 0))
+
+  const moduleNav = {
+    inventory: {
+      label: 'Inventario',
+      items: [
+        { label: 'Dashboard',   path: '/inventory/dashboard',  icon: LayoutDashboard },
+        { label: 'Productos',   path: '/inventory/products',   icon: Package },
+        { label: 'Categorías',  path: '/inventory/categories', icon: Tag },
+        { label: 'Stock',       path: '/inventory/stock',      icon: Boxes },
+        { label: 'Movimientos', path: '/inventory/movements',  icon: ArrowLeftRight },
+        { label: 'Kardex',      path: '/inventory/kardex',     icon: ScrollText },
+      ],
+    },
+    sales: {
+      label: 'Ventas',
+      items: [
+        { label: 'Dashboard',      path: '/sales/dashboard',          icon: LayoutDashboard },
+        { label: 'Ventas',         path: '/sales/list',               icon: ShoppingCart },
+        { label: 'Recibos',        path: '/sales/receipts',           icon: ReceiptText },
+        ...(moduleSettings.clientsEnabled ? [{ label: 'Clientes',    path: '/sales/customers',         icon: Users     }] : []),
+        ...(moduleSettings.sellersEnabled ? [{ label: 'Vendedores',  path: '/sales/sellers',           icon: UserCheck }] : []),
+        { label: 'Mis Productos',  path: '/sales/catalog/products',   icon: Package },
+        { label: 'Mis Categorías', path: '/sales/catalog/categories', icon: Tag },
+      ],
+    },
+    pdv: {
+      label: 'Punto de Venta',
+      items: [
+        { label: 'Dashboard',      path: '/pdv/dashboard',            icon: LayoutDashboard },
+        { label: 'Órdenes',        path: '/pdv/orders',               icon: Store },
+        { label: 'Mesas',          path: '/pdv/tables',               icon: Table2 },
+        { label: 'Menús',          path: '/pdv/menus',                icon: BookOpen },
+        { label: 'Estaciones',     path: '/pdv/stations',             icon: UtensilsCrossed },
+        { label: 'Mis Productos',  path: '/pdv/catalog/products',     icon: Package },
+        { label: 'Mis Categorías', path: '/pdv/catalog/categories',   icon: Tag },
+      ],
+    },
+  }
 
   const activeModule = getActiveModule(location.pathname)
   const { items }    = moduleNav[activeModule]
