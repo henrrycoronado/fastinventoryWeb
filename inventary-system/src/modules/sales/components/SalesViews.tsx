@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ReceiptText, Ban, Trash2, Package } from 'lucide-react'
-import { useCancelSale, useDeleteSale, useCreateReceipt } from '../services/salesHooks'
+import { useCancelSale, useDeleteSale } from '../services/salesHooks'
 import { formatCurrency } from '../../../lib/utils'
 import type { Sale, SaleDetail } from '../services/types'
 import ConfirmModal from '../../../atoms/ConfirmModal'

@@ -74,6 +74,7 @@ export default function AppLayout() {
         { label: 'Dashboard',      path: '/pdv/dashboard',            icon: LayoutDashboard },
         { label: 'Órdenes',        path: '/pdv/orders',               icon: Store },
         { label: 'Mesas',          path: '/pdv/tables',               icon: Table2 },
+        { label: 'Meseros',        path: '/pdv/waiters',              icon: UserCheck },
         { label: 'Menús',          path: '/pdv/menus',                icon: BookOpen },
         { label: 'Estaciones',     path: '/pdv/stations',             icon: UtensilsCrossed },
         { label: 'Mis Productos',  path: '/pdv/catalog/products',     icon: Package },

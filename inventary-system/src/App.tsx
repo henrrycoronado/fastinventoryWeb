@@ -24,6 +24,13 @@ import CompanyProfile from './pages/CompanyProfile'
 import SalesListPage from './modules/sales/pages/SalesListPage'
 import SalesProductsPage from './modules/sales/pages/SalesProductsPage'
 import SalesCategoriesPage from './modules/sales/pages/SalesCategoriesPage'
+import PdvOrdersPage from './modules/pdv/pages/PdvOrdersPage'
+import PdvTablesPage from './modules/pdv/pages/PdvTablesPage'
+import PdvMenusPage from './modules/pdv/pages/PdvMenusPage'
+import PdvStationsPage from './modules/pdv/pages/PdvStationsPage'
+import MyCatalogProducts from './modules/pdv/pages/MyCatalogProducts'
+import MyCatalogCategories from './modules/pdv/pages/MyCatalogCategories'
+import PdvWaitersPage from './modules/pdv/pages/PdvWaitersPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,12 +86,13 @@ export default function App() {
                 <Route path="/sales/catalog/categories"     element={<SalesCategoriesPage />} />
 
                 <Route path="/pdv/dashboard"                element={<PdvDashboard />} />
-                <Route path="/pdv/orders"                   element={<div className="p-6 text-ink-primary">Órdenes</div>} />
-                <Route path="/pdv/tables"                   element={<div className="p-6 text-ink-primary">Mesas</div>} />
-                <Route path="/pdv/menus"                    element={<div className="p-6 text-ink-primary">Menús</div>} />
-                <Route path="/pdv/stations"                 element={<div className="p-6 text-ink-primary">Estaciones</div>} />
-                <Route path="/pdv/catalog/products"         element={<div className="p-6 text-ink-primary">Mis Productos</div>} />
-                <Route path="/pdv/catalog/categories"       element={<div className="p-6 text-ink-primary">Mis Categorías</div>} />
+                <Route path="/pdv/orders"                   element={<PdvOrdersPage />} />
+                <Route path="/pdv/tables"                   element={<PdvTablesPage />} />
+                <Route path="/pdv/waiters"                  element={<PdvWaitersPage />} />
+                <Route path="/pdv/menus"                    element={<PdvMenusPage />} />
+                <Route path="/pdv/stations"                 element={<PdvStationsPage />} />
+                <Route path="/pdv/catalog/products"         element={<MyCatalogProducts />} />
+                <Route path="/pdv/catalog/categories"       element={<MyCatalogCategories />} />
                 
                 <Route path="/company/profile" element={<CompanyProfile />} />
                 <Route path="/settings"        element={<Settings />} />
