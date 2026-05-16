@@ -1,55 +1,114 @@
 import { useState } from 'react'
-import { Package, Plus } from 'lucide-react'
-import { useGlobalCategories, useCreateGlobalProduct, useCreateCompanyProduct } from '../services/inventoryHooks'
-import { inventoryApi } from '../services/inventoryApi'
+import { Plus } from 'lucide-react'
+import { useCategories, useUnits, useCreateProduct } from '../services/inventoryHooks'
+import Button from '../../../atoms/Button'
+import Input from '../../../atoms/Input'
 
-export default function CreateProductInline({ onCreated }: { onCreated: (sku: { skuId: number; skuLabel: string; productName: string }) => void }) {
-  const { data: categories = [] } = useGlobalCategories()
-  const createGlobal  = useCreateGlobalProduct()
-  const createCompany = useCreateCompanyProduct()
+export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
+  const { data: categories = [] } = useCategories()
+  const { data: units = [] } = useUnits()
+  const createProduct = useCreateProduct()
 
-  const [name, setName] = useState(''); const [brand, setBrand] = useState(''); const [upc, setUpc] = useState(''); const [catId, setCatId] = useState('')
-  const [skuCode, setSkuCode] = useState(''); const [retailPrice, setRetailPrice] = useState(''); const [wholesale, setWholesale] = useState(''); const [alias, setAlias] = useState('')
+  const [form, setForm] = useState({
+    sku: '',
+    name: '',
+    description: '',
+    categoryCen: '',
+    unitCen: '',
+    salePrice: 0,
+    costPrice: 0,
+    reorderLevel: 0,
+    stationCode: '',
+  })
 
-  const handleCreate = async () => {
-    if (!name.trim()) return
-    const gp = await createGlobal.mutateAsync({ name, brand: brand || undefined, upcBarcode: upc || undefined, categoryId: catId ? parseInt(catId) : undefined })
-    const cp = await createCompany.mutateAsync({ globalProductId: (gp as any).id, localNameAlias: alias || undefined, wholesalePrice: wholesale ? parseFloat(wholesale) : undefined })
-    const skus = (cp as any).skus ?? []
-    let skuId: number, skuLabel: string
-    if (skus.length > 0) {
-      skuId = skus[0].id; skuLabel = skus[0].internalSku ?? `SKU #${skus[0].id}`
-    } else {
-      const newSku = await inventoryApi.skus.create((cp as any).id, { internalSku: skuCode || undefined, retailPrice: retailPrice ? parseFloat(retailPrice) : undefined })
-      skuId = (newSku as any).id; skuLabel = (newSku as any).internalSku ?? `SKU #${(newSku as any).id}`
-    }
-    onCreated({ skuId, skuLabel, productName: alias || name })
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await createProduct.mutateAsync(form)
+    onSuccess?.()
   }
 
-  const isPending = createGlobal.isPending || createCompany.isPending
-
   return (
-    <div className="border border-accent/20 rounded-xl p-4 space-y-3 bg-accent/5 animate-slide-up">
-      <p className="text-xs font-semibold text-accent flex items-center gap-1.5"><Package size={12} /> Crear nuevo producto</p>
-      <div className="grid grid-cols-2 gap-2">
-        <div><label className="label">Nombre *</label><input className="input text-xs" value={name} onChange={e => setName(e.target.value)} /></div>
-        <div><label className="label">Marca</label><input className="input text-xs" value={brand} onChange={e => setBrand(e.target.value)} /></div>
-        <div><label className="label">UPC</label><input className="input text-xs font-mono" value={upc} onChange={e => setUpc(e.target.value)} /></div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Input 
+          label="SKU / Código *" 
+          placeholder="Ej: PROD-001" 
+          value={form.sku} 
+          onChange={e => setForm({...form, sku: e.target.value})} 
+          required 
+        />
+        <Input 
+          label="Nombre *" 
+          placeholder="Ej: Producto de ejemplo" 
+          value={form.name} 
+          onChange={e => setForm({...form, name: e.target.value})} 
+          required 
+        />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="label">Categoría</label>
-          <select className="input text-xs" value={catId} onChange={e => setCatId(e.target.value)}>
-            <option value="">Sin categoría</option>
-            {(categories as any[]).map(c => (<option key={c.id} value={c.id}>{c.name}</option>))}
+          <select 
+            className="input text-sm" 
+            value={form.categoryCen} 
+            onChange={e => setForm({...form, categoryCen: e.target.value})}
+          >
+            <option value="">Seleccionar...</option>
+            {categories.map(c => <option key={c.categoryCen} value={c.categoryCen}>{c.name}</option>)}
           </select>
         </div>
-        <div><label className="label">Alias</label><input className="input text-xs" value={alias} onChange={e => setAlias(e.target.value)} /></div>
-        <div><label className="label">P. Mayoreo</label><input className="input text-xs font-mono" type="number" step="0.01" value={wholesale} onChange={e => setWholesale(e.target.value)} /></div>
-        <div><label className="label">SKU *</label><input className="input text-xs font-mono" value={skuCode} onChange={e => setSkuCode(e.target.value)} /></div>
-        <div><label className="label">P. Retail *</label><input className="input text-xs font-mono" type="number" step="0.01" value={retailPrice} onChange={e => setRetailPrice(e.target.value)} /></div>
+        <div>
+          <label className="label">Unidad de medida *</label>
+          <select 
+            className="input text-sm" 
+            value={form.unitCen} 
+            onChange={e => setForm({...form, unitCen: e.target.value})}
+            required
+          >
+            <option value="">Seleccionar...</option>
+            {units.map(u => <option key={u.unitCen} value={u.unitCen}>{u.name} ({u.abbreviation})</option>)}
+          </select>
+        </div>
       </div>
-      <button onClick={handleCreate} disabled={!name.trim() || !skuCode.trim() || !retailPrice || isPending} className="btn-primary text-xs w-full justify-center">
-        {isPending ? <span className="w-3 h-3 rounded-full border-2 border-surface-0/30 border-t-surface-0 animate-spin" /> : <Plus size={12} />} Crear y agregar
-      </button>
-    </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Input 
+          label="Precio Venta *" 
+          type="number" 
+          step="0.01" 
+          value={form.salePrice} 
+          onChange={e => setForm({...form, salePrice: parseFloat(e.target.value) || 0})} 
+          required 
+        />
+        <Input 
+          label="Costo Unitario" 
+          type="number" 
+          step="0.01" 
+          value={form.costPrice} 
+          onChange={e => setForm({...form, costPrice: parseFloat(e.target.value) || 0})} 
+        />
+        <Input 
+          label="Stock Reorden" 
+          type="number" 
+          value={form.reorderLevel} 
+          onChange={e => setForm({...form, reorderLevel: parseFloat(e.target.value) || 0})} 
+        />
+      </div>
+
+      <Input 
+        label="Descripción" 
+        placeholder="Breve descripción del producto..." 
+        value={form.description} 
+        onChange={e => setForm({...form, description: e.target.value})} 
+      />
+
+      <div className="flex justify-end gap-2 pt-2">
+        <Button type="button" onClick={() => onSuccess?.()}>Cancelar</Button>
+        <Button variant="primary" type="submit" loading={createProduct.isPending}>
+          <Plus size={14} /> Crear Producto
+        </Button>
+      </div>
+    </form>
   )
 }

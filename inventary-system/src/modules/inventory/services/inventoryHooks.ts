@@ -3,204 +3,117 @@ import { useAppStore } from '../../../store/useAppStore'
 import { inventoryApi } from './inventoryApi'
 import toast from 'react-hot-toast'
 
-export const useCompanyProducts = () => {
-  const companyId = useAppStore(s => s.selectedCompany?.id)
+export const useInventoryDashboard = () => {
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
   return useQuery({
-    queryKey: ['company-products', companyId],
-    queryFn:  () => inventoryApi.products.list(companyId!),
-    enabled:  !!companyId,
+    queryKey: ['inventory-dashboard', companyCen],
+    queryFn:  () => inventoryApi.dashboard.get(companyCen!),
+    enabled:  !!companyCen,
   })
 }
 
-export const useGlobalProducts = () => {
-  const companyId = useAppStore(s => s.selectedCompany?.id)
+export const useCategories = () => {
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
   return useQuery({
-    queryKey: ['global-products', companyId],
-    queryFn:  () => inventoryApi.products.listGlobal(companyId!),
-    enabled:  !!companyId,
+    queryKey: ['categories', companyCen],
+    queryFn:  () => inventoryApi.categories.list(companyCen!),
+    enabled:  !!companyCen,
   })
 }
 
-export const useCreateCompanyProduct = () => {
-  const qc        = useQueryClient()
-  const companyId = useAppStore(s => s.selectedCompany?.id)
+export const useCreateCategory = () => {
+  const qc         = useQueryClient()
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
   return useMutation({
-    mutationFn: (data: { globalProductId: number; localNameAlias?: string; wholesalePrice?: number }) =>
-      inventoryApi.products.create(companyId!, data),
+    mutationFn: (data: { name: string; description?: string }) =>
+      inventoryApi.categories.create(companyCen!, data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['company-products', companyId] })
-      qc.invalidateQueries({ queryKey: ['global-products', companyId] })
-      toast.success('Producto agregado al catálogo')
-    },
-  })
-}
-
-export const useDeleteCompanyProduct = () => {
-  const qc        = useQueryClient()
-  const companyId = useAppStore(s => s.selectedCompany?.id)
-  return useMutation({
-    mutationFn: (id: number) => inventoryApi.products.delete(companyId!, id),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['company-products', companyId] })
-      toast.success('Producto eliminado')
-    },
-  })
-}
-
-export const useCreateGlobalProduct = () => {
-  const qc        = useQueryClient()
-  const companyId = useAppStore(s => s.selectedCompany?.id)
-  return useMutation({
-    mutationFn: (data: { categoryId?: number; name: string; brand?: string; upcBarcode?: string }) =>
-      inventoryApi.products.createGlobal(data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['global-products', companyId] })
-      toast.success('Producto global creado')
-    },
-  })
-}
-
-export const useSkus = (companyProductId: number | undefined) =>
-  useQuery({
-    queryKey: ['skus', companyProductId],
-    queryFn:  () => inventoryApi.skus.list(companyProductId!),
-    enabled:  !!companyProductId,
-  })
-
-export const useCreateSku = (companyProductId: number) => {
-  const qc = useQueryClient()
-  return useMutation({
-    mutationFn: (data: { internalSku?: string; retailPrice?: number }) =>
-      inventoryApi.skus.create(companyProductId, data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['skus', companyProductId] })
-      qc.invalidateQueries({ queryKey: ['company-products'] })
-      toast.success('SKU creado')
-    },
-  })
-}
-
-export const useDeleteSku = (companyProductId: number) => {
-  const qc = useQueryClient()
-  return useMutation({
-    mutationFn: (id: number) => inventoryApi.skus.delete(companyProductId, id),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['skus', companyProductId] })
-      toast.success('SKU eliminado')
-    },
-  })
-}
-
-export const useAttributes = () => {
-  const companyId = useAppStore(s => s.selectedCompany?.id)
-  return useQuery({
-    queryKey: ['attributes', companyId],
-    queryFn:  () => inventoryApi.attributes.listByCompany(companyId!),
-    enabled:  !!companyId,
-  })
-}
-
-export const useSkuAttributes = (skuId: number | undefined) =>
-  useQuery({
-    queryKey: ['sku-attributes', skuId],
-    queryFn:  () => inventoryApi.attributes.listBySku(skuId!),
-    enabled:  !!skuId,
-  })
-
-export const useGlobalCategories = () =>
-  useQuery({
-    queryKey: ['global-categories'],
-    queryFn:  () => inventoryApi.categories.listGlobal(),
-    staleTime: Infinity,
-  })
-
-export const useCreateGlobalCategory = () => {
-  const qc = useQueryClient()
-  return useMutation({
-    mutationFn: (data: { name: string }) => inventoryApi.categories.create(data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['global-categories'] })
+      qc.invalidateQueries({ queryKey: ['categories', companyCen] })
       toast.success('Categoría creada')
     },
   })
 }
 
-export const useStock = () => {
-  const warehouseId = useAppStore(s => s.selectedWarehouse?.id)
+export const useProducts = (params?: { search?: string; categoryCen?: string; status?: string }) => {
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
   return useQuery({
-    queryKey: ['stock', warehouseId],
-    queryFn:  () => inventoryApi.stock.list(warehouseId!),
-    enabled:  !!warehouseId,
-    refetchInterval: 30_000,
+    queryKey: ['products', companyCen, params],
+    queryFn:  () => inventoryApi.products.list(companyCen!, params),
+    enabled:  !!companyCen,
   })
 }
 
-export const useMovements = () => {
-  const companyId = useAppStore(s => s.selectedCompany?.id)
-  return useQuery({
-    queryKey: ['movements', companyId],
-    queryFn:  () => inventoryApi.movements.list(companyId!),
-    enabled:  !!companyId,
-  })
-}
-
-export const useCreateMovement = () => {
-  const qc        = useQueryClient()
-  const companyId = useAppStore(s => s.selectedCompany?.id)
+export const useCreateProduct = () => {
+  const qc         = useQueryClient()
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
   return useMutation({
-    mutationFn: ({ type, data }: { type: 'incoming' | 'outgoing'; data: any }) =>
-      type === 'incoming'
-        ? inventoryApi.movements.incoming(companyId!, data)
-        : inventoryApi.movements.outgoing(companyId!, data),
+    mutationFn: (data: any) =>
+      inventoryApi.products.create(companyCen!, data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['movements', companyId] })
-      qc.invalidateQueries({ queryKey: ['stock'] })
-      toast.success('Movimiento registrado')
+      qc.invalidateQueries({ queryKey: ['products', companyCen] })
+      toast.success('Producto creado')
     },
   })
 }
 
-export const useDeleteMovement = () => {
-  const qc        = useQueryClient()
-  const companyId = useAppStore(s => s.selectedCompany?.id)
+export const useStock = (params?: { productCen?: string; warehouseCen?: string }) => {
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const warehouseCen = useAppStore(s => s.selectedWarehouse?.cen)
+  return useQuery({
+    queryKey: ['stock', companyCen, warehouseCen, params],
+    queryFn:  () => inventoryApi.stock.list(companyCen!, { warehouseCen, ...params }),
+    enabled:  !!companyCen && !!warehouseCen,
+  })
+}
+
+export const useInventoryDocuments = (params?: { documentType?: string; from?: string; to?: string }) => {
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  return useQuery({
+    queryKey: ['inventory-documents', companyCen, params],
+    queryFn:  () => inventoryApi.documents.list(companyCen!, params),
+    enabled:  !!companyCen,
+  })
+}
+
+export const useCreateInventoryDocument = () => {
+  const qc         = useQueryClient()
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
   return useMutation({
-    mutationFn: (id: number) => inventoryApi.movements.delete(companyId!, id),
+    mutationFn: (data: any) =>
+      inventoryApi.documents.create(companyCen!, data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['movements', companyId] })
+      qc.invalidateQueries({ queryKey: ['inventory-documents', companyCen] })
       qc.invalidateQueries({ queryKey: ['stock'] })
-      toast.success('Movimiento eliminado')
+      toast.success('Documento de inventario registrado')
     },
   })
 }
 
-export const useKardex = (skuId: number | undefined) => {
-  const warehouseId = useAppStore(s => s.selectedWarehouse?.id)
+export const useKardex = (productCen: string | undefined, params?: { warehouseCen?: string; from?: string; to?: string }) => {
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const selectedWarehouseCen = useAppStore(s => s.selectedWarehouse?.cen)
+  
   return useQuery({
-    queryKey: ['kardex', warehouseId, skuId],
-    queryFn:  () => inventoryApi.kardex.get(warehouseId!, skuId!),
-    enabled:  !!warehouseId && !!skuId,
+    queryKey: ['kardex', companyCen, productCen, selectedWarehouseCen, params],
+    queryFn:  () => inventoryApi.kardex.get(companyCen!, productCen!, { warehouseCen: selectedWarehouseCen, ...params }),
+    enabled:  !!companyCen && !!productCen && !!selectedWarehouseCen,
+  })
+}
+
+export const useUnits = () => {
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  return useQuery({
+    queryKey: ['units', companyCen],
+    queryFn:  () => inventoryApi.units.list(companyCen!),
+    enabled:  !!companyCen,
   })
 }
 
 export const useWarehouses = () => {
-  const companyId = useAppStore(s => s.selectedCompany?.id)
+  const companyCen = useAppStore(s => s.selectedCompany?.cen)
   return useQuery({
-    queryKey: ['warehouses', companyId],
-    queryFn:  () => inventoryApi.warehouses.list(companyId!),
-    enabled:  !!companyId,
+    queryKey: ['warehouses', companyCen],
+    queryFn:  () => inventoryApi.warehouses.list(companyCen!),
+    enabled:  !!companyCen,
   })
 }
-
-export const useMovementTypes = () =>
-  useQuery({
-    queryKey: ['movement-types'],
-    queryFn:  () => inventoryApi.catalogs.movementTypes(),
-    staleTime: Infinity,
-  })
-
-export const useBatches = (skuId: number | undefined) =>
-  useQuery({
-    queryKey: ['batches', skuId],
-    queryFn:  () => inventoryApi.batches.list(skuId!),
-    enabled:  !!skuId,
-  })

@@ -1,36 +1,40 @@
 import { useState } from 'react'
-import { Search } from 'lucide-react'
-import { useCompanyProducts, useGlobalProducts } from '../services/inventoryHooks'
+import { Search, Plus } from 'lucide-react'
+import { useProducts } from '../services/inventoryHooks'
 import SectionHeader from '../../../components/SectionHeader'
-import { MyCompanyView, GlobalView } from '../components/ProductViews'
+import { ProductListView } from '../components/ProductViews'
+import Modal from '../../../atoms/Modal'
+import ProductForm from '../components/ProductCreation'
 
 export default function ProductsPage() {
-  const [view, setView] = useState<'company' | 'global'>('company')
   const [search, setSearch] = useState('')
-  const { data: products = [] } = useCompanyProducts()
-  const { data: globalProducts = [] } = useGlobalProducts()
+  const { data: products = [] } = useProducts({ search: search || undefined })
+  const [modalOpen, setModalOpen] = useState(false)
 
   return (
     <div className="animate-fade-in">
       <SectionHeader
         title="Productos"
-        subtitle={view === 'company' ? `${(products as any[]).length} productos en tu catálogo` : `${(globalProducts as any[]).length} productos en catálogo global`}
+        subtitle={`${products.length} productos en el catálogo`}
         right={
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
               <input className="input pl-8 w-52 text-xs" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            <div className="flex rounded-lg border border-surface-4 overflow-hidden text-xs">
-              <button onClick={() => setView('company')} className={`px-3 py-2 transition-colors ${view === 'company' ? 'bg-accent/10 text-accent font-medium' : 'text-ink-secondary hover:bg-surface-3'}`}>Mi empresa</button>
-              <button onClick={() => setView('global')} className={`px-3 py-2 transition-colors ${view === 'global' ? 'bg-accent/10 text-accent font-medium' : 'text-ink-secondary hover:bg-surface-3'}`}>Catálogo global</button>
-            </div>
+            <button onClick={() => setModalOpen(true)} className="btn-primary text-sm">
+              <Plus size={13} /> Nuevo producto
+            </button>
           </div>
         }
       />
       <div className="mx-6 mt-4 card overflow-hidden">
-        {view === 'company' ? <MyCompanyView search={search} /> : <GlobalView search={search} />}
+        <ProductListView search={search} />
       </div>
+
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Nuevo Producto" size="lg">
+        <ProductForm onSuccess={() => setModalOpen(false)} />
+      </Modal>
     </div>
   )
 }

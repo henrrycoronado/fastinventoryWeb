@@ -1,142 +1,88 @@
-export interface GlobalCategory {
-  id:   number
-  name: string
+export interface Category {
+  categoryCen: string
+  name:        string
+  description?: string
+  isActive:    boolean
 }
 
-export interface GlobalProduct {
-  id:                  number
-  categoryId:          number
-  name:                string
-  brand?:              string
-  upcBarcode?:         string
-  createdAt:           string
-  category?:           GlobalCategory
-  referencedByCompany?: boolean
+export interface Unit {
+  unitCen:      string
+  name:         string
+  abbreviation: string
+  isActive:     boolean
 }
 
-export interface Sku {
-  id:               number
-  companyProductId: number
-  internalSku?:     string
-  retailPrice?:     number
-  createdAt?:       string
+export interface Product {
+  productCen:   string
+  sku:          string
+  name:         string
+  description?: string
+  categoryCen?: string
+  categoryName?: string
+  unitCen?:      string
+  unitName?:     string
+  salePrice:    number
+  costPrice?:   number
+  reorderLevel: number
+  status:       string
+  stationCode?: string
 }
 
-export interface CompanyProduct {
-  id:              number
-  companyId:       number
-  globalProductId: number
-  localNameAlias?: string
-  wholesalePrice?: number
-  createdAt?:      string
-  globalProduct?:  GlobalProduct
-  skus?:           Sku[]
-}
-
-export interface SkuAttribute {
-  id:          number
-  skuId:       number
-  attributeId: number
-  value:       string
-  createdAt?:  string
-  attribute?:  { id: number; name: string }
-}
-
-export interface Attribute {
-  id:        number
-  companyId: number
-  name:      string
-  createdAt?: string
-  skuCount:  number
-}
-
-export interface Batch {
-  id:               number
-  skuId:            number
-  batchNumber:      string
-  manufactureDate?: string
-  expirationDate?:  string
-  createdAt?:       string
-}
-
-export interface StockSku extends Sku {
-  companyProduct?: {
-    id:              number
-    localNameAlias?: string
-    wholesalePrice?: number
-    globalProduct?:  GlobalProduct
-  }
-}
-
-export interface Stock {
-  id:                number
-  warehouseId:       number
-  skuId:             number
-  batchId?:          number | null
-  quantity:          number
-  reservedQuantity:  number
+export interface StockItem {
+  productCen:        string
+  productName:       string
+  warehouseCen:      string
+  warehouseName:     string
   availableQuantity: number
-  lastUpdated:       string
-  sku?:              StockSku
+  reservedQuantity:  number
+  unitName?:         string
+  reorderLevel:      number
+  isLowStock:        boolean
 }
 
-export interface MovementDetailSku extends Sku {
-  companyProduct?: {
-    id:              number
-    localNameAlias?: string
-    wholesalePrice?: number
-    globalProduct?:  { id: number; name: string; brand?: string; upcBarcode?: string }
-  }
+export interface InventoryDocument {
+  documentCen:   string
+  documentType:  string
+  status:        string
+  title:         string
+  createdAt:     string
+  totalItems:    number
+  generatedMovementCens?: string[]
 }
 
-export interface MovementDetail {
-  id:       number
-  skuId:    number
-  batchId?: number | null
-  quantity: number
-  unitCost: number
-  sku?:     MovementDetailSku
-}
-
-export interface Movement {
-  id:                 number
-  companyId:          number
-  warehouseId:        number
-  targetWarehouseId?: number | null
-  statusId:           number
-  typeId:             number
-  movementDate:       string
-  notes?:             string
-  details?:           MovementDetail[]
-}
-
-export interface KardexEntry {
-  id:           number
-  date:         string
-  typeId:       number
-  typeName:     string
+export interface KardexMovement {
+  movementCen:  string
+  documentCen:  string
+  productCen:   string
+  warehouseCen: string
+  movementType: string
   quantity:     number
-  balanceAfter: number
-}
-
-export interface Kardex {
-  skuId:       number
-  internalSku: string
-  productName: string
-  entries:     KardexEntry[]
+  unitCost:     number
+  reason?:      string
+  createdAt:    string
 }
 
 export interface Warehouse {
-  id:          number
-  companyId:   number
-  name:        string
-  createdAt?:  string
-  totalStock?: number
+  warehouseCen: string
+  name:         string
+  isActive:     boolean
 }
 
-export interface MovementType {
-  id:        number
-  code:      string
-  name:      string
-  operation: '+' | '-'
+export interface InventoryDashboard {
+  companyCen:         string
+  totalProducts:      number
+  totalStockQuantity: number
+  lowStockCount:      number
+  outOfStockCount:    number
+}
+
+export interface SellableProduct {
+  productCen:        string
+  name:               string
+  categoryCen?:      string
+  categoryName?:     string
+  salePrice:         number
+  availableQuantity: number
+  isAvailable:       boolean
+  stationCode?:      string
 }
