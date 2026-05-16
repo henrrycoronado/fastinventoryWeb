@@ -1,30 +1,29 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Warehouse, ChevronRight, ArrowLeft } from 'lucide-react'
+import { Warehouse as WarehouseIcon, ChevronRight, ArrowLeft } from 'lucide-react'
 import { companyApi, warehouseApi } from '../services/companyApi'
 import { useAppStore } from '../store/useAppStore'
 import Spinner from '../atoms/Spinner'
+import type { Warehouse } from '../services/types'
 
 export default function WarehouseSelect() {
-  const { companyId } = useParams()
-  const navigate      = useNavigate()
-  const login         = useAppStore(s => s.login)
-
-  const id = Number(companyId)
+  const { companyCen } = useParams()
+  const navigate       = useNavigate()
+  const login          = useAppStore(s => s.login)
 
   const { data: company } = useQuery({
-    queryKey: ['company', id],
-    queryFn:  () => companyApi.get(id),
-    enabled:  !!id,
+    queryKey: ['company', companyCen],
+    queryFn:  () => companyApi.get(companyCen!),
+    enabled:  !!companyCen,
   })
 
   const { data: warehouses = [], isLoading } = useQuery({
-    queryKey: ['warehouses', id],
-    queryFn:  () => warehouseApi.list(id),
-    enabled:  !!id,
+    queryKey: ['warehouses', companyCen],
+    queryFn:  () => warehouseApi.list(companyCen!),
+    enabled:  !!companyCen,
   })
 
-  const handleSelect = (warehouse: { id: number; name: string; companyId: number }) => {
+  const handleSelect = (warehouse: Warehouse) => {
     if (!company) return
     login(company, warehouse)
     navigate('/inventory/dashboard', { replace: true })
@@ -56,18 +55,18 @@ export default function WarehouseSelect() {
             <div className="py-10 text-center text-sm text-ink-muted">
               No hay almacenes registrados
             </div>
-          ) : warehouses.map(warehouse => (
+          ) : (warehouses as Warehouse[]).map(warehouse => (
             <button
-              key={warehouse.id}
+              key={warehouse.cen}
               onClick={() => handleSelect(warehouse)}
               className="w-full flex items-center gap-4 px-5 py-4 hover:bg-surface-3 transition-colors text-left first:rounded-t-xl last:rounded-b-xl"
             >
               <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                <Warehouse size={16} className="text-accent" />
+                <WarehouseIcon size={16} className="text-accent" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-ink-primary">{warehouse.name}</p>
-                <p className="text-xs text-ink-muted">ID #{warehouse.id}</p>
+                <p className="text-xs text-ink-muted">CEN: {warehouse.cen}</p>
               </div>
               <ChevronRight size={15} className="text-ink-muted shrink-0" />
             </button>

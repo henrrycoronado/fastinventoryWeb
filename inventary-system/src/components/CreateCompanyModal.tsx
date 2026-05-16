@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Plus, X, Warehouse } from 'lucide-react'
+import { Plus, X, Warehouse as WarehouseIcon } from 'lucide-react'
 import { companyApi, warehouseApi } from '../services/companyApi'
 import type { Company } from '../services/types'
 
@@ -16,8 +16,8 @@ export default function CreateCompanyModal({ open, onClose }: { open: boolean; o
     onSuccess:  () => qc.invalidateQueries({ queryKey: ['companies'] }),
   })
   const createWarehouse = useMutation({
-    mutationFn: ({ companyId, name }: { companyId: number; name: string }) =>
-      warehouseApi.create(companyId, { name }),
+    mutationFn: ({ companyCen, name }: { companyCen: string; name: string }) =>
+      warehouseApi.create(companyCen, { name }),
   })
 
   const [step,          setStep]          = useState<'company' | 'warehouse'>('company')
@@ -43,9 +43,9 @@ export default function CreateCompanyModal({ open, onClose }: { open: boolean; o
 
   const handleCreateWarehouse = async () => {
     if (!createdCompany) return
-    await createWarehouse.mutateAsync({ companyId: createdCompany.id, name: warehouseName })
+    await createWarehouse.mutateAsync({ companyCen: createdCompany.cen, name: warehouseName })
     handleClose()
-    navigate(`/warehouses/${createdCompany.id}`)
+    navigate(`/warehouses/${createdCompany.cen}`)
   }
 
   if (!open) return null
@@ -91,7 +91,7 @@ export default function CreateCompanyModal({ open, onClose }: { open: boolean; o
               </div>
               <div className="flex justify-end gap-2 pt-1">
                 <button onClick={handleCreateWarehouse} disabled={!warehouseName.trim() || createWarehouse.isPending} className="btn-primary text-sm">
-                  {createWarehouse.isPending ? <span className="w-3 h-3 rounded-full border-2 border-surface-0/30 border-t-surface-0 animate-spin" /> : <Warehouse size={13} />} Crear almacén
+                  {createWarehouse.isPending ? <span className="w-3 h-3 rounded-full border-2 border-surface-0/30 border-t-surface-0 animate-spin" /> : <WarehouseIcon size={13} />} Crear almacén
                 </button>
               </div>
             </>

@@ -3,14 +3,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus, X } from 'lucide-react'
 import { warehouseApi } from '../services/companyApi'
 
-export default function NewWarehouseModal({ companyId, open, onClose }: {
-  companyId: number; open: boolean; onClose: () => void
+export default function NewWarehouseModal({ companyCen, open, onClose }: {
+  companyCen: string; open: boolean; onClose: () => void
 }) {
   const qc     = useQueryClient()
   const create = useMutation({
-    mutationFn: (name: string) => warehouseApi.create(companyId, { name }),
+    mutationFn: (name: string) => warehouseApi.create(companyCen, { name }),
     onSuccess:  () => {
-      qc.invalidateQueries({ queryKey: ['warehouses', companyId] })
+      qc.invalidateQueries({ queryKey: ['warehouses', companyCen] })
       onClose()
     },
   })

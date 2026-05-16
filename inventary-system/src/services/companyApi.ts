@@ -2,14 +2,14 @@ import { apiClient } from './client'
 import type { Company, Warehouse } from './types'
 
 export const companyApi = {
-  list:   () => apiClient.get<Company[]>('/api/companies').then(r => r.data),
-  get:    (id: number) => apiClient.get<Company>(`/api/companies/${id}`).then(r => r.data),
-  create: (data: { name: string }) => apiClient.post<Company>('/api/companies', data).then(r => r.data),
-  delete: (id: number) => apiClient.delete(`/api/companies/${id}`).then(r => r.data),
+  list:   () => apiClient.get<Company[]>('/api/inventory/companies').then(r => r.data),
+  get:    (cen: string) => apiClient.get<Company>(`/api/inventory/companies/${cen}`).then(r => r.data),
+  create: (data: { name: string }) => apiClient.post<Company>('/api/inventory/companies', data).then(r => r.data),
+  update: (cen: string, data: { name: string; isActive: boolean }) => apiClient.put<Company>(`/api/inventory/companies/${cen}`, data).then(r => r.data),
 }
 
 export const warehouseApi = {
-  list:   (companyId: number) => apiClient.get<Warehouse[]>(`/api/companies/${companyId}/warehouses`).then(r => r.data),
-  create: (companyId: number, data: { name: string }) => apiClient.post<Warehouse>(`/api/companies/${companyId}/warehouses`, data).then(r => r.data),
-  delete: (companyId: number, id: number) => apiClient.delete(`/api/companies/${companyId}/warehouses/${id}`).then(r => r.data),
+  list:   (companyCen: string) => apiClient.get<Warehouse[]>(`/api/inventory/companies/${companyCen}/warehouses`).then(r => r.data),
+  create: (companyCen: string, data: { name: string }) => apiClient.post<Warehouse>(`/api/inventory/companies/${companyCen}/warehouses`, data).then(r => r.data),
+  update: (companyCen: string, cen: string, data: { name: string }) => apiClient.put<Warehouse>(`/api/inventory/companies/${companyCen}/warehouses/${cen}`, data).then(r => r.data),
 }

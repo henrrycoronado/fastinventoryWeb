@@ -7,17 +7,17 @@ import type { AccentColor } from '../config/theme'
 import {
   Building2, Warehouse, Sun, Moon, LogOut,
   ChevronDown, LayoutDashboard, Package, Boxes,
-  ArrowLeftRight, ShoppingCart,
-  Users, UserCheck, Store, UtensilsCrossed,
-  Table2, BookOpen, Tag, ScrollText,
+  ArrowLeftRight, ShoppingCart, Truck,
+  UserCheck, Store, UtensilsCrossed,
+  Tag, ScrollText,
   Settings, UserCircle,
 } from 'lucide-react'
 
-type ModuleKey = 'inventory' | 'sales' | 'pdv'
+type ModuleKey = 'inventory' | 'sales' | 'purchases'
 
 function getActiveModule(pathname: string): ModuleKey {
-  if (pathname.startsWith('/sales')) return 'sales'
-  if (pathname.startsWith('/pdv'))   return 'pdv'
+  if (pathname.startsWith('/sales'))     return 'sales'
+  if (pathname.startsWith('/purchases')) return 'purchases'
   return 'inventory'
 }
 
@@ -43,7 +43,7 @@ export default function AppLayout() {
   const navigate  = useNavigate()
   const location  = useLocation()
   const { selectedCompany, selectedWarehouse, theme, accent, setTheme, setAccent, logout } = useAppStore()
-  const moduleSettings = useAppStore(s => s.getModuleSettings(s.selectedCompany?.id ?? 0))
+  const moduleSettings = useAppStore(s => s.getModuleSettings(s.selectedCompany?.cen ?? ''))
 
   const moduleNav = {
     inventory: {
@@ -57,28 +57,22 @@ export default function AppLayout() {
         { label: 'Kardex',      path: '/inventory/kardex',     icon: ScrollText },
       ],
     },
+    purchases: {
+      label: 'Compras',
+      items: [
+        { label: 'Dashboard',   path: '/purchases/dashboard',  icon: LayoutDashboard },
+        { label: 'Órdenes',     path: '/purchases/orders',     icon: Truck },
+        { label: 'Proveedores', path: '/purchases/suppliers',  icon: UserCheck },
+      ],
+    },
     sales: {
       label: 'Ventas',
       items: [
-        { label: 'Dashboard',      path: '/sales/dashboard',          icon: LayoutDashboard },
-        { label: 'Ventas',         path: '/sales/list',               icon: ShoppingCart },
-        ...(moduleSettings.clientsEnabled ? [{ label: 'Clientes',    path: '/sales/customers',         icon: Users     }] : []),
-        ...(moduleSettings.sellersEnabled ? [{ label: 'Vendedores',  path: '/sales/sellers',           icon: UserCheck }] : []),
-        { label: 'Mis Productos',  path: '/sales/catalog/products',   icon: Package },
-        { label: 'Mis Categorías', path: '/sales/catalog/categories', icon: Tag },
-      ],
-    },
-    pdv: {
-      label: 'Punto de Venta',
-      items: [
-        { label: 'Dashboard',      path: '/pdv/dashboard',            icon: LayoutDashboard },
-        { label: 'Órdenes',        path: '/pdv/orders',               icon: Store },
-        { label: 'Mesas',          path: '/pdv/tables',               icon: Table2 },
-        { label: 'Meseros',        path: '/pdv/waiters',              icon: UserCheck },
-        { label: 'Menús',          path: '/pdv/menus',                icon: BookOpen },
-        { label: 'Estaciones',     path: '/pdv/stations',             icon: UtensilsCrossed },
-        { label: 'Mis Productos',  path: '/pdv/catalog/products',     icon: Package },
-        { label: 'Mis Categorías', path: '/pdv/catalog/categories',   icon: Tag },
+        { label: 'Punto de Venta', path: '/sales/pos',                icon: Store },
+        { label: 'Tickets',        path: '/sales/tickets',            icon: ShoppingCart },
+        { label: 'KDS (Cocina)',   path: '/sales/kds',                icon: UtensilsCrossed },
+        { label: 'Meseros',        path: '/sales/waiters',            icon: UserCheck },
+        { label: 'Catálogo',       path: '/sales/catalog',            icon: Package },
       ],
     },
   }
@@ -88,8 +82,8 @@ export default function AppLayout() {
 
   const availableModules = [
     { key: 'inventory' as ModuleKey, label: 'Inventario',      always: true  },
+    { key: 'purchases' as ModuleKey, label: 'Compras',         always: false, enabled: moduleSettings.purchasesEnabled },
     { key: 'sales'     as ModuleKey, label: 'Ventas',          always: false, enabled: moduleSettings.salesEnabled },
-    { key: 'pdv'       as ModuleKey, label: 'Punto de Venta',  always: false, enabled: moduleSettings.pdvEnabled  },
   ].filter(m => m.always || m.enabled)
 
   const activeModuleLabel = availableModules.find(m => m.key === activeModule)?.label ?? 'Inventario'
@@ -102,7 +96,7 @@ export default function AppLayout() {
   }
 
   const handleSwitchModule = (key: ModuleKey) => {
-    navigate(`/${key}/dashboard`)
+    navigate(`/${key}/${key === 'sales' ? 'pos' : 'dashboard'}`)
     setModuleOpen(false)
   }
 

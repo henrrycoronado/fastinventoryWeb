@@ -1,18 +1,18 @@
 import { useAppStore } from '../store/useAppStore'
-import { ShoppingCart, Store, Package, Users, UserCheck } from 'lucide-react'
+import { ShoppingCart, Store, Package, Users, UserCheck, Truck } from 'lucide-react'
 import ModuleToggle from '../components/ModuleToggle'
 
 export default function Settings() {
   const { selectedCompany, getModuleSettings, toggleModule } = useAppStore()
-  const companyId = selectedCompany?.id
+  const companyCen = selectedCompany?.cen
 
-  if (!companyId) return (
+  if (!companyCen) return (
     <div className="flex items-center justify-center h-64">
       <p className="text-sm text-ink-muted">Sin empresa seleccionada</p>
     </div>
   )
 
-  const settings = getModuleSettings(companyId)
+  const settings = getModuleSettings(companyCen)
 
   return (
     <div className="animate-fade-in">
@@ -36,11 +36,19 @@ export default function Settings() {
         />
 
         <ModuleToggle
+          icon={<Truck size={18} />}
+          label="Compras"
+          description="Gestión de proveedores y órdenes de compra."
+          enabled={settings.purchasesEnabled}
+          onToggle={() => toggleModule(companyCen, 'purchasesEnabled')}
+        />
+
+        <ModuleToggle
           icon={<ShoppingCart size={18} />}
           label="Ventas"
           description="Gestión de ventas, clientes, vendedores y recibos."
           enabled={settings.salesEnabled}
-          onToggle={() => toggleModule(companyId, 'salesEnabled')}
+          onToggle={() => toggleModule(companyCen, 'salesEnabled')}
         />
 
         <ModuleToggle
@@ -55,7 +63,7 @@ export default function Settings() {
           disabled={!settings.salesEnabled}
           onToggle={() => {
             if (!settings.salesEnabled) return
-            toggleModule(companyId, 'pdvEnabled')
+            toggleModule(companyCen, 'pdvEnabled')
           }}
         />
 
@@ -71,7 +79,7 @@ export default function Settings() {
           disabled={!settings.salesEnabled}
           onToggle={() => {
             if (!settings.salesEnabled) return
-            toggleModule(companyId, 'clientsEnabled')
+            toggleModule(companyCen, 'clientsEnabled')
           }}
         />
 
@@ -83,7 +91,7 @@ export default function Settings() {
           disabled={!settings.salesEnabled}
           onToggle={() => {
             if (!settings.salesEnabled) return
-            toggleModule(companyId, 'sellersEnabled')
+            toggleModule(companyCen, 'sellersEnabled')
           }}
         />
 

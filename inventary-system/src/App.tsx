@@ -21,21 +21,15 @@ const StockPage = lazy(() => import('./modules/inventory/pages/StockPage'))
 const MovementsPage = lazy(() => import('./modules/inventory/pages/MovementsPage'))
 const KardexPage = lazy(() => import('./modules/inventory/pages/KardexPage'))
 
-const SalesDashboard = lazy(() => import('./modules/sales/pages/SalesDashboard'))
-const SalesListPage = lazy(() => import('./modules/sales/pages/SalesListPage'))
-const CustomersPage = lazy(() => import('./modules/sales/pages/CustomersPage'))
-const SellersPage = lazy(() => import('./modules/sales/pages/SellersPage'))
-const SalesProductsPage = lazy(() => import('./modules/sales/pages/SalesProductsPage'))
-const SalesCategoriesPage = lazy(() => import('./modules/sales/pages/SalesCategoriesPage'))
+const PurchasesDashboard = lazy(() => import('./modules/purchases/pages/PurchasesDashboard'))
+const SuppliersPage = lazy(() => import('./modules/purchases/pages/SuppliersPage'))
+const OrdersPage = lazy(() => import('./modules/purchases/pages/OrdersPage'))
 
-const PdvDashboard = lazy(() => import('./modules/pdv/pages/PdvDashboard'))
-const PdvOrdersPage = lazy(() => import('./modules/pdv/pages/PdvOrdersPage'))
-const PdvTablesPage = lazy(() => import('./modules/pdv/pages/PdvTablesPage'))
-const PdvWaitersPage = lazy(() => import('./modules/pdv/pages/PdvWaitersPage'))
-const PdvMenusPage = lazy(() => import('./modules/pdv/pages/PdvMenusPage'))
-const PdvStationsPage = lazy(() => import('./modules/pdv/pages/PdvStationsPage'))
-const MyCatalogProducts = lazy(() => import('./modules/pdv/pages/MyCatalogProducts'))
-const MyCatalogCategories = lazy(() => import('./modules/pdv/pages/MyCatalogCategories'))
+const SalesPosPage = lazy(() => import('./modules/sales/pages/SalesPosPage'))
+const TicketsPage = lazy(() => import('./modules/sales/pages/TicketsPage'))
+const KdsPage = lazy(() => import('./modules/sales/pages/KdsPage'))
+const WaitersPage = lazy(() => import('./modules/sales/pages/WaitersPage'))
+const SalesCatalogPage = lazy(() => import('./modules/sales/pages/SalesCatalogPage'))
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,7 +77,7 @@ export default function App() {
 
               <Route element={<PublicRoute />}>
                 <Route path="/" element={<CompanySelect />} />
-                <Route path="/warehouses/:companyId" element={<WarehouseSelect />} />
+                <Route path="/warehouses/:companyCen" element={<WarehouseSelect />} />
               </Route>
 
               <Route element={<ProtectedRoute />}>
@@ -95,21 +89,15 @@ export default function App() {
                   <Route path="/inventory/movements" element={<MovementsPage />} />
                   <Route path="/inventory/kardex" element={<KardexPage />} />
 
-                  <Route path="/sales/dashboard"              element={<SalesDashboard />} />
-                  <Route path="/sales/list" element={<SalesListPage />} />
-                  <Route path="/sales/customers"  element={<CustomersPage />} />
-                  <Route path="/sales/sellers"    element={<SellersPage />} />
-                  <Route path="/sales/catalog/products"       element={<SalesProductsPage />} />
-                  <Route path="/sales/catalog/categories"     element={<SalesCategoriesPage />} />
+                  <Route path="/purchases/dashboard" element={<PurchasesDashboard />} />
+                  <Route path="/purchases/suppliers" element={<SuppliersPage />} />
+                  <Route path="/purchases/orders"    element={<OrdersPage />} />
 
-                  <Route path="/pdv/dashboard"                element={<PdvDashboard />} />
-                  <Route path="/pdv/orders"                   element={<PdvOrdersPage />} />
-                  <Route path="/pdv/tables"                   element={<PdvTablesPage />} />
-                  <Route path="/pdv/waiters"                  element={<PdvWaitersPage />} />
-                  <Route path="/pdv/menus"                    element={<PdvMenusPage />} />
-                  <Route path="/pdv/stations"                 element={<PdvStationsPage />} />
-                  <Route path="/pdv/catalog/products"         element={<MyCatalogProducts />} />
-                  <Route path="/pdv/catalog/categories"       element={<MyCatalogCategories />} />
+                  <Route path="/sales/pos"       element={<SalesPosPage />} />
+                  <Route path="/sales/tickets"   element={<TicketsPage />} />
+                  <Route path="/sales/kds"       element={<KdsPage />} />
+                  <Route path="/sales/waiters"   element={<WaitersPage />} />
+                  <Route path="/sales/catalog"   element={<SalesCatalogPage />} />
 
                   <Route path="/company/profile" element={<CompanyProfile />} />
                   <Route path="/settings"        element={<Settings />} />

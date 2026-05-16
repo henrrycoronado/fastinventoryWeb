@@ -5,10 +5,11 @@ import type { ThemeMode, AccentColor } from '../config/theme'
 import type { Company, Warehouse } from '../services/types'
 
 interface ModuleSettings {
-  salesEnabled:   boolean
-  pdvEnabled:     boolean
-  clientsEnabled: boolean
-  sellersEnabled: boolean
+  salesEnabled:     boolean
+  pdvEnabled:       boolean
+  clientsEnabled:   boolean
+  sellersEnabled:   boolean
+  purchasesEnabled: boolean
 }
 
 interface AppStore {
@@ -26,9 +27,17 @@ interface AppStore {
   login:        (company: Company, warehouse: Warehouse) => void
   logout:       () => void
 
-  moduleSettings: Record<number, ModuleSettings>
-  toggleModule:   (companyId: number, module: 'salesEnabled' | 'pdvEnabled' | 'clientsEnabled' | 'sellersEnabled') => void
-  getModuleSettings: (companyId: number) => ModuleSettings
+  moduleSettings: Record<string, ModuleSettings>
+  toggleModule:   (companyCen: string, module: keyof ModuleSettings) => void
+  getModuleSettings: (companyCen: string) => ModuleSettings
+}
+
+const DEFAULT_SETTINGS: ModuleSettings = {
+  salesEnabled:     true,
+  pdvEnabled:       true,
+  clientsEnabled:   true,
+  sellersEnabled:   true,
+  purchasesEnabled: true,
 }
 
 export const useAppStore = create<AppStore>()(
@@ -51,15 +60,10 @@ export const useAppStore = create<AppStore>()(
       login: (company, warehouse) => set(state => ({
         selectedCompany:   company,
         selectedWarehouse: warehouse,
-        sessionToken:      `session-${company.id}-${warehouse.id}-${Date.now()}`,
+        sessionToken:      `session-${company.cen}-${warehouse.cen}-${Date.now()}`,
         moduleSettings: {
           ...state.moduleSettings,
-          [company.id]: state.moduleSettings[company.id] ?? {
-            salesEnabled:   true,
-            pdvEnabled:     true,
-            clientsEnabled: true,
-            sellersEnabled: true,
-          },
+          [company.cen]: state.moduleSettings[company.cen] ?? DEFAULT_SETTINGS,
         },
       })),
 
@@ -69,8 +73,8 @@ export const useAppStore = create<AppStore>()(
         sessionToken:      null,
       }),
 
-      toggleModule: (companyId, module) => set(state => {
-        const current = state.moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true, clientsEnabled: true, sellersEnabled: true }
+      toggleModule: (companyCen, module) => set(state => {
+        const current = state.moduleSettings[companyCen] ?? DEFAULT_SETTINGS
         const updated = { ...current, [module]: !current[module] }
         if (module === 'salesEnabled' && !updated.salesEnabled) {
           updated.pdvEnabled = false
@@ -78,13 +82,13 @@ export const useAppStore = create<AppStore>()(
         return {
           moduleSettings: {
             ...state.moduleSettings,
-            [companyId]: updated,
+            [companyCen]: updated,
           },
         }
       }),
 
-      getModuleSettings: (companyId) =>
-        get().moduleSettings[companyId] ?? { salesEnabled: true, pdvEnabled: true, clientsEnabled: true, sellersEnabled: true },
+      getModuleSettings: (companyCen) =>
+        get().moduleSettings[companyCen] ?? DEFAULT_SETTINGS,
     }),
     {
       name: 'inventary-app',
