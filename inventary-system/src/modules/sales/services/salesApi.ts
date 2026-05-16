@@ -1,51 +1,63 @@
 import { apiClient } from '../../../services/client'
+import type {
+  SellableProduct,
+  Ticket,
+  TicketItem,
+  Waiter,
+  KdsTeam,
+  KdsItem,
+  PaymentMethod,
+  DailySalesDashboard,
+  KdsStatusDashboard,
+} from './types'
 
 export const salesApi = {
-
-  customers: {
-    list:   (companyId: number) =>
-      apiClient.get(`/api/companies/${companyId}/customers`).then(r => r.data),
-    create: (companyId: number, data: { name: string; phone?: string; email?: string }) =>
-      apiClient.post(`/api/companies/${companyId}/customers`, data).then(r => r.data),
-    delete: (companyId: number, id: number) =>
-      apiClient.delete(`/api/companies/${companyId}/customers/${id}`).then(r => r.data),
+  catalog: {
+    listProducts: (companyCen: string, params?: any) =>
+      apiClient.get<SellableProduct[]>(`/api/sales/companies/${companyCen}/catalog/products`, { params }).then(r => r.data),
   },
 
-  sellers: {
-    list:   (companyId: number) =>
-      apiClient.get(`/api/companies/${companyId}/sellers`).then(r => r.data),
-    create: (companyId: number, data: { name: string; phone?: string }) =>
-      apiClient.post(`/api/companies/${companyId}/sellers`, data).then(r => r.data),
-    delete: (companyId: number, id: number) =>
-      apiClient.delete(`/api/companies/${companyId}/sellers/${id}`).then(r => r.data),
+  dashboard: {
+    dailySales: (companyCen: string, warehouseCen?: string) =>
+      apiClient.get<DailySalesDashboard>(`/api/sales/companies/${companyCen}/dashboard/daily-sales`, { params: { warehouseCen } }).then(r => r.data),
+    kdsStatus: (companyCen: string, warehouseCen?: string) =>
+      apiClient.get<KdsStatusDashboard>(`/api/sales/companies/${companyCen}/dashboard/kds-status`, { params: { warehouseCen } }).then(r => r.data),
   },
 
-  sales: {
-    list:    (companyId: number) =>
-      apiClient.get(`/api/companies/${companyId}/sales`).then(r => r.data),
-    get:     (companyId: number, id: number) =>
-      apiClient.get(`/api/companies/${companyId}/sales/${id}`).then(r => r.data),
-    create:  (companyId: number, data: any) =>
-      apiClient.post(`/api/companies/${companyId}/sales`, data).then(r => r.data),
-    confirm: (companyId: number, id: number) =>
-      apiClient.post(`/api/companies/${companyId}/sales/${id}/confirm`).then(r => r.data),
-    cancel:  (companyId: number, id: number) =>
-      apiClient.post(`/api/companies/${companyId}/sales/${id}/cancel`).then(r => r.data),
-    delete:  (companyId: number, id: number) =>
-      apiClient.delete(`/api/companies/${companyId}/sales/${id}`).then(r => r.data),
+  kds: {
+    listTeams: (companyCen: string, warehouseCen?: string) =>
+      apiClient.get<KdsTeam[]>(`/api/sales/companies/${companyCen}/kds/teams`, { params: { warehouseCen } }).then(r => r.data),
+    createTeam: (companyCen: string, data: Partial<KdsTeam>) =>
+      apiClient.post<KdsTeam>(`/api/sales/companies/${companyCen}/kds/teams`, data).then(r => r.data),
+    updateItemStatus: (companyCen: string, ticketItemCen: string, status: string) =>
+      apiClient.patch(`/api/sales/companies/${companyCen}/kds/items/${ticketItemCen}/status`, { status }).then(r => r.data),
+    listTeamItems: (companyCen: string, teamCen: string) =>
+      apiClient.get<KdsItem[]>(`/api/sales/companies/${companyCen}/kds/teams/${teamCen}/items`).then(r => r.data),
   },
 
-  receipts: {
-    get:    (saleId: number) =>
-      apiClient.get(`/api/sales/${saleId}/receipt`).then(r => r.data),
-    create: (saleId: number) =>
-      apiClient.post(`/api/sales/${saleId}/receipt`).then(r => r.data),
+  tickets: {
+    list: (companyCen: string, warehouseCen?: string) =>
+      apiClient.get<Ticket[]>(`/api/sales/companies/${companyCen}/tickets`, { params: { warehouseCen } }).then(r => r.data),
+    create: (companyCen: string, data: { warehouseCen: string; waiterCen?: string }) =>
+      apiClient.post<Ticket>(`/api/sales/companies/${companyCen}/tickets`, data).then(r => r.data),
+    listItems: (companyCen: string, ticketCen: string) =>
+      apiClient.get<TicketItem[]>(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/items`).then(r => r.data),
+    addItem: (companyCen: string, ticketCen: string, data: Partial<TicketItem>) =>
+      apiClient.post<TicketItem>(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/items`, data).then(r => r.data),
+    pay: (companyCen: string, ticketCen: string, data: { paymentMethodCode: string }) =>
+      apiClient.post(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/payment`, data).then(r => r.data),
+    cancel: (companyCen: string, ticketCen: string, reason: string) =>
+      apiClient.post(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/cancel`, { reason }).then(r => r.data),
   },
 
-  catalogs: {
-    saleStatuses:     () =>
-      apiClient.get(`/api/catalogs/sale-statuses`).then(r => r.data),
-    categoriesInUse:  (companyId: number) =>
-      apiClient.get(`/api/companies/${companyId}/categories-in-use`).then(r => r.data),
+  waiters: {
+    list: (companyCen: string, warehouseCen?: string) =>
+      apiClient.get<Waiter[]>(`/api/sales/companies/${companyCen}/waiters`, { params: { warehouseCen } }).then(r => r.data),
+    create: (companyCen: string, data: { name: string; warehouseCen: string }) =>
+      apiClient.post<Waiter>(`/api/sales/companies/${companyCen}/waiters`, data).then(r => r.data),
+  },
+
+  paymentMethods: {
+    list: () => apiClient.get<PaymentMethod[]>('/api/sales/payment-methods').then(r => r.data),
   },
 }

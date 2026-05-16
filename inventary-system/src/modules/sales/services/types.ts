@@ -1,69 +1,74 @@
-export interface Customer {
-  id:        number
-  companyId: number
-  name:      string
-  phone?:    string
-  email?:    string
-  createdAt: string
+export interface SellableProduct {
+  productCen:        string
+  name:               string
+  categoryCen?:      string
+  categoryName?:     string
+  salePrice:         number
+  availableQuantity: number
+  isAvailable:       boolean
+  stationCode?:      string
 }
 
-export interface Seller {
-  id:        number
-  companyId: number
-  name:      string
-  phone?:    string
-  createdAt: string
+export interface Ticket {
+  ticketCen:    string
+  warehouseCen: string
+  waiterCen?:   string
+  waiterName?:  string
+  status:       string
+  total:        number
+  createdAt:    string
 }
 
-export interface SaleStatus {
-  id:   number
-  code: 'DRAFT' | 'CONFIRMED' | 'CANCELLED' | 'RETURNED'
-  name: string
-}
-
-export interface SaleDetailSku {
-  id:            number
-  internalSku:   string
-  retailPrice:   number
+export interface TicketItem {
+  ticketItemCen: string
+  productCen:    string
   productName:   string
-  localNameAlias?: string
+  quantity:      number
+  unitPrice:     number
+  subtotal:      number
+  status:        string
+  note?:         string
 }
 
-export interface SaleDetail {
-  id:       number
-  skuId:    number
-  batchId:  number | null
-  quantity: number
-  unitPrice: number
-  subtotal:  number
-  sku?:      SaleDetailSku
+export interface Waiter {
+  waiterCen:    string
+  name:         string
+  warehouseCen: string
 }
 
-export interface Sale {
-  id:          number
-  companyId:   number
-  warehouseId: number
-  sellerId?:   number | null
-  customerId?: number | null
-  statusId:    number
-  saleDate:    string
-  notes?:      string
-  createdAt:   string
-  status?:     SaleStatus
-  customer?:   Customer | null
-  seller?:     Seller   | null
-  details?:    SaleDetail[]
+export interface KdsTeam {
+  teamCen:       string
+  name:          string
+  categoryCens:  string[]
+  warehouseCen:  string
 }
 
-export interface Receipt {
-  id:          number
-  saleId:      number
-  totalAmount: number
-  issuedAt:    string
-  createdAt:   string
+export interface KdsItem {
+  ticketItemCen: string
+  ticketCen:     string
+  productCen:    string
+  productName:   string
+  quantity:      number
+  status:        string
+  note?:         string
+  resendCount:   number
+  createdAt:     string
 }
 
-export interface CategoryInUse {
-  id:   number
-  name: string
+export interface PaymentMethod {
+  paymentMethodCode: string
+  name:              string
+  isActive:          boolean
+}
+
+export interface DailySalesDashboard {
+  totalSales:    number
+  ticketsCount:  number
+  averageTicket: number
+}
+
+export interface KdsStatusDashboard {
+  pendingCount:   number
+  preparingCount: number
+  readyCount:     number
 }
