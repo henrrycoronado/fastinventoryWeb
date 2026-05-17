@@ -37,8 +37,8 @@ export default function CompanySelect() {
             </div>
           ) : (companies as Company[]).map(company => (
             <button
-              key={company.cen}
-              onClick={() => navigate(`/warehouses/${company.cen}`)}
+              key={company.companyCen}
+              onClick={() => navigate(`/${company.companyCen}/warehouses`)}
               className="w-full flex items-center gap-4 px-5 py-4 hover:bg-surface-3 transition-colors text-left first:rounded-t-xl last:rounded-b-xl"
             >
               <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
@@ -46,7 +46,7 @@ export default function CompanySelect() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-ink-primary">{company.name}</p>
-                <p className="text-xs text-ink-muted">CEN: {company.cen}</p>
+                <p className="text-xs text-ink-muted">CEN: {company.companyCen}</p>
               </div>
               <ChevronRight size={15} className="text-ink-muted shrink-0" />
             </button>

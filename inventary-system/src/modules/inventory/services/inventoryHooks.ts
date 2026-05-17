@@ -4,7 +4,7 @@ import { inventoryApi } from './inventoryApi'
 import toast from 'react-hot-toast'
 
 export const useInventoryDashboard = () => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['inventory-dashboard', companyCen],
     queryFn:  () => inventoryApi.dashboard.get(companyCen!),
@@ -13,7 +13,7 @@ export const useInventoryDashboard = () => {
 }
 
 export const useCategories = () => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['categories', companyCen],
     queryFn:  () => inventoryApi.categories.list(companyCen!),
@@ -23,7 +23,7 @@ export const useCategories = () => {
 
 export const useCreateCategory = () => {
   const qc         = useQueryClient()
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useMutation({
     mutationFn: (data: { name: string; description?: string }) =>
       inventoryApi.categories.create(companyCen!, data),
@@ -35,7 +35,7 @@ export const useCreateCategory = () => {
 }
 
 export const useProducts = (params?: { search?: string; categoryCen?: string; status?: string }) => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['products', companyCen, params],
     queryFn:  () => inventoryApi.products.list(companyCen!, params),
@@ -45,7 +45,7 @@ export const useProducts = (params?: { search?: string; categoryCen?: string; st
 
 export const useCreateProduct = () => {
   const qc         = useQueryClient()
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useMutation({
     mutationFn: (data: any) =>
       inventoryApi.products.create(companyCen!, data),
@@ -57,8 +57,8 @@ export const useCreateProduct = () => {
 }
 
 export const useStock = (params?: { productCen?: string; warehouseCen?: string }) => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
-  const warehouseCen = useAppStore(s => s.selectedWarehouse?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
+  const warehouseCen = useAppStore(s => s.selectedWarehouse?.warehouseCen)
   return useQuery({
     queryKey: ['stock', companyCen, warehouseCen, params],
     queryFn:  () => inventoryApi.stock.list(companyCen!, { warehouseCen, ...params }),
@@ -67,7 +67,7 @@ export const useStock = (params?: { productCen?: string; warehouseCen?: string }
 }
 
 export const useInventoryDocuments = (params?: { documentType?: string; from?: string; to?: string }) => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['inventory-documents', companyCen, params],
     queryFn:  () => inventoryApi.documents.list(companyCen!, params),
@@ -77,7 +77,7 @@ export const useInventoryDocuments = (params?: { documentType?: string; from?: s
 
 export const useCreateInventoryDocument = () => {
   const qc         = useQueryClient()
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useMutation({
     mutationFn: (data: any) =>
       inventoryApi.documents.create(companyCen!, data),
@@ -90,8 +90,8 @@ export const useCreateInventoryDocument = () => {
 }
 
 export const useKardex = (productCen: string | undefined, params?: { warehouseCen?: string; from?: string; to?: string }) => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
-  const selectedWarehouseCen = useAppStore(s => s.selectedWarehouse?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
+  const selectedWarehouseCen = useAppStore(s => s.selectedWarehouse?.warehouseCen)
   
   return useQuery({
     queryKey: ['kardex', companyCen, productCen, selectedWarehouseCen, params],
@@ -101,7 +101,7 @@ export const useKardex = (productCen: string | undefined, params?: { warehouseCe
 }
 
 export const useUnits = () => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['units', companyCen],
     queryFn:  () => inventoryApi.units.list(companyCen!),
@@ -110,7 +110,7 @@ export const useUnits = () => {
 }
 
 export const useWarehouses = () => {
-  const companyCen = useAppStore(s => s.selectedCompany?.cen)
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['warehouses', companyCen],
     queryFn:  () => inventoryApi.warehouses.list(companyCen!),

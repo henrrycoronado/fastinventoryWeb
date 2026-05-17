@@ -5,19 +5,19 @@ export interface ApiResponse<T> {
 }
 
 export interface Company {
-  cen:      string
+  companyCen:      string
   name:     string
   isActive: boolean
 }
 
 export interface Warehouse {
-  cen:        string
+  warehouseCen:        string
   name:       string
   companyCen: string
 }
 
 export interface Catalog {
-  cen:  string
+  catalogCen:  string
   code: string
   name: string
 }

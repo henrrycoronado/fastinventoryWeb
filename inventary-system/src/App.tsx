@@ -77,7 +77,7 @@ export default function App() {
 
               <Route element={<PublicRoute />}>
                 <Route path="/" element={<CompanySelect />} />
-                <Route path="/warehouses/:companyCen" element={<WarehouseSelect />} />
+                <Route path="/:companyCen/warehouses" element={<WarehouseSelect />} />
               </Route>
 
               <Route element={<ProtectedRoute />}>

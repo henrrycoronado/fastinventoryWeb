@@ -57,7 +57,7 @@ export default function WarehouseSelect() {
             </div>
           ) : (warehouses as Warehouse[]).map(warehouse => (
             <button
-              key={warehouse.cen}
+              key={warehouse.warehouseCen}
               onClick={() => handleSelect(warehouse)}
               className="w-full flex items-center gap-4 px-5 py-4 hover:bg-surface-3 transition-colors text-left first:rounded-t-xl last:rounded-b-xl"
             >
@@ -66,7 +66,7 @@ export default function WarehouseSelect() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-ink-primary">{warehouse.name}</p>
-                <p className="text-xs text-ink-muted">CEN: {warehouse.cen}</p>
+                <p className="text-xs text-ink-muted">CEN: {warehouse.warehouseCen}</p>
               </div>
               <ChevronRight size={15} className="text-ink-muted shrink-0" />
             </button>
