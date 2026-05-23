@@ -21,11 +21,13 @@ interface AppStore {
   selectedCompany:   Company   | null
   selectedWarehouse: Warehouse | null
   sessionToken:      string    | null
+  activeTicketCen:   string    | null
 
   setCompany:   (c: Company   | null) => void
   setWarehouse: (w: Warehouse | null) => void
   login:        (company: Company) => void
   logout:       () => void
+  setActiveTicketCen: (ticketCen: string | null) => void
 
   moduleSettings: Record<string, ModuleSettings>
   toggleModule:   (companyCen: string, module: keyof ModuleSettings) => void
@@ -49,18 +51,21 @@ export const useAppStore = create<AppStore>()(
       selectedCompany:   null,
       selectedWarehouse: null,
       sessionToken:      null,
+      activeTicketCen:   null,
 
       moduleSettings: {},
 
       setTheme:  (theme)  => set({ theme }),
       setAccent: (accent) => set({ accent }),
-      setCompany:   (c) => set({ selectedCompany: c }),
+      setCompany:   (c) => set({ selectedCompany: c, activeTicketCen: null }),
       setWarehouse: (w) => set({ selectedWarehouse: w }),
+      setActiveTicketCen: (ticketCen) => set({ activeTicketCen: ticketCen }),
 
       login: (company) => set(state => ({
         selectedCompany:   company,
         selectedWarehouse: null,
         sessionToken:      `session-${company.companyCen}-${Date.now()}`,
+        activeTicketCen:   null,
         moduleSettings: {
           ...state.moduleSettings,
           [company.companyCen]: state.moduleSettings[company.companyCen] ?? DEFAULT_SETTINGS,
@@ -72,6 +77,7 @@ export const useAppStore = create<AppStore>()(
         selectedCompany:   null,
         selectedWarehouse: null,
         sessionToken:      null,
+        activeTicketCen:   null,
       }),
 
       toggleModule: (companyCen, module) => set(state => {
@@ -99,6 +105,7 @@ export const useAppStore = create<AppStore>()(
         selectedCompany:   s.selectedCompany,
         selectedWarehouse: s.selectedWarehouse,
         sessionToken:      s.sessionToken,
+        activeTicketCen:   s.activeTicketCen,
         moduleSettings:    s.moduleSettings,
       }),
     }

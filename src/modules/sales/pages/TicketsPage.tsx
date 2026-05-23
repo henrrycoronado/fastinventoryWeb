@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Search, ShoppingCart, ChevronRight, CheckCircle2 } from 'lucide-react'
 import { useTickets, useTicketItems, usePayTicket, usePaymentMethods, useWaiters, useTicketTotals } from '../services/salesHooks'
 import { useAppStore } from '../../../store/useAppStore'
@@ -9,8 +10,11 @@ import Badge from '../../../atoms/Badge'
 import Modal from '../../../atoms/Modal'
 import Button from '../../../atoms/Button'
 
+const normalizeStatus = (status?: string | null) => (status ?? '').toLowerCase()
+
 export default function TicketsPage() {
-  const { selectedWarehouse } = useAppStore()
+  const navigate = useNavigate()
+  const { selectedWarehouse, activeTicketCen, setActiveTicketCen } = useAppStore()
   const { data: tickets = [], isLoading } = useTickets({ warehouseCen: selectedWarehouse?.warehouseCen })
   const { data: paymentMethods = [] } = usePaymentMethods()
   const { data: waiters = [] } = useWaiters()
@@ -24,6 +28,8 @@ export default function TicketsPage() {
   const [paymentMethodCode, setPaymentMethodCode] = useState('')
 
   const { data: ticketTotals } = useTicketTotals(selectedTicket?.ticketCen)
+
+  const isOpenTicket = (ticket: Ticket) => normalizeStatus(ticket.status) === 'open'
 
   const filtered = useMemo(() => {
     return tickets.filter(t => 
@@ -41,8 +47,12 @@ export default function TicketsPage() {
       ticketCen: selectedTicket.ticketCen,
       data: { paymentMethodCode }
     })
+    if (activeTicketCen === selectedTicket.ticketCen) {
+      setActiveTicketCen(null)
+    }
     setPayModalOpen(false)
     setSelectedTicket(null)
+    setPaymentMethodCode('')
   }
 
   return (
@@ -97,13 +107,26 @@ export default function TicketsPage() {
                     <span className="text-sm text-ink-secondary truncate">{getWaiterName(ticket.waiterCen)}</span>
                     <span className="text-sm font-mono font-bold text-accent">—</span>
                     <div>
-                      <Badge variant={ticket.status === 'PAID' ? 'green' : ticket.status === 'OPEN' ? 'yellow' : 'gray'}>
+                      <Badge variant={normalizeStatus(ticket.status) === 'paid' ? 'green' : normalizeStatus(ticket.status) === 'open' ? 'yellow' : 'gray'}>
                         {ticket.status}
                       </Badge>
                     </div>
 
                     <div className="flex justify-end gap-2">
-                      {ticket.status === 'OPEN' && (
+                      {isOpenTicket(ticket) && (
+                        <Button 
+                          variant="ghost" 
+                          className="!px-2 !py-1 text-accent"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setActiveTicketCen(ticket.ticketCen)
+                            navigate('/sales/pos')
+                          }}
+                        >
+                          <ShoppingCart size={16} /> Continuar
+                        </Button>
+                      )}
+                      {isOpenTicket(ticket) && (
                         <Button 
                           variant="ghost" 
                           className="!px-2 !py-1 text-accent"
@@ -128,7 +151,7 @@ export default function TicketsPage() {
         )}
       </div>
 
-      <Modal open={payModalOpen} onClose={() => setPayModalOpen(false)} title="Procesar Pago" size="sm">
+      <Modal open={payModalOpen} onClose={() => { setPayModalOpen(false); setPaymentMethodCode('') }} title="Procesar Pago" size="sm">
         <div className="space-y-4">
           <div>
             <p className="text-sm text-ink-secondary mb-2">Ticket: <span className="font-mono font-bold">{selectedTicket?.ticketCen}</span></p>
@@ -174,7 +197,11 @@ function TicketDetailView({ ticketCen }: { ticketCen: string }) {
               <div className="text-right"><p className="text-ink-muted">Precio</p><p className="font-mono font-medium text-ink-primary">{formatCurrency(item.unitPrice)}</p></div>
               <div className="text-right min-w-[70px]"><p className="text-ink-muted">Subtotal</p><p className="font-mono font-medium text-accent">{formatCurrency(item.quantity * item.unitPrice)}</p></div>
 
-              <div><Badge variant={item.status === 'READY' ? 'green' : 'yellow'}>{item.status}</Badge></div>
+              <div>
+                <Badge variant={normalizeStatus(item.status) === 'ready' || normalizeStatus(item.status) === 'delivered' ? 'green' : normalizeStatus(item.status) === 'preparing' ? 'blue' : normalizeStatus(item.status) === 'cancelled' ? 'gray' : 'yellow'}>
+                  {item.status}
+                </Badge>
+              </div>
             </div>
           </div>
         ))}

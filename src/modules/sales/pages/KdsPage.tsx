@@ -71,6 +71,7 @@ export default function KdsPage() {
 function TeamItemsList({ teamCen }: { teamCen: string }) {
   const qc = useQueryClient()
   const { selectedCompany } = useAppStore()
+  const normalizeStatus = (status?: string | null) => (status ?? '').toLowerCase()
   
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['kds-items', teamCen],
@@ -98,8 +99,9 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
       ) : items.map((item: KdsItem) => (
         <div key={item.ticketItemCen} className="card p-4 space-y-3 relative overflow-hidden">
           <div className={`absolute top-0 left-0 w-1 h-full ${
-            item.status === 'PENDING' ? 'bg-yellow-400' : 
-            item.status === 'PREPARING' ? 'bg-accent' : 'bg-green-400'
+            normalizeStatus(item.status) === 'created' || normalizeStatus(item.status) === 'pending' ? 'bg-yellow-400' : 
+            normalizeStatus(item.status) === 'preparing' ? 'bg-accent' : 
+            normalizeStatus(item.status) === 'ready' ? 'bg-green-400' : 'bg-slate-500'
           }`} />
           
           <div className="flex justify-between items-start">
@@ -107,7 +109,7 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
               <p className="text-sm font-bold text-ink-primary truncate">{item.productName}</p>
               <p className="text-[10px] font-mono text-ink-muted">Ticket: {item.ticketCen}</p>
             </div>
-            <Badge variant={item.status === 'PENDING' ? 'yellow' : item.status === 'PREPARING' ? 'blue' : 'green'}>
+            <Badge variant={normalizeStatus(item.status) === 'created' || normalizeStatus(item.status) === 'pending' ? 'yellow' : normalizeStatus(item.status) === 'preparing' ? 'blue' : normalizeStatus(item.status) === 'ready' ? 'green' : 'gray'}>
               {item.status}
             </Badge>
           </div>
@@ -125,7 +127,7 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
           </div>
 
           <div className="flex gap-2 pt-2 border-t border-surface-4">
-            {item.status === 'PENDING' && (
+            {(normalizeStatus(item.status) === 'created' || normalizeStatus(item.status) === 'pending') && (
               <Button 
                 variant="primary" 
                 className="flex-1 justify-center text-xs"
@@ -135,7 +137,7 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
                 Empezar
               </Button>
             )}
-            {item.status === 'PREPARING' && (
+            {normalizeStatus(item.status) === 'preparing' && (
               <Button 
                 variant="primary" 
                 className="flex-1 justify-center text-xs bg-green-500 hover:bg-green-600 shadow-green-500/20"
@@ -143,6 +145,16 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
                 loading={updateStatus.isPending}
               >
                 <CheckCircle2 size={12} /> Listo
+              </Button>
+            )}
+            {normalizeStatus(item.status) === 'ready' && (
+              <Button 
+                variant="ghost" 
+                className="flex-1 justify-center text-xs border border-surface-4"
+                onClick={() => updateStatus.mutate({ ticketItemCen: item.ticketItemCen, status: 'DELIVERED' })}
+                loading={updateStatus.isPending}
+              >
+                Cerrar ítem
               </Button>
             )}
           </div>
