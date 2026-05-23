@@ -49,7 +49,7 @@ export default function TicketsPage() {
     <div className="animate-fade-in">
       <SectionHeader 
         title="Tickets" 
-        subtitle={selectedWarehouse?.name}
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : "Consolidado (Todos los almacenes)"}
       />
 
       <div className="px-6 py-4 border-b border-surface-3">
@@ -60,8 +60,9 @@ export default function TicketsPage() {
       </div>
 
       <div className="mx-6 mt-4 card overflow-hidden mb-8">
-        <div className="hidden md:grid grid-cols-6 px-6 py-3 border-b border-surface-4">
+        <div className={`hidden md:grid ${selectedWarehouse ? 'grid-cols-6' : 'grid-cols-7'} px-6 py-3 border-b border-surface-4`}>
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Ticket</span>
+          {!selectedWarehouse && <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Almacén</span>}
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Fecha</span>
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Mesero</span>
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Total</span>
@@ -83,10 +84,15 @@ export default function TicketsPage() {
               return (
                 <div key={ticket.ticketCen}>
                   <div 
-                    className="grid grid-cols-1 md:grid-cols-6 items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer" 
+                    className={`grid grid-cols-1 md:${selectedWarehouse ? 'grid-cols-6' : 'grid-cols-7'} items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer`} 
                     onClick={() => setExpandedId(isExpanded ? null : ticket.ticketCen)}
                   >
                     <span className="text-sm font-medium text-ink-primary font-mono">{ticket.ticketCen}</span>
+                    {!selectedWarehouse && (
+                      <span className="text-[10px] text-ink-secondary truncate bg-surface-3 px-2 py-0.5 rounded-full w-fit">
+                        {ticket.warehouseCen || 'General'}
+                      </span>
+                    )}
                     <span className="text-xs text-ink-secondary">{formatDate(ticket.createdAt)}</span>
                     <span className="text-sm text-ink-secondary truncate">{getWaiterName(ticket.waiterCen)}</span>
                     <span className="text-sm font-mono font-bold text-accent">—</span>

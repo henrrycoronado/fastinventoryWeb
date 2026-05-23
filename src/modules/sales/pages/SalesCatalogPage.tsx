@@ -9,13 +9,16 @@ import SectionHeader from '../../../components/SectionHeader'
 export default function SalesCatalogPage() {
   const { selectedWarehouse } = useAppStore()
   const [search, setSearch] = useState('')
-  const { data: products = [], isLoading } = useSellableProducts({ search: search || undefined })
+  const { data: products = [], isLoading } = useSellableProducts({ 
+    search: search || undefined,
+    warehouseCen: selectedWarehouse?.warehouseCen || undefined
+  })
 
   return (
     <div className="animate-fade-in">
       <SectionHeader 
         title="Catálogo de Ventas" 
-        subtitle={`Productos disponibles en ${selectedWarehouse?.name}`}
+        subtitle={selectedWarehouse ? `Productos disponibles en ${selectedWarehouse.name}` : "Consolidado (Todos los almacenes)"}
         right={
           <div className="relative">
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />

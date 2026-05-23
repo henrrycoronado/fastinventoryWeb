@@ -3,7 +3,6 @@ import { Search, Package, Plus } from 'lucide-react'
 import { useProducts } from '../modules/inventory/services/inventoryHooks'
 import { useSellableProducts } from '../modules/sales/services/salesHooks'
 import { formatCurrency } from '../lib/utils'
-import type { Product } from '../modules/inventory/services/types'
 
 export default function SkuSelector({ 
   onAdd, 
@@ -29,7 +28,7 @@ export default function SkuSelector({
     warehouseCen: warehouseCen || undefined
   }, { enabled: isSellable })
 
-  const products = isSellable ? sellableProducts : inventoryProducts
+  const products: any[] = isSellable ? sellableProducts : inventoryProducts
   const [showCreate, setShowCreate] = useState(false)
 
   return (

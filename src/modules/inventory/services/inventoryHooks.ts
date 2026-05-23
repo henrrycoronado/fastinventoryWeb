@@ -1,11 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import type { UseQueryOptions } from '@tanstack/react-query'
 import { useAppStore } from '../../../store/useAppStore'
 import { inventoryApi } from './inventoryApi'
 import toast from 'react-hot-toast'
+import type { 
+  Category, 
+  Product, 
+  StockItem, 
+  InventoryDocument, 
+  KardexMovement, 
+  Unit, 
+  Warehouse, 
+  InventoryDashboard 
+} from './types'
 
 export const useInventoryDashboard = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<InventoryDashboard>({
     queryKey: ['inventory-dashboard', companyCen],
     queryFn:  () => inventoryApi.dashboard.get(companyCen!),
     enabled:  !!companyCen,
@@ -14,7 +25,7 @@ export const useInventoryDashboard = () => {
 
 export const useCategories = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<Category[]>({
     queryKey: ['categories', companyCen],
     queryFn:  () => inventoryApi.categories.list(companyCen!),
     enabled:  !!companyCen,
@@ -34,13 +45,16 @@ export const useCreateCategory = () => {
   })
 }
 
-export const useProducts = (params?: { search?: string; categoryCen?: string; status?: string }, options?: any) => {
+export const useProducts = (
+  params?: { search?: string; categoryCen?: string; status?: string }, 
+  options?: Partial<UseQueryOptions<Product[]>>
+) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<Product[]>({
     queryKey: ['products', companyCen, params],
     queryFn:  () => inventoryApi.products.list(companyCen!, params),
     enabled:  !!companyCen,
-    ...options
+    ...options as any
   })
 }
 
@@ -60,7 +74,7 @@ export const useCreateProduct = () => {
 export const useStock = (params?: { productCen?: string; warehouseCen?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   const warehouseCen = useAppStore(s => s.selectedWarehouse?.warehouseCen)
-  return useQuery({
+  return useQuery<StockItem[]>({
     queryKey: ['stock', companyCen, warehouseCen, params],
     queryFn:  () => inventoryApi.stock.list(companyCen!, { warehouseCen, ...params }),
     enabled:  !!companyCen,
@@ -70,7 +84,7 @@ export const useStock = (params?: { productCen?: string; warehouseCen?: string }
 
 export const useInventoryDocuments = (params?: { documentType?: string; from?: string; to?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<InventoryDocument[]>({
     queryKey: ['inventory-documents', companyCen, params],
     queryFn:  () => inventoryApi.documents.list(companyCen!, params),
     enabled:  !!companyCen,
@@ -95,7 +109,7 @@ export const useKardex = (productCen: string | undefined, params?: { warehouseCe
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   const selectedWarehouseCen = useAppStore(s => s.selectedWarehouse?.warehouseCen)
   
-  return useQuery({
+  return useQuery<KardexMovement[]>({
     queryKey: ['kardex', companyCen, productCen, selectedWarehouseCen, params],
     queryFn:  () => inventoryApi.kardex.get(companyCen!, productCen!, { warehouseCen: selectedWarehouseCen, ...params }),
     enabled:  !!companyCen && !!productCen,
@@ -105,7 +119,7 @@ export const useKardex = (productCen: string | undefined, params?: { warehouseCe
 
 export const useUnits = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<Unit[]>({
     queryKey: ['units', companyCen],
     queryFn:  () => inventoryApi.units.list(companyCen!),
     enabled:  !!companyCen,
@@ -114,7 +128,7 @@ export const useUnits = () => {
 
 export const useWarehouses = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<Warehouse[]>({
     queryKey: ['warehouses', companyCen],
     queryFn:  () => inventoryApi.warehouses.list(companyCen!),
     enabled:  !!companyCen,

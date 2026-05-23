@@ -18,11 +18,11 @@ export const salesApi = {
   },
 
   dashboard: {
-    dailySales: (companyCen: string) =>
-      apiClient.get<DailySalesDashboard>(`/api/sales/companies/${companyCen}/dashboard/daily-sales`).then(r => r.data),
-    kdsStatus: (companyCen: string) =>
-      apiClient.get<KdsStatusDashboard>(`/api/sales/companies/${companyCen}/dashboard/kds-status`).then(r => r.data),
-    topProducts: (companyCen: string, params?: { topN?: number }) =>
+    dailySales: (companyCen: string, params?: { warehouseCen?: string }) =>
+      apiClient.get<DailySalesDashboard>(`/api/sales/companies/${companyCen}/dashboard/daily-sales`, { params }).then(r => r.data),
+    kdsStatus: (companyCen: string, params?: { warehouseCen?: string }) =>
+      apiClient.get<KdsStatusDashboard>(`/api/sales/companies/${companyCen}/dashboard/kds-status`, { params }).then(r => r.data),
+    topProducts: (companyCen: string, params?: { topN?: number; warehouseCen?: string }) =>
       apiClient.get<any[]>(`/api/sales/companies/${companyCen}/dashboard/top-products`, { params }).then(r => r.data),
   },
 

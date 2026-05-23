@@ -1,40 +1,55 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import type { UseQueryOptions } from '@tanstack/react-query'
 import { useAppStore } from '../../../store/useAppStore'
 import { salesApi } from './salesApi'
 import toast from 'react-hot-toast'
+import type { 
+  SellableProduct, 
+  DailySalesDashboard, 
+  KdsStatusDashboard, 
+  Waiter, 
+  Ticket, 
+  TicketItem, 
+  KdsTeam, 
+  PaymentMethod, 
+  TicketTotals 
+} from './types'
 
-export const useSellableProducts = (params?: any, options?: any) => {
+export const useSellableProducts = (
+  params?: any, 
+  options?: Partial<UseQueryOptions<SellableProduct[]>>
+) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<SellableProduct[]>({
     queryKey: ['sellable-products', companyCen, params],
     queryFn:  () => salesApi.catalog.listProducts(companyCen!, params),
     enabled:  !!companyCen,
-    ...options
+    ...options as any
   })
 }
 
 
-export const useDailySales = () => {
+export const useDailySales = (params?: { warehouseCen?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
-    queryKey: ['daily-sales', companyCen],
-    queryFn:  () => salesApi.dashboard.dailySales(companyCen!),
+  return useQuery<DailySalesDashboard>({
+    queryKey: ['daily-sales', companyCen, params],
+    queryFn:  () => salesApi.dashboard.dailySales(companyCen!, params),
     enabled:  !!companyCen,
   })
 }
 
-export const useKdsStatus = () => {
+export const useKdsStatus = (params?: { warehouseCen?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
-    queryKey: ['kds-status', companyCen],
-    queryFn:  () => salesApi.dashboard.kdsStatus(companyCen!),
+  return useQuery<KdsStatusDashboard>({
+    queryKey: ['kds-status', companyCen, params],
+    queryFn:  () => salesApi.dashboard.kdsStatus(companyCen!, params),
     enabled:  !!companyCen,
   })
 }
 
 export const useWaiters = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<Waiter[]>({
     queryKey: ['waiters', companyCen],
     queryFn:  () => salesApi.waiters.list(companyCen!),
     enabled:  !!companyCen,
@@ -56,7 +71,7 @@ export const useCreateWaiter = () => {
 
 export const useTickets = (params?: { warehouseCen?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<Ticket[]>({
     queryKey: ['tickets', companyCen, params],
     queryFn:  () => salesApi.tickets.list(companyCen!, params),
     enabled:  !!companyCen,
@@ -79,7 +94,7 @@ export const useCreateTicket = () => {
 
 export const useTicketItems = (ticketCen: string | undefined) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<TicketItem[]>({
     queryKey: ['ticket-items', companyCen, ticketCen],
     queryFn:  () => salesApi.tickets.listItems(companyCen!, ticketCen!),
     enabled:  !!companyCen && !!ticketCen,
@@ -115,7 +130,7 @@ export const usePayTicket = () => {
 
 export const useKdsTeams = (params?: { warehouseCen?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<KdsTeam[]>({
     queryKey: ['kds-teams', companyCen, params],
     queryFn:  () => salesApi.kds.listTeams(companyCen!, params),
     enabled:  !!companyCen,
@@ -124,14 +139,14 @@ export const useKdsTeams = (params?: { warehouseCen?: string }) => {
 
 
 export const usePaymentMethods = () =>
-  useQuery({
+  useQuery<PaymentMethod[]>({
     queryKey: ['payment-methods'],
     queryFn:  () => salesApi.paymentMethods.list(),
   })
 
 export const useTicketTotals = (ticketCen: string | undefined) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  return useQuery({
+  return useQuery<TicketTotals>({
     queryKey: ['ticket-totals', companyCen, ticketCen],
     queryFn:  () => salesApi.tickets.getTotals(companyCen!, ticketCen!),
     enabled:  !!companyCen && !!ticketCen,

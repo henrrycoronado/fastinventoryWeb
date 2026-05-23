@@ -12,7 +12,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 export default function KdsPage() {
   const { selectedWarehouse } = useAppStore()
   const { data: teams = [] } = useKdsTeams({ warehouseCen: selectedWarehouse?.warehouseCen })
-  const { data: status } = useKdsStatus()
+  const { data: status } = useKdsStatus({ warehouseCen: selectedWarehouse?.warehouseCen })
 
   const [selectedTeamCen, setSelectedTeamCen] = useState('')
 

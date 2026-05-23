@@ -43,7 +43,7 @@ function NavItem({ path, icon: Icon, label }: { path: string; icon: any; label: 
 export default function AppLayout() {
   const navigate  = useNavigate()
   const location  = useLocation()
-  const { selectedCompany, selectedWarehouse, theme, accent, setTheme, setAccent, logout } = useAppStore()
+  const { selectedCompany, theme, accent, setTheme, setAccent, logout } = useAppStore()
   const moduleSettings = useAppStore(s => s.getModuleSettings(s.selectedCompany?.companyCen ?? ''))
 
   const moduleNav = {
