@@ -1,12 +1,35 @@
 import { useState } from 'react'
 import { Search, Package, Plus } from 'lucide-react'
 import { useProducts } from '../modules/inventory/services/inventoryHooks'
+import { useSellableProducts } from '../modules/sales/services/salesHooks'
 import { formatCurrency } from '../lib/utils'
 import type { Product } from '../modules/inventory/services/types'
 
-export default function SkuSelector({ onAdd, allowCreate = false, CreateComponent }: { onAdd: (item: any) => void; allowCreate?: boolean; CreateComponent?: React.ElementType }) {
+export default function SkuSelector({ 
+  onAdd, 
+  allowCreate = false, 
+  CreateComponent,
+  warehouseCen,
+  isSellable = false
+}: { 
+  onAdd: (item: any) => void; 
+  allowCreate?: boolean; 
+  CreateComponent?: React.ElementType;
+  warehouseCen?: string;
+  isSellable?: boolean;
+}) {
   const [search, setSearch] = useState('')
-  const { data: products = [] } = useProducts({ search: search || undefined })
+  
+  const { data: inventoryProducts = [] } = useProducts({ 
+    search: search || undefined 
+  }, { enabled: !isSellable })
+
+  const { data: sellableProducts = [] } = useSellableProducts({ 
+    search: search || undefined,
+    warehouseCen: warehouseCen || undefined
+  }, { enabled: isSellable })
+
+  const products = isSellable ? sellableProducts : inventoryProducts
   const [showCreate, setShowCreate] = useState(false)
 
   return (
@@ -28,12 +51,12 @@ export default function SkuSelector({ onAdd, allowCreate = false, CreateComponen
           </div>
         ) : (
           <>
-            {products.map((p: Product) => (
+            {products.map((p: any) => (
               <button 
                 key={p.productCen}
                 onClick={() => onAdd({ 
                   productCen: p.productCen, 
-                  skuLabel: p.sku, 
+                  skuLabel: p.sku || p.productCen, 
                   productName: p.name,
                   price: p.salePrice || 0
                 })} 
@@ -42,7 +65,7 @@ export default function SkuSelector({ onAdd, allowCreate = false, CreateComponen
                 <Package size={13} className="text-accent shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-ink-primary truncate">{p.name}</p>
-                  <p className="text-[10px] text-ink-muted font-mono">{p.sku}</p>
+                  <p className="text-[10px] text-ink-muted font-mono">{p.sku || p.productCen}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-mono font-medium text-ink-secondary">{formatCurrency(p.salePrice)}</p>

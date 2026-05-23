@@ -51,7 +51,10 @@ export default function SalesPosPage() {
     
     setIsProcessing(true)
     try {
-      const ticket: any = await createTicket.mutateAsync({ waiterCen: selectedWaiterCen || undefined })
+      const ticket: any = await createTicket.mutateAsync({ 
+        waiterCen: selectedWaiterCen || undefined,
+        warehouseCen: selectedWarehouse?.warehouseCen || undefined
+      })
 
       const ticketCen = ticket.ticketCen
 
@@ -90,7 +93,12 @@ export default function SalesPosPage() {
             <h2 className="font-display font-bold text-ink-primary">Productos</h2>
           </div>
           <div className="p-5 overflow-y-auto flex-1">
-            <SkuSelector allowCreate={false} onAdd={handleAddToCart} />
+            <SkuSelector 
+              allowCreate={false} 
+              onAdd={handleAddToCart} 
+              isSellable={true}
+              warehouseCen={selectedWarehouse?.warehouseCen}
+            />
           </div>
         </div>
 

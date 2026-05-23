@@ -34,12 +34,13 @@ export const useCreateCategory = () => {
   })
 }
 
-export const useProducts = (params?: { search?: string; categoryCen?: string; status?: string }) => {
+export const useProducts = (params?: { search?: string; categoryCen?: string; status?: string }, options?: any) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['products', companyCen, params],
     queryFn:  () => inventoryApi.products.list(companyCen!, params),
     enabled:  !!companyCen,
+    ...options
   })
 }
 

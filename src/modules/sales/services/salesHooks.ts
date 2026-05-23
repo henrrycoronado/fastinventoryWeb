@@ -3,12 +3,13 @@ import { useAppStore } from '../../../store/useAppStore'
 import { salesApi } from './salesApi'
 import toast from 'react-hot-toast'
 
-export const useSellableProducts = (params?: any) => {
+export const useSellableProducts = (params?: any, options?: any) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
     queryKey: ['sellable-products', companyCen, params],
     queryFn:  () => salesApi.catalog.listProducts(companyCen!, params),
     enabled:  !!companyCen,
+    ...options
   })
 }
 
@@ -53,11 +54,11 @@ export const useCreateWaiter = () => {
   })
 }
 
-export const useTickets = () => {
+export const useTickets = (params?: { warehouseCen?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
-    queryKey: ['tickets', companyCen],
-    queryFn:  () => salesApi.tickets.list(companyCen!),
+    queryKey: ['tickets', companyCen, params],
+    queryFn:  () => salesApi.tickets.list(companyCen!, params),
     enabled:  !!companyCen,
   })
 }
@@ -66,7 +67,7 @@ export const useCreateTicket = () => {
   const qc         = useQueryClient()
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useMutation({
-    mutationFn: (data: { waiterCen?: string }) =>
+    mutationFn: (data: { waiterCen?: string; warehouseCen?: string }) =>
       salesApi.tickets.create(companyCen!, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tickets', companyCen] })
@@ -112,11 +113,11 @@ export const usePayTicket = () => {
   })
 }
 
-export const useKdsTeams = () => {
+export const useKdsTeams = (params?: { warehouseCen?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useQuery({
-    queryKey: ['kds-teams', companyCen],
-    queryFn:  () => salesApi.kds.listTeams(companyCen!),
+    queryKey: ['kds-teams', companyCen, params],
+    queryFn:  () => salesApi.kds.listTeams(companyCen!, params),
     enabled:  !!companyCen,
   })
 }

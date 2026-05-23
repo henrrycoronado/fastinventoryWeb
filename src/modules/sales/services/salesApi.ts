@@ -27,8 +27,8 @@ export const salesApi = {
   },
 
   kds: {
-    listTeams: (companyCen: string) =>
-      apiClient.get<KdsTeam[]>(`/api/sales/companies/${companyCen}/kds/teams`).then(r => r.data),
+    listTeams: (companyCen: string, params?: { warehouseCen?: string }) =>
+      apiClient.get<KdsTeam[]>(`/api/sales/companies/${companyCen}/kds/teams`, { params }).then(r => r.data),
     createTeam: (companyCen: string, data: Partial<KdsTeam>) =>
       apiClient.post<KdsTeam>(`/api/sales/companies/${companyCen}/kds/teams`, data).then(r => r.data),
     updateTeam: (companyCen: string, teamCen: string, data: any) =>
@@ -40,9 +40,9 @@ export const salesApi = {
   },
 
   tickets: {
-    list: (companyCen: string) =>
-      apiClient.get<Ticket[]>(`/api/sales/companies/${companyCen}/tickets`).then(r => r.data),
-    create: (companyCen: string, data: { waiterCen?: string | null }) =>
+    list: (companyCen: string, params?: { warehouseCen?: string }) =>
+      apiClient.get<Ticket[]>(`/api/sales/companies/${companyCen}/tickets`, { params }).then(r => r.data),
+    create: (companyCen: string, data: { waiterCen?: string | null; warehouseCen?: string | null }) =>
       apiClient.post<Ticket>(`/api/sales/companies/${companyCen}/tickets`, data).then(r => r.data),
     listItems: (companyCen: string, ticketCen: string) =>
       apiClient.get<TicketItem[]>(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/items`).then(r => r.data),

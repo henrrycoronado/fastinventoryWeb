@@ -4,6 +4,7 @@ import { useAppStore } from '../store/useAppStore'
 import { ACCENT_OPTIONS } from '../config/theme'
 import { APP_NAME } from '../config/constants'
 import type { AccentColor } from '../config/theme'
+import WarehouseSelector from '../components/WarehouseSelector'
 import {
   Building2, Warehouse, Sun, Moon, LogOut,
   ChevronDown, LayoutDashboard, Package, Boxes,
@@ -118,14 +119,9 @@ export default function AppLayout() {
         <div className="px-3 py-3 border-b border-surface-4 space-y-1.5">
           <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-surface-3">
             <Building2 size={12} className="text-accent shrink-0" />
-            <span className="text-xs text-ink-secondary truncate">{selectedCompany?.name}</span>
+            <span className="text-xs text-ink-secondary truncate font-medium">{selectedCompany?.name}</span>
           </div>
-          {selectedWarehouse && (
-            <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-surface-3 animate-fade-in">
-              <Warehouse size={12} className="text-accent shrink-0" />
-              <span className="text-xs text-ink-secondary truncate">{selectedWarehouse?.name}</span>
-            </div>
-          )}
+          <WarehouseSelector />
         </div>
 
 

@@ -11,7 +11,7 @@ import Button from '../../../atoms/Button'
 
 export default function TicketsPage() {
   const { selectedWarehouse } = useAppStore()
-  const { data: tickets = [], isLoading } = useTickets()
+  const { data: tickets = [], isLoading } = useTickets({ warehouseCen: selectedWarehouse?.warehouseCen })
   const { data: paymentMethods = [] } = usePaymentMethods()
   const { data: waiters = [] } = useWaiters()
   const payTicket = usePayTicket()

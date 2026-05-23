@@ -15,6 +15,7 @@ export interface Ticket {
   status:        string
   createdAt:     string
   waiterCen?:    string | null
+  warehouseCen?: string | null
   companyCen?:   string | null
   taxAmount?:    number
 }
