@@ -18,7 +18,7 @@ interface CartItem {
 }
 
 export default function SalesPosPage() {
-  const { selectedWarehouse } = useAppStore()
+  const { selectedCompany, selectedWarehouse } = useAppStore()
   const { data: waiters = [] } = useWaiters()
   
   const createTicket = useCreateTicket()
@@ -47,12 +47,11 @@ export default function SalesPosPage() {
   }
 
   const handleProcessSale = async () => {
-    if (!selectedWarehouse) return
     if (cart.length === 0) return
     
     setIsProcessing(true)
     try {
-      const ticket: any = await createTicket.mutateAsync({ waiterCen: selectedWaiterCen || undefined })
+      const ticket: any = await createTicket.mutateAsync({ waiterCen: selectedWaiterCen || null })
       const ticketCen = ticket.ticketCen
 
       await Promise.all(cart.map(item => 
@@ -60,8 +59,7 @@ export default function SalesPosPage() {
           ticketCen,
           data: {
             productCen: item.productCen,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice
+            quantity: item.quantity
           }
         })
       ))
@@ -80,8 +78,9 @@ export default function SalesPosPage() {
     <div className="animate-fade-in h-[calc(100vh-64px)] flex flex-col">
       <SectionHeader 
         title="Punto de Venta" 
-        subtitle={`Almacén: ${selectedWarehouse?.name}`} 
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name}`} 
       />
+
 
       <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
         

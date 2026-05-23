@@ -1,14 +1,14 @@
 export interface Category {
   categoryCen: string
   name:        string
-  description?: string
+  description?: string | null
   isActive:    boolean
 }
 
 export interface Unit {
   unitCen:      string
   name:         string
-  abbreviation: string
+  abbreviation?: string | null
   isActive:     boolean
 }
 
@@ -16,16 +16,16 @@ export interface Product {
   productCen:   string
   sku:          string
   name:         string
-  description?: string
-  categoryCen?: string
-  categoryName?: string
-  unitCen?:      string
-  unitName?:     string
+  description?: string | null
+  categoryCen:  string
+  categoryName: string
+  unitCen:      string
+  unitName:     string
   salePrice:    number
-  costPrice?:   number
+  costPrice?:   number | null
   reorderLevel: number
   status:       string
-  stationCode?: string
+  stationCode?: string | null
 }
 
 export interface StockItem {
@@ -35,7 +35,7 @@ export interface StockItem {
   warehouseName:     string
   availableQuantity: number
   reservedQuantity:  number
-  unitName?:         string
+  unitName:          string
   reorderLevel:      number
   isLowStock:        boolean
 }
@@ -47,18 +47,18 @@ export interface InventoryDocument {
   title:         string
   createdAt:     string
   totalItems:    number
-  generatedMovementCens?: string[]
+  generatedMovementCens: string[]
 }
 
 export interface KardexMovement {
   movementCen:  string
-  documentCen:  string
+  documentCen?: string | null
   productCen:   string
   warehouseCen: string
   movementType: string
   quantity:     number
-  unitCost:     number
-  reason?:      string
+  unitCost?:    number | null
+  reason?:      string | null
   createdAt:    string
 }
 
@@ -67,6 +67,7 @@ export interface Warehouse {
   name:         string
   isActive:     boolean
 }
+
 
 export interface InventoryDashboard {
   companyCen:         string
@@ -78,13 +79,13 @@ export interface InventoryDashboard {
 
 export interface SellableProduct {
   productCen:        string
-  name:               string
-  categoryCen?:      string
-  categoryName?:     string
+  name:              string
+  categoryCen:       string
+  categoryName:      string
   salePrice:         number
   availableQuantity: number
   isAvailable:       boolean
-  stationCode?:      string
+  stationCode?:      string | null
 }
 
 export interface StockRequirement {
@@ -94,8 +95,8 @@ export interface StockRequirement {
   requestedQuantity: number
   availableQuantity: number
   missingQuantity:   number
-  unitName?:         string
-  reason?:           string
+  unitName:          string
+  reason:            string
 }
 
 export interface StockValidationResponse {
@@ -105,11 +106,12 @@ export interface StockValidationResponse {
 
 export interface StockConsumeResponse {
   success:               boolean
-  documentCen?:          string
-  documentType?:         string
-  generatedMovementCens?: string[]
-  requirements?:         StockRequirement[]
+  documentCen?:          string | null
+  documentType?:         string | null
+  generatedMovementCens: string[]
+  requirements:          StockRequirement[]
 }
+
 
 export interface InventoryAdjustmentLine {
   productCen:     string

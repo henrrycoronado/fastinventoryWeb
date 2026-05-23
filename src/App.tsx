@@ -20,6 +20,8 @@ const CategoriesPage = lazy(() => import('./modules/inventory/pages/CategoriesPa
 const StockPage = lazy(() => import('./modules/inventory/pages/StockPage'))
 const MovementsPage = lazy(() => import('./modules/inventory/pages/MovementsPage'))
 const KardexPage = lazy(() => import('./modules/inventory/pages/KardexPage'))
+const WarehousesPage = lazy(() => import('./modules/inventory/pages/WarehousesPage'))
+
 
 const PurchasesDashboard = lazy(() => import('./modules/purchases/pages/PurchasesDashboard'))
 const SuppliersPage = lazy(() => import('./modules/purchases/pages/SuppliersPage'))
@@ -88,6 +90,8 @@ export default function App() {
                   <Route path="/inventory/stock" element={<StockPage />} />
                   <Route path="/inventory/movements" element={<MovementsPage />} />
                   <Route path="/inventory/kardex" element={<KardexPage />} />
+                  <Route path="/inventory/warehouses" element={<WarehousesPage />} />
+
 
                   <Route path="/purchases/dashboard" element={<PurchasesDashboard />} />
                   <Route path="/purchases/suppliers" element={<SuppliersPage />} />

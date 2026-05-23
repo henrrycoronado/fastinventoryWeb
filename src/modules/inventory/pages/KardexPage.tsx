@@ -7,7 +7,7 @@ import type { Product, KardexMovement } from '../services/types'
 import SectionHeader from '../../../components/SectionHeader'
 
 export default function KardexPage() {
-  const { selectedWarehouse } = useAppStore()
+  const { selectedCompany, selectedWarehouse } = useAppStore()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [search, setSearch] = useState('')
   const { data: products = [] } = useProducts({ search: search || undefined })
@@ -18,7 +18,7 @@ export default function KardexPage() {
     <div className="animate-fade-in">
       <SectionHeader 
         title="Kardex" 
-        subtitle={selectedWarehouse?.name} 
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name} (Global)`} 
         right={selectedProduct && <button onClick={() => setSelectedProduct(null)} className="btn-ghost text-xs">← Cambiar Producto</button>} 
       />
       
@@ -51,9 +51,15 @@ export default function KardexPage() {
             <div className="card p-4">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center shrink-0"><ScrollText size={16} className="text-accent" /></div>
-                <div><p className="text-sm font-medium text-ink-primary">{selectedProduct.name}</p><p className="text-xs font-mono text-ink-muted">{selectedProduct.sku} · {selectedWarehouse?.name}</p></div>
+                <div>
+                  <p className="text-sm font-medium text-ink-primary">{selectedProduct.name}</p>
+                  <p className="text-xs font-mono text-ink-muted">
+                    {selectedProduct.sku} {selectedWarehouse ? `· ${selectedWarehouse.name}` : ''}
+                  </p>
+                </div>
               </div>
             </div>
+
 
             <div className="card overflow-hidden mb-8">
               <div className="grid grid-cols-5 px-6 py-3 border-b border-surface-4">

@@ -62,9 +62,10 @@ export const useStock = (params?: { productCen?: string; warehouseCen?: string }
   return useQuery({
     queryKey: ['stock', companyCen, warehouseCen, params],
     queryFn:  () => inventoryApi.stock.list(companyCen!, { warehouseCen, ...params }),
-    enabled:  !!companyCen && !!warehouseCen,
+    enabled:  !!companyCen,
   })
 }
+
 
 export const useInventoryDocuments = (params?: { documentType?: string; from?: string; to?: string }) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
@@ -96,9 +97,10 @@ export const useKardex = (productCen: string | undefined, params?: { warehouseCe
   return useQuery({
     queryKey: ['kardex', companyCen, productCen, selectedWarehouseCen, params],
     queryFn:  () => inventoryApi.kardex.get(companyCen!, productCen!, { warehouseCen: selectedWarehouseCen, ...params }),
-    enabled:  !!companyCen && !!productCen && !!selectedWarehouseCen,
+    enabled:  !!companyCen && !!productCen,
   })
 }
+
 
 export const useUnits = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)

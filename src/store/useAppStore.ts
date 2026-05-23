@@ -24,7 +24,7 @@ interface AppStore {
 
   setCompany:   (c: Company   | null) => void
   setWarehouse: (w: Warehouse | null) => void
-  login:        (company: Company, warehouse: Warehouse) => void
+  login:        (company: Company) => void
   logout:       () => void
 
   moduleSettings: Record<string, ModuleSettings>
@@ -57,15 +57,16 @@ export const useAppStore = create<AppStore>()(
       setCompany:   (c) => set({ selectedCompany: c }),
       setWarehouse: (w) => set({ selectedWarehouse: w }),
 
-      login: (company, warehouse) => set(state => ({
+      login: (company) => set(state => ({
         selectedCompany:   company,
-        selectedWarehouse: warehouse,
-        sessionToken:      `session-${company.companyCen}-${warehouse.warehouseCen}-${Date.now()}`,
+        selectedWarehouse: null,
+        sessionToken:      `session-${company.companyCen}-${Date.now()}`,
         moduleSettings: {
           ...state.moduleSettings,
           [company.companyCen]: state.moduleSettings[company.companyCen] ?? DEFAULT_SETTINGS,
         },
       })),
+
 
       logout: () => set({
         selectedCompany:   null,

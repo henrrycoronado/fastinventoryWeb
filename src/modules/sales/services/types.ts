@@ -1,24 +1,22 @@
 export interface SellableProduct {
   productCen:        string
-  name:               string
-  categoryCen?:      string
-  categoryName?:     string
+  name:              string
+  categoryCen:       string
+  categoryName:      string
   salePrice:         number
   availableQuantity: number
   isAvailable:       boolean
-  stationCode?:      string
+  stationCode?:      string | null
 }
 
 export interface Ticket {
   ticketCen:     string
   dailyNumber?:  number
-  warehouseCen:  string
-  waiterCen?:    string
-  waiterName?:   string
   status:        string
-  total:         number
-  taxAmount?:    number
   createdAt:     string
+  waiterCen?:    string | null
+  companyCen?:   string | null
+  taxAmount?:    number
 }
 
 export interface TicketItem {
@@ -27,10 +25,9 @@ export interface TicketItem {
   productName:   string
   quantity:      number
   unitPrice:     number
-  subtotal:      number
   status:        string
-  note?:         string
-  sentAt?:       string
+  note?:         string | null
+  sentAt?:       string | null
   resendCount?:  number
 }
 
@@ -47,26 +44,25 @@ export interface TaxConfiguration {
 }
 
 export interface TopProductDashboard {
-  productCen:    string
+  productCen?:   string | null
   productName:   string
   totalQuantity: number
-  categoryCen?:  string
-  categoryName?: string
+  categoryCen?:  string | null
+  categoryName?: string | null
   salePrice:     number
 }
 
 export interface Waiter {
-  waiterCen:    string
-  name:         string
-  warehouseCen: string
+  waiterCen: string
+  name:      string
 }
 
 export interface KdsTeam {
-  teamCen:       string
-  name:          string
-  categoryCens:  string[]
-  warehouseCen:  string
+  teamCen:      string
+  name:         string
+  categoryCens: string[]
 }
+
 
 export interface KdsItem {
   ticketItemCen: string

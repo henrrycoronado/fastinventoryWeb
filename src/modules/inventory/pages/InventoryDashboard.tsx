@@ -34,7 +34,9 @@ export default function InventoryDashboard() {
     <div className="p-6 space-y-6 animate-fade-in">
       <div>
         <h1 className="font-display text-2xl font-bold text-ink-primary">Dashboard</h1>
-        <p className="text-xs text-ink-muted mt-0.5">{selectedCompany?.name} · {selectedWarehouse?.name}</p>
+        <p className="text-xs text-ink-muted mt-0.5">
+          {selectedCompany?.name} {selectedWarehouse ? `· ${selectedWarehouse.name}` : '(Consolidado empresa)'}
+        </p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -48,9 +50,10 @@ export default function InventoryDashboard() {
         <div className="card p-5">
           <h2 className="font-display text-sm font-bold text-ink-secondary uppercase tracking-wider mb-3">Resumen de Inventario</h2>
           <div className="h-40 flex items-center justify-center text-sm text-ink-muted">
-            <p>Monitoreo activo para {selectedWarehouse?.name}</p>
+            <p>{selectedWarehouse ? `Monitoreo activo para ${selectedWarehouse.name}` : 'Consolidado de todas las bodegas'}</p>
           </div>
         </div>
+
         <div className="card p-5">
           <h2 className="font-display text-sm font-bold text-ink-secondary uppercase tracking-wider mb-3">Stock por producto</h2>
           {stockByCategory.length === 0 ? <div className="flex items-center justify-center h-40 text-sm text-ink-muted">Sin datos de stock</div> : (

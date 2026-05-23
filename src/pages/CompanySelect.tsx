@@ -17,6 +17,13 @@ export default function CompanySelect() {
     queryFn:  companyApi.list,
   })
 
+  const login = useAppStore(s => s.login)
+
+  const handleSelect = (company: Company) => {
+    login(company)
+    navigate('/inventory/dashboard', { replace: true })
+  }
+
   return (
     <div className="min-h-screen bg-surface-0 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md space-y-6">
@@ -38,9 +45,10 @@ export default function CompanySelect() {
           ) : (companies as Company[]).map(company => (
             <button
               key={company.companyCen}
-              onClick={() => navigate(`/${company.companyCen}/warehouses`)}
+              onClick={() => handleSelect(company)}
               className="w-full flex items-center gap-4 px-5 py-4 hover:bg-surface-3 transition-colors text-left first:rounded-t-xl last:rounded-b-xl"
             >
+
               <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                 <Building2 size={16} className="text-accent" />
               </div>

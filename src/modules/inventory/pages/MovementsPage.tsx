@@ -12,8 +12,9 @@ import Badge from '../../../atoms/Badge'
 import SkuSelector from '../../../components/SkuSelector'
 
 export default function MovementsPage() {
-  const { selectedWarehouse } = useAppStore()
+  const { selectedCompany, selectedWarehouse } = useAppStore()
   const { data: documents = [], isLoading } = useInventoryDocuments()
+  const { data: warehouses = [] } = useWarehouses()
   const createDocument = useCreateInventoryDocument()
   
   const [modalOpen, setModalOpen] = useState(false)
@@ -21,37 +22,43 @@ export default function MovementsPage() {
   
   // Create state
   const [docType, setDocType] = useState('INCREASE')
+  const [targetWarehouseCen, setTargetWarehouseCen] = useState('')
   const [reason, setReason] = useState('')
   const [lines, setLines] = useState<{productCen: string, productName: string, quantity: number}[]>([])
 
+  // Use global warehouse if available, else use targetWarehouseCen
+  const effectiveWarehouseCen = selectedWarehouse?.warehouseCen || targetWarehouseCen
+
   const handleAddProduct = (item: any) => {
-    // Again, assuming item from SkuSelector has productCen or adapting.
-    // Since I refactored useProducts, SkuSelector might be broken.
-    // I need to check SkuSelector.tsx.
     if (lines.some(l => l.productCen === item.productCen)) return
     setLines([...lines, { productCen: item.productCen, productName: item.productName, quantity: 1 }])
   }
 
   const handleCreate = async () => {
-    if (!selectedWarehouse || lines.length === 0) return
+    if (!effectiveWarehouseCen || lines.length === 0) {
+      if (!effectiveWarehouseCen) toast.error('Debe seleccionar un almacén')
+      return
+    }
     await createDocument.mutateAsync({
       documentType: docType,
-      warehouseCen: selectedWarehouse.warehouseCen,
+      warehouseCen: effectiveWarehouseCen,
       reason,
       lines: lines.map(l => ({ productCen: l.productCen, quantity: l.quantity }))
     })
     setModalOpen(false)
     setLines([])
     setReason('')
+    setTargetWarehouseCen('')
   }
 
   return (
     <div className="animate-fade-in">
       <SectionHeader
         title="Movimientos"
-        subtitle={selectedWarehouse?.name}
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name} (Global)`}
         right={<button onClick={() => setModalOpen(true)} className="btn-primary text-sm"><Plus size={13} /> Nuevo movimiento</button>}
       />
+
 
       <div className="mx-6 mt-4 card overflow-hidden mb-8">
         <div className="hidden md:grid grid-cols-5 px-6 py-3 border-b border-surface-4">
@@ -107,8 +114,24 @@ export default function MovementsPage() {
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Nuevo Movimiento de Inventario" size="lg">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
+            {!selectedWarehouse && (
+              <div>
+                <label className="label">Almacén de Destino</label>
+                <select 
+                  className="input text-sm" 
+                  value={targetWarehouseCen} 
+                  onChange={e => setTargetWarehouseCen(e.target.value)}
+                >
+                  <option value="">Seleccione un almacén...</option>
+                  {warehouses.map(w => (
+                    <option key={w.warehouseCen} value={w.warehouseCen}>{w.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div>
               <label className="label">Tipo de Movimiento</label>
+
               <select className="input text-sm" value={docType} onChange={e => setDocType(e.target.value)}>
                 <option value="INCREASE">Aumento (Entrada)</option>
                 <option value="CONSUME">Consumo (Salida)</option>

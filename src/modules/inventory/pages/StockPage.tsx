@@ -8,7 +8,7 @@ import SectionHeader from '../../../components/SectionHeader'
 import Badge from '../../../atoms/Badge'
 
 export default function StockPage() {
-  const { selectedWarehouse } = useAppStore()
+  const { selectedCompany, selectedWarehouse } = useAppStore()
   const [search, setSearch] = useState('')
   const { data: stockList = [], isLoading } = useStock({ warehouseCen: selectedWarehouse?.warehouseCen })
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -27,19 +27,24 @@ export default function StockPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader title="Stock" subtitle={selectedWarehouse?.name} right={
-        <div className="relative">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-          <input className="input pl-8 w-52 text-xs" placeholder="Buscar producto o CEN..." value={search} onChange={e => setSearch(e.target.value)} />
-        </div>
-      }/>
+      <SectionHeader 
+        title="Stock" 
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name} (Consolidado)`} 
+        right={
+          <div className="relative">
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+            <input className="input pl-8 w-52 text-xs" placeholder="Buscar producto o CEN..." value={search} onChange={e => setSearch(e.target.value)} />
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 px-6 mt-4">
-        <StatCard label="Productos en Stock" value={stats.totalSkus} sub="en este almacén" />
+        <StatCard label="Productos en Stock" value={stats.totalSkus} sub={selectedWarehouse ? "en este almacén" : "en todas las bodegas"} />
         <StatCard label="Uds disponibles" value={stats.disponible} sub="listas para venta" />
         <StatCard label="Uds reservadas" value={stats.reservado} sub="en órdenes activas" />
         <StatCard label="Sin stock" value={stats.sinStock} sub="requieren reposición" variant={stats.sinStock > 0 ? 'danger' : 'default'} />
       </div>
+
 
       <div className="mx-6 mt-4 card overflow-hidden mb-8">
         <div className="hidden md:grid grid-cols-6 px-6 py-3 border-b border-surface-4">

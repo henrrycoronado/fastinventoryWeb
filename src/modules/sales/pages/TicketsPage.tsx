@@ -25,9 +25,12 @@ export default function TicketsPage() {
   const filtered = useMemo(() => {
     return tickets.filter(t => 
       t.ticketCen.toLowerCase().includes(search.toLowerCase()) || 
-      (t.waiterName && t.waiterName.toLowerCase().includes(search.toLowerCase()))
+      (t.waiterCen && t.waiterCen.toLowerCase().includes(search.toLowerCase()))
     ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   }, [tickets, search])
+
+  const getWaiterName = (cen?: string | null) => waiters.find(w => w.waiterCen === cen)?.name || '—'
+
 
   const handlePay = async () => {
     if (!selectedTicket || !paymentMethodCode) return
@@ -82,13 +85,14 @@ export default function TicketsPage() {
                   >
                     <span className="text-sm font-medium text-ink-primary font-mono">{ticket.ticketCen}</span>
                     <span className="text-xs text-ink-secondary">{formatDate(ticket.createdAt)}</span>
-                    <span className="text-sm text-ink-secondary truncate">{ticket.waiterName || '—'}</span>
-                    <span className="text-sm font-mono font-bold text-accent">{formatCurrency(ticket.total)}</span>
+                    <span className="text-sm text-ink-secondary truncate">{getWaiterName(ticket.waiterCen)}</span>
+                    <span className="text-sm font-mono font-bold text-accent">—</span>
                     <div>
                       <Badge variant={ticket.status === 'PAID' ? 'green' : ticket.status === 'OPEN' ? 'yellow' : 'gray'}>
                         {ticket.status}
                       </Badge>
                     </div>
+
                     <div className="flex justify-end gap-2">
                       {ticket.status === 'OPEN' && (
                         <Button 

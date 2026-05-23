@@ -52,11 +52,13 @@ export default function AppLayout() {
         { label: 'Dashboard',   path: '/inventory/dashboard',  icon: LayoutDashboard },
         { label: 'Productos',   path: '/inventory/products',   icon: Package },
         { label: 'Categorías',  path: '/inventory/categories', icon: Tag },
+        { label: 'Almacenes',   path: '/inventory/warehouses', icon: Warehouse },
         { label: 'Stock',       path: '/inventory/stock',      icon: Boxes },
         { label: 'Movimientos', path: '/inventory/movements',  icon: ArrowLeftRight },
         { label: 'Kardex',      path: '/inventory/kardex',     icon: ScrollText },
       ],
     },
+
     purchases: {
       label: 'Compras',
       items: [
@@ -118,11 +120,14 @@ export default function AppLayout() {
             <Building2 size={12} className="text-accent shrink-0" />
             <span className="text-xs text-ink-secondary truncate">{selectedCompany?.name}</span>
           </div>
-          <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-surface-3">
-            <Warehouse size={12} className="text-accent shrink-0" />
-            <span className="text-xs text-ink-secondary truncate">{selectedWarehouse?.name}</span>
-          </div>
+          {selectedWarehouse && (
+            <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-surface-3 animate-fade-in">
+              <Warehouse size={12} className="text-accent shrink-0" />
+              <span className="text-xs text-ink-secondary truncate">{selectedWarehouse?.name}</span>
+            </div>
+          )}
         </div>
+
 
         {/* Module switcher */}
         <div className="px-3 py-3 border-b border-surface-4">

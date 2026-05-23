@@ -18,17 +18,17 @@ export const salesApi = {
   },
 
   dashboard: {
-    dailySales: (companyCen: string, warehouseCen?: string) =>
-      apiClient.get<DailySalesDashboard>(`/api/sales/companies/${companyCen}/dashboard/daily-sales`, { params: { warehouseCen } }).then(r => r.data),
-    kdsStatus: (companyCen: string, warehouseCen?: string) =>
-      apiClient.get<KdsStatusDashboard>(`/api/sales/companies/${companyCen}/dashboard/kds-status`, { params: { warehouseCen } }).then(r => r.data),
-    topProducts: (companyCen: string, params?: { topN?: number; warehouseCen?: string }) =>
+    dailySales: (companyCen: string) =>
+      apiClient.get<DailySalesDashboard>(`/api/sales/companies/${companyCen}/dashboard/daily-sales`).then(r => r.data),
+    kdsStatus: (companyCen: string) =>
+      apiClient.get<KdsStatusDashboard>(`/api/sales/companies/${companyCen}/dashboard/kds-status`).then(r => r.data),
+    topProducts: (companyCen: string, params?: { topN?: number }) =>
       apiClient.get<any[]>(`/api/sales/companies/${companyCen}/dashboard/top-products`, { params }).then(r => r.data),
   },
 
   kds: {
-    listTeams: (companyCen: string, warehouseCen?: string) =>
-      apiClient.get<KdsTeam[]>(`/api/sales/companies/${companyCen}/kds/teams`, { params: { warehouseCen } }).then(r => r.data),
+    listTeams: (companyCen: string) =>
+      apiClient.get<KdsTeam[]>(`/api/sales/companies/${companyCen}/kds/teams`).then(r => r.data),
     createTeam: (companyCen: string, data: Partial<KdsTeam>) =>
       apiClient.post<KdsTeam>(`/api/sales/companies/${companyCen}/kds/teams`, data).then(r => r.data),
     updateTeam: (companyCen: string, teamCen: string, data: any) =>
@@ -40,16 +40,17 @@ export const salesApi = {
   },
 
   tickets: {
-    list: (companyCen: string, warehouseCen?: string) =>
-      apiClient.get<Ticket[]>(`/api/sales/companies/${companyCen}/tickets`, { params: { warehouseCen } }).then(r => r.data),
-    create: (companyCen: string, data: { warehouseCen: string; waiterCen?: string }) =>
+    list: (companyCen: string) =>
+      apiClient.get<Ticket[]>(`/api/sales/companies/${companyCen}/tickets`).then(r => r.data),
+    create: (companyCen: string, data: { waiterCen?: string | null }) =>
       apiClient.post<Ticket>(`/api/sales/companies/${companyCen}/tickets`, data).then(r => r.data),
     listItems: (companyCen: string, ticketCen: string) =>
       apiClient.get<TicketItem[]>(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/items`).then(r => r.data),
-    addItem: (companyCen: string, ticketCen: string, data: Partial<TicketItem>) =>
+    addItem: (companyCen: string, ticketCen: string, data: { productCen: string; quantity: number; note?: string | null }) =>
       apiClient.post<TicketItem>(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/items`, data).then(r => r.data),
-    patchItem: (companyCen: string, ticketCen: string, ticketItemCen: string, data: any) =>
+    patchItem: (companyCen: string, ticketCen: string, ticketItemCen: string, data: { quantity?: number; note?: string | null }) =>
       apiClient.patch<TicketItem>(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/items/${ticketItemCen}`, data).then(r => r.data),
+
     resendItem: (companyCen: string, ticketCen: string, ticketItemCen: string) =>
       apiClient.post<TicketItem>(`/api/sales/companies/${companyCen}/tickets/${ticketCen}/items/${ticketItemCen}/resend`).then(r => r.data),
     sendTicket: (companyCen: string, ticketCen: string) =>
@@ -67,9 +68,9 @@ export const salesApi = {
   },
 
   waiters: {
-    list: (companyCen: string, warehouseCen?: string) =>
-      apiClient.get<Waiter[]>(`/api/sales/companies/${companyCen}/waiters`, { params: { warehouseCen } }).then(r => r.data),
-    create: (companyCen: string, data: { name: string; warehouseCen: string }) =>
+    list: (companyCen: string) =>
+      apiClient.get<Waiter[]>(`/api/sales/companies/${companyCen}/waiters`).then(r => r.data),
+    create: (companyCen: string, data: { name: string }) =>
       apiClient.post<Waiter>(`/api/sales/companies/${companyCen}/waiters`, data).then(r => r.data),
     update: (companyCen: string, waiterCen: string, data: { name: string; isActive: boolean }) =>
       apiClient.put<Waiter>(`/api/sales/companies/${companyCen}/waiters/${waiterCen}`, data).then(r => r.data),

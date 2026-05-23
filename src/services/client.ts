@@ -7,22 +7,21 @@ export const apiClient = axios.create({
 })
 
 apiClient.interceptors.response.use(
-  (response) => {
-    const body = response.data
-    if (body && typeof body === 'object' && 'success' in body) {
-      if (!body.success) {
-        const msg = body.message ?? 'Error desconocido'
-        toast.error(msg)
-        return Promise.reject(new Error(msg))
-      }
-      response.data = body.data
-    }
-    return response
-  },
+  (response) => response,
   (error) => {
+    const data = error.response?.data
     const msg =
-      error.response?.data?.message ?? error.message ?? 'Error de red'
+      data?.detail ??      // Standard ProblemDetails detail
+      data?.message ??     // Manual controller message fallback
+      error.message ??     // Axios error message
+      'Error de red'
+    
+    if (data?.traceId) {
+      console.error(`[API Error] TraceId: ${data.traceId}`, data)
+    }
+
     toast.error(msg)
+
     return Promise.reject(error)
   }
 )
