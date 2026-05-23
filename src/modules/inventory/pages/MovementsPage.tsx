@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { ArrowLeftRight, ChevronRight, Plus } from 'lucide-react'
-import { useInventoryDocuments, useCreateInventoryDocument } from '../services/inventoryHooks'
+import { useInventoryDocuments, useCreateInventoryDocument, useWarehouses } from '../services/inventoryHooks'
 import { useAppStore } from '../../../store/useAppStore'
 import { formatDate } from '../../../lib/utils'
-import type { InventoryDocument } from '../services/types'
+import type { InventoryDocument, Warehouse } from '../services/types'
+
 import SectionHeader from '../../../components/SectionHeader'
 import Modal from '../../../atoms/Modal'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import Badge from '../../../atoms/Badge'
 import SkuSelector from '../../../components/SkuSelector'
+import toast from 'react-hot-toast'
+
 
 export default function MovementsPage() {
   const { selectedCompany, selectedWarehouse } = useAppStore()
@@ -123,9 +126,10 @@ export default function MovementsPage() {
                   onChange={e => setTargetWarehouseCen(e.target.value)}
                 >
                   <option value="">Seleccione un almacén...</option>
-                  {warehouses.map(w => (
+                  {warehouses.map((w: Warehouse) => (
                     <option key={w.warehouseCen} value={w.warehouseCen}>{w.name}</option>
                   ))}
+
                 </select>
               </div>
             )}

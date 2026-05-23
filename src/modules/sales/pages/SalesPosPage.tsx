@@ -51,7 +51,8 @@ export default function SalesPosPage() {
     
     setIsProcessing(true)
     try {
-      const ticket: any = await createTicket.mutateAsync({ waiterCen: selectedWaiterCen || null })
+      const ticket: any = await createTicket.mutateAsync({ waiterCen: selectedWaiterCen || undefined })
+
       const ticketCen = ticket.ticketCen
 
       await Promise.all(cart.map(item => 

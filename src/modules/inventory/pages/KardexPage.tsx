@@ -78,8 +78,9 @@ export default function KardexPage() {
                         <span className="text-xs text-ink-secondary">{formatDate(e.createdAt)}</span>
                         <div className="flex items-center gap-1.5">{isEntry ? <TrendingUp size={12} className="text-accent shrink-0" /> : <TrendingDown size={12} className="text-red-400 shrink-0" />}<span className="text-xs text-ink-secondary truncate">{e.movementType}</span></div>
                         <span className={`text-xs font-mono font-medium ${isEntry ? 'text-accent' : 'text-red-400'}`}>{isEntry ? `+${e.quantity}` : `-${e.quantity}`}</span>
-                        <span className="text-xs font-mono text-ink-secondary">{formatCurrency(e.unitCost)}</span>
-                        <span className="text-xs text-ink-muted truncate" title={e.reason}>{e.reason || '—'}</span>
+                        <span className="text-xs font-mono text-ink-secondary">{formatCurrency(e.unitCost ?? 0)}</span>
+                        <span className="text-xs text-ink-muted truncate" title={e.reason ?? undefined}>{e.reason || '—'}</span>
+
                       </div>
                     )
                   })}

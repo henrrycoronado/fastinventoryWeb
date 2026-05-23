@@ -11,6 +11,8 @@ export default function WarehouseSelect() {
   const navigate       = useNavigate()
   const login          = useAppStore(s => s.login)
 
+  const setWarehouse   = useAppStore(s => s.setWarehouse)
+
   const { data: company } = useQuery({
     queryKey: ['company', companyCen],
     queryFn:  () => companyApi.get(companyCen!),
@@ -25,9 +27,11 @@ export default function WarehouseSelect() {
 
   const handleSelect = (warehouse: Warehouse) => {
     if (!company) return
-    login(company, warehouse)
+    login(company)
+    setWarehouse(warehouse)
     navigate('/inventory/dashboard', { replace: true })
   }
+
 
   return (
     <div className="min-h-screen bg-surface-0 flex flex-col items-center justify-center p-6">

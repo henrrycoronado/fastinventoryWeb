@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react'
 import { Search, ShoppingCart, ChevronRight, CheckCircle2 } from 'lucide-react'
-import { useTickets, useTicketItems, usePayTicket, usePaymentMethods } from '../services/salesHooks'
+import { useTickets, useTicketItems, usePayTicket, usePaymentMethods, useWaiters, useTicketTotals } from '../services/salesHooks'
 import { useAppStore } from '../../../store/useAppStore'
 import { formatDate, formatCurrency } from '../../../lib/utils'
-import type { Ticket, TicketItem } from '../services/types'
+import type { Ticket, TicketItem, Waiter } from '../services/types'
 import SectionHeader from '../../../components/SectionHeader'
 import Badge from '../../../atoms/Badge'
 import Modal from '../../../atoms/Modal'
@@ -13,6 +13,7 @@ export default function TicketsPage() {
   const { selectedWarehouse } = useAppStore()
   const { data: tickets = [], isLoading } = useTickets()
   const { data: paymentMethods = [] } = usePaymentMethods()
+  const { data: waiters = [] } = useWaiters()
   const payTicket = usePayTicket()
 
   const [search, setSearch] = useState('')
@@ -22,6 +23,8 @@ export default function TicketsPage() {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
   const [paymentMethodCode, setPaymentMethodCode] = useState('')
 
+  const { data: ticketTotals } = useTicketTotals(selectedTicket?.ticketCen)
+
   const filtered = useMemo(() => {
     return tickets.filter(t => 
       t.ticketCen.toLowerCase().includes(search.toLowerCase()) || 
@@ -29,7 +32,7 @@ export default function TicketsPage() {
     ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   }, [tickets, search])
 
-  const getWaiterName = (cen?: string | null) => waiters.find(w => w.waiterCen === cen)?.name || '—'
+  const getWaiterName = (cen?: string | null) => waiters.find((w: Waiter) => w.waiterCen === cen)?.name || '—'
 
 
   const handlePay = async () => {
@@ -123,8 +126,9 @@ export default function TicketsPage() {
         <div className="space-y-4">
           <div>
             <p className="text-sm text-ink-secondary mb-2">Ticket: <span className="font-mono font-bold">{selectedTicket?.ticketCen}</span></p>
-            <p className="text-lg font-bold text-ink-primary mb-4">Total a pagar: {formatCurrency(selectedTicket?.total || 0)}</p>
+            <p className="text-lg font-bold text-ink-primary mb-4">Total a pagar: {formatCurrency(ticketTotals?.total || 0)}</p>
           </div>
+
           <div>
             <label className="label">Método de Pago</label>
             <select className="input text-sm" value={paymentMethodCode} onChange={e => setPaymentMethodCode(e.target.value)}>
@@ -162,7 +166,8 @@ function TicketDetailView({ ticketCen }: { ticketCen: string }) {
             <div className="flex items-center gap-6 text-xs text-ink-secondary shrink-0">
               <div className="text-right"><p className="text-ink-muted">Cant.</p><p className="font-mono font-medium text-ink-primary">{item.quantity}</p></div>
               <div className="text-right"><p className="text-ink-muted">Precio</p><p className="font-mono font-medium text-ink-primary">{formatCurrency(item.unitPrice)}</p></div>
-              <div className="text-right min-w-[70px]"><p className="text-ink-muted">Subtotal</p><p className="font-mono font-medium text-accent">{formatCurrency(item.subtotal ?? (item.quantity * item.unitPrice))}</p></div>
+              <div className="text-right min-w-[70px]"><p className="text-ink-muted">Subtotal</p><p className="font-mono font-medium text-accent">{formatCurrency(item.quantity * item.unitPrice)}</p></div>
+
               <div><Badge variant={item.status === 'READY' ? 'green' : 'yellow'}>{item.status}</Badge></div>
             </div>
           </div>
