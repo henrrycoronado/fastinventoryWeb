@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, ShoppingCart, ChevronRight, CheckCircle2 } from 'lucide-react'
-import { useTickets, useTicketItems, usePayTicket, usePaymentMethods, useWaiters, useTicketTotals } from '../services/salesHooks'
+import { useTickets, useTicketItems, useSendTicket, usePayTicket, usePaymentMethods, useWaiters, useTicketTotals } from '../services/salesHooks'
 import { useAppStore } from '../../../store/useAppStore'
 import { formatDate, formatCurrency } from '../../../lib/utils'
 import type { Ticket, TicketItem, Waiter } from '../services/types'
@@ -18,6 +18,7 @@ export default function TicketsPage() {
   const { data: tickets = [], isLoading } = useTickets({ warehouseCen: selectedWarehouse?.warehouseCen })
   const { data: paymentMethods = [] } = usePaymentMethods()
   const { data: waiters = [] } = useWaiters()
+  const sendTicket = useSendTicket()
   const payTicket = usePayTicket()
 
   const [search, setSearch] = useState('')
@@ -43,6 +44,8 @@ export default function TicketsPage() {
 
   const handlePay = async () => {
     if (!selectedTicket || !paymentMethodCode) return
+
+    await sendTicket.mutateAsync(selectedTicket.ticketCen)
     await payTicket.mutateAsync({
       ticketCen: selectedTicket.ticketCen,
       data: { paymentMethodCode }

@@ -114,6 +114,23 @@ export const useAddTicketItem = () => {
   })
 }
 
+export const useSendTicket = () => {
+  const qc         = useQueryClient()
+  const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
+  return useMutation({
+    mutationFn: (ticketCen: string) =>
+      salesApi.tickets.sendTicket(companyCen!, ticketCen),
+    onSuccess: (_, ticketCen) => {
+      qc.invalidateQueries({ queryKey: ['tickets', companyCen] })
+      qc.invalidateQueries({ queryKey: ['ticket-items', companyCen, ticketCen] })
+      qc.invalidateQueries({ queryKey: ['ticket-totals', companyCen, ticketCen] })
+      qc.invalidateQueries({ queryKey: ['kds-items'] })
+      qc.invalidateQueries({ queryKey: ['kds-status'] })
+      toast.success('Ticket enviado a cocina / caja')
+    },
+  })
+}
+
 export const usePayTicket = () => {
   const qc         = useQueryClient()
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
@@ -122,6 +139,8 @@ export const usePayTicket = () => {
       salesApi.tickets.pay(companyCen!, ticketCen, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tickets', companyCen] })
+      qc.invalidateQueries({ queryKey: ['ticket-items', companyCen] })
+      qc.invalidateQueries({ queryKey: ['ticket-totals', companyCen] })
       qc.invalidateQueries({ queryKey: ['stock'] })
       toast.success('Pago procesado')
     },

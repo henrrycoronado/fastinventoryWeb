@@ -5,6 +5,7 @@ import {
   useWaiters,
   useCreateTicket,
   useAddTicketItem,
+  useSendTicket,
   usePayTicket,
   usePaymentMethods,
   useTicketItems,
@@ -37,6 +38,7 @@ export default function SalesPosPage() {
   const { data: paymentMethods = [] } = usePaymentMethods()
   const createTicket = useCreateTicket()
   const addTicketItem = useAddTicketItem()
+  const sendTicket = useSendTicket()
   const payTicket = usePayTicket()
 
   const { data: activeTicketItems = [] } = useTicketItems(activeTicketCen ?? undefined)
@@ -120,6 +122,7 @@ export default function SalesPosPage() {
   const handlePayTicket = async () => {
     if (!activeTicketCen || !paymentMethodCode) return
 
+    await sendTicket.mutateAsync(activeTicketCen)
     await payTicket.mutateAsync({
       ticketCen: activeTicketCen,
       data: { paymentMethodCode },
