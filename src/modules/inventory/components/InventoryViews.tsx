@@ -1,6 +1,6 @@
 import { Package, Tag, Warehouse } from 'lucide-react'
-import { formatCurrency } from '../../../lib/utils'
-import type { Product, StockItem } from '../services/types'
+import { formatCurrency } from '../../../core/utils'
+import type { Product, StockItem } from '../types'
 
 export function ProductExpanded({ product }: { product: Product }) {
   return (

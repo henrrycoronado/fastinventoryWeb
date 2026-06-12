@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Warehouse as WarehouseIcon, ChevronRight, ArrowLeft } from 'lucide-react'
-import { companyApi, warehouseApi } from '../services/companyApi'
-import { useAppStore } from '../store/useAppStore'
-import Spinner from '../atoms/Spinner'
-import type { Warehouse } from '../services/types'
+import { companyApi, warehouseApi } from '../core/networks/hooks'
+import { useAppStore } from '../core/store/useAppStore'
+import Spinner from '../core/components/atoms/Spinner'
+import type { Warehouse } from '../core/networks/types'
 
 export default function WarehouseSelect() {
   const { companyCen } = useParams()

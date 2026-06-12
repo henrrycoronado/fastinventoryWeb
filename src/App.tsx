@@ -2,11 +2,11 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
-import { useAppStore } from './store/useAppStore'
-import ProtectedRoute from './router/ProtectedRoute'
-import PublicRoute from './router/PublicRoute'
+import { useAppStore } from './core/store/useAppStore'
+import ProtectedRoute from './core/router/ProtectedRoute'
+import PublicRoute from './core/router/PublicRoute'
 import AppLayout from './layouts/AppLayout'
-import Spinner from './atoms/Spinner'
+import Spinner from './core/components/atoms/Spinner'
 
 const CompanySelect = lazy(() => import('./pages/CompanySelect'))
 const WarehouseSelect = lazy(() => import('./pages/WarehouseSelect'))

@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react'
 import { Search, Boxes, ChevronRight } from 'lucide-react'
-import { useStock } from '../services/inventoryHooks'
-import { useAppStore } from '../../../store/useAppStore'
-import type { StockItem } from '../services/types'
-import StatCard from '../../../components/StatCard'
-import SectionHeader from '../../../components/SectionHeader'
-import Badge from '../../../atoms/Badge'
+import { useStock } from '../services'
+import { useAppStore } from '../../../core/store/useAppStore'
+import type { StockItem } from '../types'
+import StatCard from '../../../core/components/StatCard'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Badge from '../../../core/components/atoms/Badge'
 
 export default function StockPage() {
   const { selectedCompany, selectedWarehouse } = useAppStore()
@@ -33,7 +33,7 @@ export default function StockPage() {
         right={
           <div className="relative">
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-            <input className="input pl-8 w-52 text-xs" placeholder="Buscar producto o CEN..." value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="input pl-8 w-52 text-xs" placeholder="Buscar producto o CEN..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
           </div>
         }
       />

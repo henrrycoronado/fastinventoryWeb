@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Search, ScrollText, Package, ChevronRight, TrendingUp, TrendingDown } from 'lucide-react'
-import { useProducts, useKardex } from '../services/inventoryHooks'
-import { useAppStore } from '../../../store/useAppStore'
-import { formatDate, formatCurrency } from '../../../lib/utils'
-import type { Product, KardexMovement } from '../services/types'
-import SectionHeader from '../../../components/SectionHeader'
+import { useProducts, useKardex } from '../services'
+import { useAppStore } from '../../../core/store/useAppStore'
+import { formatDate, formatCurrency } from '../../../core/utils'
+import type { Product, KardexMovement } from '../types'
+import SectionHeader from '../../../core/components/SectionHeader'
 
 export default function KardexPage() {
   const { selectedCompany, selectedWarehouse } = useAppStore()
@@ -31,7 +31,7 @@ export default function KardexPage() {
             <div className="p-4 space-y-2">
                <div className="relative mb-4">
                 <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-                <input className="input pl-8 text-sm" placeholder="Buscar producto..." value={search} onChange={e => setSearch(e.target.value)} />
+                <input className="input pl-8 text-sm" placeholder="Buscar producto..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
               </div>
               <div className="divide-y divide-surface-3">
                 {products.length === 0 ? (

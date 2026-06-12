@@ -1,14 +1,14 @@
 import { useState, useMemo } from 'react'
 import { Search, Truck, Plus, CheckCircle2, ShoppingCart, Trash2 } from 'lucide-react'
-import { useOrders, useCreateOrder, useConfirmOrder, useSuppliers } from '../services/purchasesHooks'
-import { useAppStore } from '../../../store/useAppStore'
-import { formatDate } from '../../../lib/utils'
-import type { Supplier } from '../services/types'
-import SectionHeader from '../../../components/SectionHeader'
-import Modal from '../../../atoms/Modal'
-import Button from '../../../atoms/Button'
-import SkuSelector from '../../../components/SkuSelector'
-import Badge from '../../../atoms/Badge'
+import { useOrders, useCreateOrder, useConfirmOrder, useSuppliers } from '../services'
+import { useAppStore } from '../../../core/store/useAppStore'
+import { formatDate } from '../../../core/utils'
+import type { Supplier } from '../types'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Modal from '../../../core/components/atoms/Modal'
+import Button from '../../../core/components/atoms/Button'
+import SkuSelector from '../../../core/components/SkuSelector'
+import Badge from '../../../core/components/atoms/Badge'
 
 interface CartItem {
   productCen: string
@@ -34,7 +34,7 @@ export default function OrdersPage() {
   const orders = ordersData?.items ?? []
 
   const filtered = useMemo(() => {
-    return orders.filter(o => 
+    return orders.filter((o: any) => 
       o.orderCen.toLowerCase().includes(search.toLowerCase()) || 
       o.supplierCen.toLowerCase().includes(search.toLowerCase())
     )
@@ -80,7 +80,7 @@ export default function OrdersPage() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-              <input className="input pl-8 w-52 text-xs" placeholder="Buscar orden..." value={search} onChange={e => setSearch(e.target.value)} />
+              <input className="input pl-8 w-52 text-xs" placeholder="Buscar orden..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
             </div>
             <button onClick={() => setModalOpen(true)} className="btn-primary text-sm"><Plus size={13} /> Nueva orden</button>
           </div>
@@ -105,7 +105,7 @@ export default function OrdersPage() {
           </div>
         ) : (
           <div className="divide-y divide-surface-3">
-            {filtered.map(o => (
+            {filtered.map((o: any) => (
               <div key={o.orderCen} className="grid grid-cols-5 items-center px-6 py-4 hover:bg-surface-2/50 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
@@ -150,7 +150,7 @@ export default function OrdersPage() {
               <select 
                 className="input text-sm" 
                 value={selectedSupplierCen} 
-                onChange={e => setSelectedSupplierCen(e.target.value)}
+                onChange={(e: any) => setSelectedSupplierCen(e.target.value)}
               >
                 <option value="">Seleccionar proveedor...</option>
                 {(suppliers as Supplier[]).map(s => (
@@ -185,7 +185,7 @@ export default function OrdersPage() {
                         type="number" 
                         className="input !py-0.5 !px-1.5 w-12 text-xs font-mono text-center" 
                         value={item.quantity} 
-                        onChange={e => {
+                        onChange={(e: any) => {
                           const val = parseInt(e.target.value) || 1
                           setCart(prev => prev.map(i => i.productCen === item.productCen ? { ...i, quantity: val } : i))
                         }}

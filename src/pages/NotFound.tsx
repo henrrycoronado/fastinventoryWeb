@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { APP_NAME } from '../config/constants'
+import { APP_NAME } from '../core/utils/constants'
 import { MoveLeft } from 'lucide-react'
 
 export default function NotFound() {

@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Building2, ChevronRight, Plus } from 'lucide-react'
-import { companyApi } from '../services/companyApi'
-import { useAppStore } from '../store/useAppStore'
-import { APP_NAME } from '../config/constants'
+import { companyApi } from '../core/networks/hooks'
+import { useAppStore } from '../core/store/useAppStore'
+import { APP_NAME } from '../core/utils/constants'
 
-import Spinner from '../atoms/Spinner'
-import type { Company } from '../services/types'
-import CreateCompanyModal from '../components/CreateCompanyModal'
+import Spinner from '../core/components/atoms/Spinner'
+import type { Company } from '../core/networks/types'
+import CreateCompanyModal from '../core/components/CreateCompanyModal'
 
 export default function CompanySelect() {
   const navigate    = useNavigate()
@@ -40,7 +40,7 @@ export default function CompanySelect() {
         <div className="card divide-y divide-surface-4">
           {isLoading ? (
             <div className="flex justify-center py-10"><Spinner size={20} /></div>
-          ) : companies.length === 0 ? (
+          ) : (companies as any[]).length === 0 ? (
             <div className="py-10 text-center text-sm text-ink-muted">
               No hay empresas registradas
             </div>

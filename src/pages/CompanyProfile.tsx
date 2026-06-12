@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Building2, Warehouse, Plus, Trash2 } from 'lucide-react'
-import { useAppStore } from '../store/useAppStore'
-import { companyApi, warehouseApi } from '../services/companyApi'
-import ConfirmModal from '../atoms/ConfirmModal'
-import NewWarehouseModal from '../components/NewWarehouseModal'
-import type { Company, Warehouse as WarehouseType } from '../services/types'
+import { useAppStore } from '../core/store/useAppStore'
+import { companyApi, warehouseApi } from '../core/networks/hooks'
+import ConfirmModal from '../core/components/atoms/ConfirmModal'
+import NewWarehouseModal from '../core/components/NewWarehouseModal'
+import type { Company, Warehouse as WarehouseType } from '../core/networks/types'
 
 export default function CompanyProfile() {
   const qc = useQueryClient()

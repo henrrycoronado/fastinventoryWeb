@@ -1,0 +1,7 @@
+export interface ProblemDetails {
+  status:   number
+  title:    string
+  detail:   string
+  instance: string
+  traceId:  string
+}

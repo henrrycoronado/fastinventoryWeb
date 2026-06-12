@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Search, Tag, Plus } from 'lucide-react'
-import { useCategories, useCreateCategory } from '../services/inventoryHooks'
-import type { Category } from '../services/types'
-import SectionHeader from '../../../components/SectionHeader'
-import Modal from '../../../atoms/Modal'
-import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
+import { useCategories, useCreateCategory } from '../services'
+import type { Category } from '../types'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Modal from '../../../core/components/atoms/Modal'
+import Button from '../../../core/components/atoms/Button'
+import Input from '../../../core/components/atoms/Input'
 
 export default function CategoriesPage() {
   const { data: categories = [], isLoading } = useCategories()
@@ -35,7 +35,7 @@ export default function CategoriesPage() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-              <input className="input pl-8 w-48 text-xs" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} />
+              <input className="input pl-8 w-48 text-xs" placeholder="Buscar..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
             </div>
             <button onClick={() => setModalOpen(true)} className="btn-primary text-sm"><Plus size={13} /> Nueva categoría</button>
           </div>
@@ -79,7 +79,7 @@ export default function CategoriesPage() {
             label="Nombre" 
             placeholder="Ej: Electrónica" 
             value={newName} 
-            onChange={e => setNewName(e.target.value)} 
+            onChange={(e: any) => setNewName(e.target.value)} 
             autoFocus 
           />
           <div className="flex justify-end gap-2">

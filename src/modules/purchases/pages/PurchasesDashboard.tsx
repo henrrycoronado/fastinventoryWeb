@@ -1,8 +1,8 @@
 import { Truck, Users, Clock, CheckCircle2 } from 'lucide-react'
-import { useOrders, useSuppliers } from '../services/purchasesHooks'
-import { useAppStore } from '../../../store/useAppStore'
-import StatCard from '../../../components/StatCard'
-import SectionHeader from '../../../components/SectionHeader'
+import { useOrders, useSuppliers } from '../services'
+import { useAppStore } from '../../../core/store/useAppStore'
+import StatCard from '../../../core/components/StatCard'
+import SectionHeader from '../../../core/components/SectionHeader'
 
 export default function PurchasesDashboard() {
   const { selectedCompany, selectedWarehouse } = useAppStore()
@@ -11,8 +11,8 @@ export default function PurchasesDashboard() {
 
   const orders = ordersData?.items ?? []
   
-  const pendingOrders = orders.filter(o => o.status === 0).length
-  const confirmedOrders = orders.filter(o => o.status === 1).length
+  const pendingOrders = orders.filter((o: any) => o.status === 0).length
+  const confirmedOrders = orders.filter((o: any) => o.status === 1).length
 
   return (
     <div className="p-6 space-y-6 animate-fade-in">
@@ -56,7 +56,7 @@ export default function PurchasesDashboard() {
           <div className="py-8 text-center text-sm text-ink-muted">No hay órdenes registradas</div>
         ) : (
           <div className="divide-y divide-surface-3">
-            {orders.slice(0, 5).map(o => (
+            {orders.slice(0, 5).map((o: any) => (
               <div key={o.orderCen} className="flex items-center justify-between px-5 py-3">
                 <div>
                   <p className="text-xs font-medium text-ink-primary font-mono">{o.orderCen}</p>

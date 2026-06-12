@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ShoppingCart, Trash2, CheckCircle2, Ticket as TicketIcon, CreditCard, Plus } from 'lucide-react'
-import { useAppStore } from '../../../store/useAppStore'
+import { useAppStore } from '../../../core/store/useAppStore'
 import {
   useWaiters,
   useCreateTicket,
@@ -10,13 +10,13 @@ import {
   usePaymentMethods,
   useTicketItems,
   useTicketTotals,
-} from '../services/salesHooks'
-import { formatCurrency } from '../../../lib/utils'
-import SectionHeader from '../../../components/SectionHeader'
-import SkuSelector from '../../../components/SkuSelector'
-import Button from '../../../atoms/Button'
-import Badge from '../../../atoms/Badge'
-import Modal from '../../../atoms/Modal'
+} from '../services'
+import { formatCurrency } from '../../../core/utils'
+import SectionHeader from '../../../core/components/SectionHeader'
+import SkuSelector from '../../../core/components/SkuSelector'
+import Button from '../../../core/components/atoms/Button'
+import Badge from '../../../core/components/atoms/Badge'
+import Modal from '../../../core/components/atoms/Modal'
 import toast from 'react-hot-toast'
 
 interface CartItem {
@@ -239,7 +239,7 @@ export default function SalesPosPage() {
           <div className="border-t border-surface-4 bg-surface-1 p-5 space-y-4 shrink-0">
             <div>
               <label className="text-[10px] uppercase tracking-wider font-semibold text-ink-muted mb-1 block">Mesero</label>
-              <select className="input text-xs" value={selectedWaiterCen} onChange={e => setSelectedWaiterCen(e.target.value)} disabled={!!activeTicketCen}>
+              <select className="input text-xs" value={selectedWaiterCen} onChange={(e: any) => setSelectedWaiterCen(e.target.value)} disabled={!!activeTicketCen}>
                 <option value="">Sin asignar</option>
                 {waiters.map(w => <option key={w.waiterCen} value={w.waiterCen}>{w.name}</option>)}
               </select>
@@ -291,7 +291,7 @@ export default function SalesPosPage() {
 
           <div>
             <label className="label">Método de pago</label>
-            <select className="input text-sm" value={paymentMethodCode} onChange={e => setPaymentMethodCode(e.target.value)}>
+            <select className="input text-sm" value={paymentMethodCode} onChange={(e: any) => setPaymentMethodCode(e.target.value)}>
               <option value="">Seleccionar...</option>
               {paymentMethods.map(method => (
                 <option key={method.paymentMethodCode} value={method.paymentMethodCode}>{method.name}</option>

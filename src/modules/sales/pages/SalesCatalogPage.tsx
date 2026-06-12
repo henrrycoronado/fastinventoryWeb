@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Search, Package, AlertCircle } from 'lucide-react'
-import { useSellableProducts } from '../services/salesHooks'
-import { useAppStore } from '../../../store/useAppStore'
-import { formatCurrency } from '../../../lib/utils'
-import type { SellableProduct } from '../services/types'
-import SectionHeader from '../../../components/SectionHeader'
+import { useSellableProducts } from '../services'
+import { useAppStore } from '../../../core/store/useAppStore'
+import { formatCurrency } from '../../../core/utils'
+import type { SellableProduct } from '../types'
+import SectionHeader from '../../../core/components/SectionHeader'
 
 export default function SalesCatalogPage() {
   const { selectedWarehouse } = useAppStore()
@@ -22,7 +22,7 @@ export default function SalesCatalogPage() {
         right={
           <div className="relative">
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-            <input className="input pl-8 w-52 text-xs" placeholder="Buscar producto..." value={search} onChange={e => setSearch(e.target.value)} />
+            <input className="input pl-8 w-52 text-xs" placeholder="Buscar producto..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
           </div>
         }
       />

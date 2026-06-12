@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import { ArrowLeftRight, ChevronRight, Plus } from 'lucide-react'
-import { useInventoryDocuments, useCreateInventoryDocument, useWarehouses } from '../services/inventoryHooks'
-import { useAppStore } from '../../../store/useAppStore'
-import { formatDate } from '../../../lib/utils'
-import type { InventoryDocument, Warehouse } from '../services/types'
+import { useInventoryDocuments, useCreateInventoryDocument, useWarehouses } from '../services'
+import { useAppStore } from '../../../core/store/useAppStore'
+import { formatDate } from '../../../core/utils'
+import type { InventoryDocument, Warehouse } from '../types'
 
-import SectionHeader from '../../../components/SectionHeader'
-import Modal from '../../../atoms/Modal'
-import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
-import Badge from '../../../atoms/Badge'
-import SkuSelector from '../../../components/SkuSelector'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Modal from '../../../core/components/atoms/Modal'
+import Button from '../../../core/components/atoms/Button'
+import Input from '../../../core/components/atoms/Input'
+import Badge from '../../../core/components/atoms/Badge'
+import SkuSelector from '../../../core/components/SkuSelector'
 import toast from 'react-hot-toast'
 
 
@@ -123,7 +123,7 @@ export default function MovementsPage() {
                 <select 
                   className="input text-sm" 
                   value={targetWarehouseCen} 
-                  onChange={e => setTargetWarehouseCen(e.target.value)}
+                  onChange={(e: any) => setTargetWarehouseCen(e.target.value)}
                 >
                   <option value="">Seleccione un almacén...</option>
                   {warehouses.map((w: Warehouse) => (
@@ -136,13 +136,13 @@ export default function MovementsPage() {
             <div>
               <label className="label">Tipo de Movimiento</label>
 
-              <select className="input text-sm" value={docType} onChange={e => setDocType(e.target.value)}>
+              <select className="input text-sm" value={docType} onChange={(e: any) => setDocType(e.target.value)}>
                 <option value="INCREASE">Aumento (Entrada)</option>
                 <option value="CONSUME">Consumo (Salida)</option>
                 <option value="ADJUSTMENT">Ajuste</option>
               </select>
             </div>
-            <Input label="Motivo / Razón" placeholder="Ej: Inventario inicial" value={reason} onChange={e => setReason(e.target.value)} />
+            <Input label="Motivo / Razón" placeholder="Ej: Inventario inicial" value={reason} onChange={(e: any) => setReason(e.target.value)} />
             <div className="space-y-2">
               <label className="label">Productos</label>
               <SkuSelector onAdd={handleAddProduct} />
@@ -168,7 +168,7 @@ export default function MovementsPage() {
                         type="number" 
                         className="input !py-0.5 !px-1.5 w-12 text-xs font-mono text-center" 
                         value={line.quantity} 
-                        onChange={e => {
+                        onChange={(e: any) => {
                           const val = parseFloat(e.target.value) || 1
                           setLines(prev => prev.map(l => l.productCen === line.productCen ? { ...l, quantity: val } : l))
                         }}

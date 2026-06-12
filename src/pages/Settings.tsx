@@ -1,6 +1,6 @@
-import { useAppStore } from '../store/useAppStore'
+import { useAppStore } from '../core/store/useAppStore'
 import { ShoppingCart, Store, Package, Users, UserCheck, Truck } from 'lucide-react'
-import ModuleToggle from '../components/ModuleToggle'
+import ModuleToggle from '../core/components/ModuleToggle'
 
 export default function Settings() {
   const { selectedCompany, getModuleSettings, toggleModule } = useAppStore()

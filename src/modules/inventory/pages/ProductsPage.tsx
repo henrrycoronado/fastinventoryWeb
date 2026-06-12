@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Search, Plus } from 'lucide-react'
-import { useProducts } from '../services/inventoryHooks'
-import SectionHeader from '../../../components/SectionHeader'
+import { useProducts } from '../services'
+import SectionHeader from '../../../core/components/SectionHeader'
 import { ProductListView } from '../components/ProductViews'
-import Modal from '../../../atoms/Modal'
+import Modal from '../../../core/components/atoms/Modal'
 import ProductForm from '../components/ProductCreation'
 
 export default function ProductsPage() {
@@ -20,7 +20,7 @@ export default function ProductsPage() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-              <input className="input pl-8 w-52 text-xs" placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} />
+              <input className="input pl-8 w-52 text-xs" placeholder="Buscar..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
             </div>
             <button onClick={() => setModalOpen(true)} className="btn-primary text-sm">
               <Plus size={13} /> Nuevo producto

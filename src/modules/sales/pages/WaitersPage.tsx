@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react'
 import { Search, UserCheck, Plus } from 'lucide-react'
-import { useWaiters, useCreateWaiter } from '../services/salesHooks'
-import SectionHeader from '../../../components/SectionHeader'
-import Modal from '../../../atoms/Modal'
-import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
+import { useWaiters, useCreateWaiter } from '../services'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Modal from '../../../core/components/atoms/Modal'
+import Button from '../../../core/components/atoms/Button'
+import Input from '../../../core/components/atoms/Input'
 
 export default function WaitersPage() {
   const { data: waiters = [], isLoading } = useWaiters()
@@ -36,7 +36,7 @@ export default function WaitersPage() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-              <input className="input pl-8 w-52 text-xs" placeholder="Buscar mesero..." value={search} onChange={e => setSearch(e.target.value)} />
+              <input className="input pl-8 w-52 text-xs" placeholder="Buscar mesero..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
             </div>
             <button onClick={() => setModalOpen(true)} className="btn-primary text-sm"><Plus size={13} /> Nuevo mesero</button>
           </div>
@@ -81,7 +81,7 @@ export default function WaitersPage() {
             label="Nombre del mesero" 
             placeholder="Ej: Marco Polo" 
             value={newName} 
-            onChange={e => setNewName(e.target.value)} 
+            onChange={(e: any) => setNewName(e.target.value)} 
             autoFocus 
           />
           <div className="flex justify-end gap-2 pt-2">

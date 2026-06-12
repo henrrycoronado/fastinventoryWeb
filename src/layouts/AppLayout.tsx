@@ -1,10 +1,10 @@
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useState } from 'react'
-import { useAppStore } from '../store/useAppStore'
-import { ACCENT_OPTIONS } from '../config/theme'
-import { APP_NAME } from '../config/constants'
-import type { AccentColor } from '../config/theme'
-import WarehouseSelector from '../components/WarehouseSelector'
+import { useAppStore } from '../core/store/useAppStore'
+import { ACCENT_OPTIONS } from '../core/themes/constants'
+import { APP_NAME } from '../core/utils/constants'
+import type { AccentColor } from '../core/themes/types'
+import WarehouseSelector from '../core/components/WarehouseSelector'
 import {
   Building2, Warehouse, Sun, Moon, LogOut,
   ChevronDown, LayoutDashboard, Package, Boxes,

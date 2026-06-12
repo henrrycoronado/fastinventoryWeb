@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import { useCategories, useUnits, useCreateProduct } from '../services/inventoryHooks'
-import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
+import { useCategories, useUnits, useCreateProduct } from '../services'
+import Button from '../../../core/components/atoms/Button'
+import Input from '../../../core/components/atoms/Input'
 
 export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
   const { data: categories = [] } = useCategories()
@@ -34,14 +34,14 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
           label="SKU / Código *" 
           placeholder="Ej: PROD-001" 
           value={form.sku} 
-          onChange={e => setForm({...form, sku: e.target.value})} 
+          onChange={(e: any) => setForm({...form, sku: e.target.value})} 
           required 
         />
         <Input 
           label="Nombre *" 
           placeholder="Ej: Producto de ejemplo" 
           value={form.name} 
-          onChange={e => setForm({...form, name: e.target.value})} 
+          onChange={(e: any) => setForm({...form, name: e.target.value})} 
           required 
         />
       </div>
@@ -52,7 +52,7 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
           <select 
             className="input text-sm" 
             value={form.categoryCen} 
-            onChange={e => setForm({...form, categoryCen: e.target.value})}
+            onChange={(e: any) => setForm({...form, categoryCen: e.target.value})}
           >
             <option value="">Seleccionar...</option>
             {categories.map(c => <option key={c.categoryCen} value={c.categoryCen}>{c.name}</option>)}
@@ -63,7 +63,7 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
           <select 
             className="input text-sm" 
             value={form.unitCen} 
-            onChange={e => setForm({...form, unitCen: e.target.value})}
+            onChange={(e: any) => setForm({...form, unitCen: e.target.value})}
             required
           >
             <option value="">Seleccionar...</option>
@@ -78,7 +78,7 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
           type="number" 
           step="0.01" 
           value={form.salePrice} 
-          onChange={e => setForm({...form, salePrice: parseFloat(e.target.value) || 0})} 
+          onChange={(e: any) => setForm({...form, salePrice: parseFloat(e.target.value) || 0})} 
           required 
         />
         <Input 
@@ -86,13 +86,13 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
           type="number" 
           step="0.01" 
           value={form.costPrice} 
-          onChange={e => setForm({...form, costPrice: parseFloat(e.target.value) || 0})} 
+          onChange={(e: any) => setForm({...form, costPrice: parseFloat(e.target.value) || 0})} 
         />
         <Input 
           label="Stock Reorden" 
           type="number" 
           value={form.reorderLevel} 
-          onChange={e => setForm({...form, reorderLevel: parseFloat(e.target.value) || 0})} 
+          onChange={(e: any) => setForm({...form, reorderLevel: parseFloat(e.target.value) || 0})} 
         />
       </div>
 
@@ -100,7 +100,7 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
         label="Descripción" 
         placeholder="Breve descripción del producto..." 
         value={form.description} 
-        onChange={e => setForm({...form, description: e.target.value})} 
+        onChange={(e: any) => setForm({...form, description: e.target.value})} 
       />
 
       <div className="flex justify-end gap-2 pt-2">

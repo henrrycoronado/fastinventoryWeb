@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Search, Warehouse, Plus } from 'lucide-react'
-import { useWarehouses } from '../services/inventoryHooks'
-import type { Warehouse as WarehouseType } from '../services/types'
-import SectionHeader from '../../../components/SectionHeader'
-import Modal from '../../../atoms/Modal'
-import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
+import { useWarehouses } from '../services'
+import type { Warehouse as WarehouseType } from '../types'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Modal from '../../../core/components/atoms/Modal'
+import Button from '../../../core/components/atoms/Button'
+import Input from '../../../core/components/atoms/Input'
 
 export default function WarehousesPage() {
   const { data: warehouses = [], isLoading } = useWarehouses()
@@ -40,7 +40,7 @@ export default function WarehousesPage() {
                 className="input pl-8 w-48 text-xs" 
                 placeholder="Buscar..." 
                 value={search} 
-                onChange={e => setSearch(e.target.value)} 
+                onChange={(e: any) => setSearch(e.target.value)} 
               />
             </div>
             <button onClick={() => setModalOpen(true)} className="btn-primary text-sm">
@@ -87,7 +87,7 @@ export default function WarehousesPage() {
             label="Nombre del Almacén" 
             placeholder="Ej: Bodega Principal" 
             value={newName} 
-            onChange={e => setNewName(e.target.value)} 
+            onChange={(e: any) => setNewName(e.target.value)} 
             autoFocus 
           />
           <div className="flex justify-end gap-2">

@@ -1,14 +1,14 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, ShoppingCart, ChevronRight, CheckCircle2 } from 'lucide-react'
-import { useTickets, useTicketItems, useSendTicket, usePayTicket, usePaymentMethods, useWaiters, useTicketTotals } from '../services/salesHooks'
-import { useAppStore } from '../../../store/useAppStore'
-import { formatDate, formatCurrency } from '../../../lib/utils'
-import type { Ticket, TicketItem, Waiter } from '../services/types'
-import SectionHeader from '../../../components/SectionHeader'
-import Badge from '../../../atoms/Badge'
-import Modal from '../../../atoms/Modal'
-import Button from '../../../atoms/Button'
+import { useTickets, useTicketItems, useSendTicket, usePayTicket, usePaymentMethods, useWaiters, useTicketTotals } from '../services'
+import { useAppStore } from '../../../core/store/useAppStore'
+import { formatDate, formatCurrency } from '../../../core/utils'
+import type { Ticket, TicketItem, Waiter } from '../types'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Badge from '../../../core/components/atoms/Badge'
+import Modal from '../../../core/components/atoms/Modal'
+import Button from '../../../core/components/atoms/Button'
 
 const normalizeStatus = (status?: string | null) => (status ?? '').toLowerCase()
 
@@ -68,7 +68,7 @@ export default function TicketsPage() {
       <div className="px-6 py-4 border-b border-surface-3">
         <div className="relative w-full max-w-md">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-          <input className="input pl-8 text-xs" placeholder="Buscar por ticket o mesero..." value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="input pl-8 text-xs" placeholder="Buscar por ticket o mesero..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export default function TicketsPage() {
 
           <div>
             <label className="label">Método de Pago</label>
-            <select className="input text-sm" value={paymentMethodCode} onChange={e => setPaymentMethodCode(e.target.value)}>
+            <select className="input text-sm" value={paymentMethodCode} onChange={(e: any) => setPaymentMethodCode(e.target.value)}>
               <option value="">Seleccionar...</option>
               {paymentMethods.map(m => <option key={m.paymentMethodCode} value={m.paymentMethodCode}>{m.name}</option>)}
             </select>

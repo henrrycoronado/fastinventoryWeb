@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
 import { Package, Boxes, AlertTriangle, TrendingDown } from 'lucide-react'
-import { useAppStore } from '../../../store/useAppStore'
-import { useStock, useInventoryDashboard, useProducts } from '../services/inventoryHooks'
-import type { StockItem } from '../services/types'
-import StatCard from '../../../components/StatCard'
+import { useAppStore } from '../../../core/store/useAppStore'
+import { useStock, useInventoryDashboard, useProducts } from '../services'
+import type { StockItem } from '../types'
+import StatCard from '../../../core/components/StatCard'
 
 const ACCENT_COLORS = ['var(--color-accent)', '#3b82f6', '#f97316', '#8b5cf6', '#f43f5e']
 

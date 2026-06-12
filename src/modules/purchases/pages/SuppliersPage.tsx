@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react'
 import { Search, Users, Plus } from 'lucide-react'
-import { useSuppliers, useCreateSupplier } from '../services/purchasesHooks'
-import type { Supplier } from '../services/types'
-import SectionHeader from '../../../components/SectionHeader'
-import Modal from '../../../atoms/Modal'
-import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
+import { useSuppliers, useCreateSupplier } from '../services'
+import type { Supplier } from '../types'
+import SectionHeader from '../../../core/components/SectionHeader'
+import Modal from '../../../core/components/atoms/Modal'
+import Button from '../../../core/components/atoms/Button'
+import Input from '../../../core/components/atoms/Input'
 
 export default function SuppliersPage() {
   const { data: suppliers = [], isLoading } = useSuppliers()
@@ -37,7 +37,7 @@ export default function SuppliersPage() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-              <input className="input pl-8 w-52 text-xs" placeholder="Buscar proveedor..." value={search} onChange={e => setSearch(e.target.value)} />
+              <input className="input pl-8 w-52 text-xs" placeholder="Buscar proveedor..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
             </div>
             <button onClick={() => setModalOpen(true)} className="btn-primary text-sm"><Plus size={13} /> Nuevo proveedor</button>
           </div>
@@ -89,7 +89,7 @@ export default function SuppliersPage() {
             label="Nombre del proveedor"
             placeholder="Ej: Insumos Global S.A." 
             value={newName} 
-            onChange={e => setNewName(e.target.value)} 
+            onChange={(e: any) => setNewName(e.target.value)} 
             autoFocus 
           />
           <div className="flex justify-end gap-2">

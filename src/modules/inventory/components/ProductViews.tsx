@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Package, ChevronRight, Tag, Boxes } from 'lucide-react'
-import { useProducts } from '../services/inventoryHooks'
-import { formatCurrency } from '../../../lib/utils'
-import type { Product } from '../services/types'
-import Badge from '../../../atoms/Badge'
+import { useProducts } from '../services'
+import { formatCurrency } from '../../../core/utils'
+import type { Product } from '../types'
+import Badge from '../../../core/components/atoms/Badge'
 
 export function ProductListView({ search }: { search: string }) {
   const { data: products = [], isLoading } = useProducts({ search: search || undefined })
