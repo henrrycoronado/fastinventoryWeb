@@ -11,6 +11,7 @@ import {
   useTicketItems,
   useTicketTotals,
 } from '../services'
+import { useRestockNotifications } from '../hooks/useRestockNotifications'
 import { formatCurrency } from '../../../core/utils'
 import SectionHeader from '../../../core/components/SectionHeader'
 import SkuSelector from '../../../core/components/SkuSelector'
@@ -28,6 +29,8 @@ interface CartItem {
 }
 
 export default function SalesPosPage() {
+  useRestockNotifications()
+  
   const {
     selectedCompany,
     selectedWarehouse,
