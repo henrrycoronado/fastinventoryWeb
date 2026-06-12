@@ -3,9 +3,11 @@ export interface Supplier {
   name:        string
 }
 
-export interface SupplierManagement {
-  cen:       string
-  name:      string
-  isActive:  boolean
-  createdAt: string
+export interface CreateSupplierRequest {
+  companyCen: string
+  name:       string
+}
+
+export interface UpdateSupplierRequest {
+  name: string
 }

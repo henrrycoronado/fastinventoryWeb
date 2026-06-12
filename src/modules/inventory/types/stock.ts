@@ -1,4 +1,5 @@
 export interface StockItem {
+  stockCen:          string
   productCen:        string
   productName:       string
   warehouseCen:      string

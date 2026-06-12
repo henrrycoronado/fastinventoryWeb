@@ -1,14 +1,15 @@
 export interface Product {
   productCen:   string
+  companyCen:   string
+  categoryCen?:  string | null
+  categoryName?: string | null
+  unitCen?:      string | null
+  unitName?:     string | null
   sku:          string
   name:         string
   description?: string | null
-  categoryCen:  string
-  categoryName: string
-  unitCen:      string
-  unitName:     string
   salePrice:    number
-  costPrice?:   number | null
+  costPrice:    number
   reorderLevel: number
   status:       string
   stationCode?: string | null

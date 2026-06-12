@@ -7,11 +7,19 @@ export interface KdsTeam {
 export interface KdsItem {
   ticketItemCen: string
   ticketCen:     string
-  productCen:    string
   productName:   string
   quantity:      number
   status:        string
-  note?:         string
-  resendCount:   number
-  createdAt:     string
+  orderedAt:     string
+  note?:         string | null
+}
+
+export interface CreateKdsTeamRequest {
+  companyCen:   string
+  name:         string
+  categoryCens: string[]
+}
+
+export interface UpdateKdsItemStatusRequest {
+  status: string
 }

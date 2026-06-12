@@ -1,10 +1,10 @@
 export interface SellableProduct {
   productCen:        string
   name:              string
-  categoryCen:       string
-  categoryName:      string
+  categoryCen:       string | null
+  categoryName:      string | null
   salePrice:         number
   availableQuantity: number
   isAvailable:       boolean
-  stationCode?:      string | null
+  stationCode:       string | null
 }

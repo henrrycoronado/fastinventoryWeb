@@ -18,7 +18,7 @@ export const useCreateWaiter = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useMutation({
     mutationFn: (data: { name: string }) =>
-      salesApi.waiters.create(companyCen!, data),
+      salesApi.waiters.create(companyCen!, { ...data, companyCen: companyCen! }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['waiters', companyCen] })
       toast.success('Mesero registrado')

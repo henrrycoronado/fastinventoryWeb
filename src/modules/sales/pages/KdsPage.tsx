@@ -10,9 +10,9 @@ import Button from '../../../core/components/atoms/Button'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function KdsPage() {
-  const { selectedWarehouse } = useAppStore()
-  const { data: teams = [] } = useKdsTeams({ warehouseCen: selectedWarehouse?.warehouseCen })
-  const { data: status } = useKdsStatus({ warehouseCen: selectedWarehouse?.warehouseCen })
+  const { selectedCompany } = useAppStore()
+  const { data: teams = [] } = useKdsTeams()
+  const { data: status } = useKdsStatus()
 
   const [selectedTeamCen, setSelectedTeamCen] = useState('')
 
@@ -20,21 +20,21 @@ export default function KdsPage() {
     <div className="animate-fade-in">
       <SectionHeader 
         title="Cocina (KDS)" 
-        subtitle={selectedWarehouse?.name}
+        subtitle={selectedCompany?.name}
       />
 
       <div className="grid grid-cols-3 gap-4 px-6 mt-4">
         <div className="card p-4 text-center">
           <p className="text-xs text-ink-muted uppercase tracking-wider">Pendientes</p>
-          <p className="font-display text-2xl font-bold text-yellow-400 mt-1">{status?.pendingCount ?? 0}</p>
+          <p className="font-display text-2xl font-bold text-yellow-400 mt-1">{status?.pendingItems ?? 0}</p>
         </div>
         <div className="card p-4 text-center">
           <p className="text-xs text-ink-muted uppercase tracking-wider">Preparando</p>
-          <p className="font-display text-2xl font-bold text-accent mt-1">{status?.preparingCount ?? 0}</p>
+          <p className="font-display text-2xl font-bold text-accent mt-1">{status?.preparingItems ?? 0}</p>
         </div>
         <div className="card p-4 text-center">
-          <p className="text-xs text-ink-muted uppercase tracking-wider">Listos</p>
-          <p className="font-display text-2xl font-bold text-green-400 mt-1">{status?.readyCount ?? 0}</p>
+          <p className="text-xs text-ink-muted uppercase tracking-wider">Espera prom.</p>
+          <p className="font-display text-2xl font-bold text-green-400 mt-1">{status?.averageWaitTimeMinutes?.toFixed(1) ?? 0}m</p>
         </div>
       </div>
 
@@ -81,7 +81,7 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
 
   const updateStatus = useMutation({
     mutationFn: ({ ticketItemCen, status }: { ticketItemCen: string, status: string }) => 
-      salesApi.kds.updateItemStatus(selectedCompany!.companyCen, ticketItemCen, status),
+      salesApi.kds.updateItemStatus(selectedCompany!.companyCen, ticketItemCen, { status }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['kds-items', teamCen] })
       qc.invalidateQueries({ queryKey: ['kds-status'] })
@@ -121,7 +121,7 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
             <div className="flex-1 min-w-0">
               {item.note && <p className="text-xs text-yellow-400 italic">"{item.note}"</p>}
               <p className="text-[10px] text-ink-muted flex items-center gap-1 mt-1">
-                <Clock size={10} /> {new Date(item.createdAt).toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' })}
+                <Clock size={10} /> {new Date(item.orderedAt).toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
           </div>

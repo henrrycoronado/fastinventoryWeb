@@ -17,7 +17,7 @@ export const useCreateSupplier = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
   return useMutation({
     mutationFn: (data: { name: string }) =>
-      purchasesApi.suppliers.create(companyCen!, data),
+      purchasesApi.suppliers.create(companyCen!, { ...data, companyCen: companyCen! }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['suppliers', companyCen] })
       toast.success('Proveedor registrado')

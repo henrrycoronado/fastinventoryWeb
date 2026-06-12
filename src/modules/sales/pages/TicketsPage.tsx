@@ -15,7 +15,7 @@ const normalizeStatus = (status?: string | null) => (status ?? '').toLowerCase()
 export default function TicketsPage() {
   const navigate = useNavigate()
   const { selectedWarehouse, activeTicketCen, setActiveTicketCen } = useAppStore()
-  const { data: tickets = [], isLoading } = useTickets({ warehouseCen: selectedWarehouse?.warehouseCen })
+  const { data: tickets = [], isLoading } = useTickets()
   const { data: paymentMethods = [] } = usePaymentMethods()
   const { data: waiters = [] } = useWaiters()
   const sendTicket = useSendTicket()
@@ -73,9 +73,8 @@ export default function TicketsPage() {
       </div>
 
       <div className="mx-6 mt-4 card overflow-hidden mb-8">
-        <div className={`hidden md:grid ${selectedWarehouse ? 'grid-cols-6' : 'grid-cols-7'} px-6 py-3 border-b border-surface-4`}>
+        <div className="hidden md:grid grid-cols-6 px-6 py-3 border-b border-surface-4">
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Ticket</span>
-          {!selectedWarehouse && <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Almacén</span>}
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Fecha</span>
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Mesero</span>
           <span className="col-span-1 text-xs font-semibold uppercase tracking-wider text-ink-muted">Total</span>
@@ -97,18 +96,13 @@ export default function TicketsPage() {
               return (
                 <div key={ticket.ticketCen}>
                   <div 
-                    className={`grid grid-cols-1 md:${selectedWarehouse ? 'grid-cols-6' : 'grid-cols-7'} items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer`} 
+                    className="grid grid-cols-1 md:grid-cols-6 items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer" 
                     onClick={() => setExpandedId(isExpanded ? null : ticket.ticketCen)}
                   >
                     <span className="text-sm font-medium text-ink-primary font-mono">{ticket.ticketCen}</span>
-                    {!selectedWarehouse && (
-                      <span className="text-[10px] text-ink-secondary truncate bg-surface-3 px-2 py-0.5 rounded-full w-fit">
-                        {ticket.warehouseCen || 'General'}
-                      </span>
-                    )}
                     <span className="text-xs text-ink-secondary">{formatDate(ticket.createdAt)}</span>
                     <span className="text-sm text-ink-secondary truncate">{getWaiterName(ticket.waiterCen)}</span>
-                    <span className="text-sm font-mono font-bold text-accent">—</span>
+                    <span className="text-sm font-mono font-bold text-accent">{formatCurrency(ticket.total)}</span>
                     <div>
                       <Badge variant={normalizeStatus(ticket.status) === 'paid' ? 'green' : normalizeStatus(ticket.status) === 'open' ? 'yellow' : 'gray'}>
                         {ticket.status}
@@ -201,8 +195,8 @@ function TicketDetailView({ ticketCen }: { ticketCen: string }) {
               <div className="text-right min-w-[70px]"><p className="text-ink-muted">Subtotal</p><p className="font-mono font-medium text-accent">{formatCurrency(item.quantity * item.unitPrice)}</p></div>
 
               <div>
-                <Badge variant={normalizeStatus(item.status) === 'ready' || normalizeStatus(item.status) === 'delivered' ? 'green' : normalizeStatus(item.status) === 'preparing' ? 'blue' : normalizeStatus(item.status) === 'cancelled' ? 'gray' : 'yellow'}>
-                  {item.status}
+                <Badge variant={normalizeStatus(item.kdsStatus) === 'ready' || normalizeStatus(item.kdsStatus) === 'delivered' ? 'green' : normalizeStatus(item.kdsStatus) === 'preparing' ? 'blue' : normalizeStatus(item.kdsStatus) === 'cancelled' ? 'gray' : 'yellow'}>
+                  {item.kdsStatus}
                 </Badge>
               </div>
             </div>

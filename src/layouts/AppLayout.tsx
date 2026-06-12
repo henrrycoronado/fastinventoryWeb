@@ -10,7 +10,7 @@ import {
   ChevronDown, LayoutDashboard, Package, Boxes,
   ArrowLeftRight, ShoppingCart, Truck,
   UserCheck, Store, UtensilsCrossed,
-  Tag, ScrollText,
+  Tag, ScrollText, Ruler,
   Settings, UserCircle,
 } from 'lucide-react'
 
@@ -53,6 +53,7 @@ export default function AppLayout() {
         { label: 'Dashboard',   path: '/inventory/dashboard',  icon: LayoutDashboard },
         { label: 'Productos',   path: '/inventory/products',   icon: Package },
         { label: 'Categorías',  path: '/inventory/categories', icon: Tag },
+        { label: 'Unidades',    path: '/inventory/units',      icon: Ruler },
         { label: 'Almacenes',   path: '/inventory/warehouses', icon: Warehouse },
         { label: 'Stock',       path: '/inventory/stock',      icon: Boxes },
         { label: 'Movimientos', path: '/inventory/movements',  icon: ArrowLeftRight },

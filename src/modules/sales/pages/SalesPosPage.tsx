@@ -84,8 +84,7 @@ export default function SalesPosPage() {
 
       if (!ticketCen) {
         const ticket: any = await createTicket.mutateAsync({ 
-          waiterCen: selectedWaiterCen || undefined,
-          warehouseCen: selectedWarehouse?.warehouseCen || undefined
+          waiterCen: selectedWaiterCen || undefined
         })
 
         ticketCen = ticket.ticketCen
