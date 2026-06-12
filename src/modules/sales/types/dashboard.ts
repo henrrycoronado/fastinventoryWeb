@@ -4,6 +4,17 @@ export interface DailySalesDashboard {
   averageTicket: number
 }
 
+export interface MonthlySalesDashboard {
+  currentMonth:  MonthlySummary
+  previousMonth: MonthlySummary
+}
+
+export interface MonthlySummary {
+  totalSales:    number
+  ticketsCount:  number
+  averageTicket: number
+}
+
 export interface TopProductDashboard {
   productCen:   string
   productName:  string

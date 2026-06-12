@@ -72,6 +72,7 @@ export default function AppLayout() {
     sales: {
       label: 'Ventas',
       items: [
+        { label: 'Dashboard',      path: '/sales/dashboard',          icon: LayoutDashboard },
         { label: 'Punto de Venta', path: '/sales/pos',                icon: Store },
         { label: 'Tickets',        path: '/sales/tickets',            icon: ShoppingCart },
         { label: 'KDS (Cocina)',   path: '/sales/kds',                icon: UtensilsCrossed },

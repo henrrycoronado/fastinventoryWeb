@@ -29,6 +29,7 @@ const SuppliersPage = lazy(() => import('./modules/purchases/pages/SuppliersPage
 const OrdersPage = lazy(() => import('./modules/purchases/pages/OrdersPage'))
 
 const SalesPosPage = lazy(() => import('./modules/sales/pages/SalesPosPage'))
+const SalesDashboard = lazy(() => import('./modules/sales/pages/SalesDashboard'))
 const TicketsPage = lazy(() => import('./modules/sales/pages/TicketsPage'))
 const KdsPage = lazy(() => import('./modules/sales/pages/KdsPage'))
 const WaitersPage = lazy(() => import('./modules/sales/pages/WaitersPage'))
@@ -99,6 +100,7 @@ export default function App() {
                   <Route path="/purchases/suppliers" element={<SuppliersPage />} />
                   <Route path="/purchases/orders"    element={<OrdersPage />} />
 
+                  <Route path="/sales/dashboard" element={<SalesDashboard />} />
                   <Route path="/sales/pos"       element={<SalesPosPage />} />
                   <Route path="/sales/tickets"   element={<TicketsPage />} />
                   <Route path="/sales/kds"       element={<KdsPage />} />
