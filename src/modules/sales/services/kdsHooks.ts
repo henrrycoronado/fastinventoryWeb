@@ -2,10 +2,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAppStore } from '../../../core/store/useAppStore'
 import { salesApi } from '../hooks'
 import toast from 'react-hot-toast'
-import type { 
-  KdsTeam, 
-  KdsItem, 
-  UpdateKdsItemStatusRequest 
+import type {
+  KdsTeam,
+  KdsItem,
+  UpdateKdsItemStatusRequest
 } from '../types'
 
 export const useKdsTeams = () => {
@@ -36,7 +36,7 @@ export const useKdsTeamItems = (teamCen: string | undefined) => {
     queryKey: ['kds-team-items', companyCen, teamCen],
     queryFn:  () => salesApi.kds.listTeamItems(companyCen!, teamCen!),
     enabled:  !!companyCen && !!teamCen,
-    refetchInterval: 15000, // Auto-refresh for KDS
+    refetchInterval: 15000,
   })
 }
 

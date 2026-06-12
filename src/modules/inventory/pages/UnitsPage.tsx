@@ -10,14 +10,13 @@ import Input from '../../../core/components/atoms/Input'
 export default function UnitsPage() {
   const { data: units = [], isLoading } = useUnits()
   const createUnit = useCreateUnit()
-  
   const [search, setSearch]     = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [newName, setNewName]     = useState('')
   const [newAbbr, setNewAbbr]     = useState('')
 
-  const filtered = units.filter(u => 
-    u.name.toLowerCase().includes(search.toLowerCase()) || 
+  const filtered = units.filter(u =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
     (u.abbreviation && u.abbreviation.toLowerCase().includes(search.toLowerCase()))
   )
 
@@ -76,24 +75,24 @@ export default function UnitsPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Nueva Unidad de Medida" size="sm">
         <div className="space-y-4">
-          <Input 
-            label="Nombre" 
-            placeholder="Ej: Kilogramos" 
-            value={newName} 
-            onChange={(e: any) => setNewName(e.target.value)} 
-            autoFocus 
+          <Input
+            label="Nombre"
+            placeholder="Ej: Kilogramos"
+            value={newName}
+            onChange={(e: any) => setNewName(e.target.value)}
+            autoFocus
           />
-          <Input 
-            label="Abreviación" 
-            placeholder="Ej: kg" 
-            value={newAbbr} 
-            onChange={(e: any) => setNewAbbr(e.target.value)} 
+          <Input
+            label="Abreviación"
+            placeholder="Ej: kg"
+            value={newAbbr}
+            onChange={(e: any) => setNewAbbr(e.target.value)}
           />
           <div className="flex justify-end gap-2">
             <Button onClick={() => setModalOpen(false)}>Cancelar</Button>
-            <Button 
-              variant="primary" 
-              onClick={handleCreate} 
+            <Button
+              variant="primary"
+              onClick={handleCreate}
               loading={createUnit.isPending}
               disabled={!newName.trim() || !newAbbr.trim()}
             >

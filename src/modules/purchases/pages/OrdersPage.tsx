@@ -26,16 +26,14 @@ export default function OrdersPage() {
 
   const [search, setSearch]   = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  
-  // Create Order State
   const [selectedSupplierCen, setSelectedSupplierCen] = useState('')
   const [cart, setCart] = useState<CartItem[]>([])
 
   const orders = ordersData?.items ?? []
 
   const filtered = useMemo(() => {
-    return orders.filter((o: any) => 
-      o.orderCen.toLowerCase().includes(search.toLowerCase()) || 
+    return orders.filter((o: any) =>
+      o.orderCen.toLowerCase().includes(search.toLowerCase()) ||
       o.supplierCen.toLowerCase().includes(search.toLowerCase())
     )
   }, [orders, search])
@@ -55,13 +53,11 @@ export default function OrdersPage() {
 
   const handleCreate = async () => {
     if (!selectedSupplierCen || !selectedWarehouse || cart.length === 0) return
-    
     await createOrder.mutateAsync({
       supplierCen: selectedSupplierCen,
       warehouseCen: selectedWarehouse.warehouseCen,
       items: cart.map(i => ({ productCen: i.productCen, quantity: i.quantity }))
     })
-    
     setModalOpen(false)
     setCart([])
     setSelectedSupplierCen('')
@@ -73,8 +69,8 @@ export default function OrdersPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Órdenes de Compra" 
+      <SectionHeader
+        title="Órdenes de Compra"
         subtitle={`${orders.length} órdenes registradas`}
         right={
           <div className="flex items-center gap-2">
@@ -122,7 +118,7 @@ export default function OrdersPage() {
                 </div>
                 <div className="flex justify-end">
                   {o.status === 0 && (
-                    <button 
+                    <button
                       onClick={() => handleConfirm(o.orderCen)}
                       className="btn-ghost !px-2 !py-1 text-accent hover:bg-accent/10"
                       title="Confirmar recepción"
@@ -137,19 +133,19 @@ export default function OrdersPage() {
         )}
       </div>
 
-      <Modal 
-        open={modalOpen} 
-        onClose={() => setModalOpen(false)} 
-        title="Nueva Orden de Compra" 
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Nueva Orden de Compra"
         size="lg"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
               <label className="label">Proveedor</label>
-              <select 
-                className="input text-sm" 
-                value={selectedSupplierCen} 
+              <select
+                className="input text-sm"
+                value={selectedSupplierCen}
                 onChange={(e: any) => setSelectedSupplierCen(e.target.value)}
               >
                 <option value="">Seleccionar proveedor...</option>
@@ -158,7 +154,6 @@ export default function OrdersPage() {
                 ))}
               </select>
             </div>
-            
             <div className="space-y-2">
               <label className="label">Productos</label>
               <SkuSelector onAdd={handleAddToCart} />
@@ -181,16 +176,16 @@ export default function OrdersPage() {
                       <p className="text-[10px] text-ink-muted font-mono">{item.skuLabel}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <input 
-                        type="number" 
-                        className="input !py-0.5 !px-1.5 w-12 text-xs font-mono text-center" 
-                        value={item.quantity} 
+                      <input
+                        type="number"
+                        className="input !py-0.5 !px-1.5 w-12 text-xs font-mono text-center"
+                        value={item.quantity}
                         onChange={(e: any) => {
                           const val = parseInt(e.target.value) || 1
                           setCart(prev => prev.map(i => i.productCen === item.productCen ? { ...i, quantity: val } : i))
                         }}
                       />
-                      <button 
+                      <button
                         onClick={() => setCart(prev => prev.filter(i => i.productCen !== item.productCen))}
                         className="text-ink-muted hover:text-red-400"
                       >
@@ -203,8 +198,8 @@ export default function OrdersPage() {
             </div>
             <div className="p-4 border-t border-surface-4 bg-surface-2 flex justify-end gap-2">
               <Button onClick={() => setModalOpen(false)}>Cancelar</Button>
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 onClick={handleCreate}
                 disabled={!selectedSupplierCen || cart.length === 0 || createOrder.isPending}
                 loading={createOrder.isPending}

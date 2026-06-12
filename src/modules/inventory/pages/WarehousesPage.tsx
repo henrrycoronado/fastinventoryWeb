@@ -9,21 +9,17 @@ import Input from '../../../core/components/atoms/Input'
 
 export default function WarehousesPage() {
   const { data: warehouses = [], isLoading } = useWarehouses()
-  
   const [search, setSearch]     = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [newName, setNewName]     = useState('')
 
-  const filtered = warehouses.filter(w => 
-    w.name.toLowerCase().includes(search.toLowerCase()) || 
+  const filtered = warehouses.filter(w =>
+    w.name.toLowerCase().includes(search.toLowerCase()) ||
     w.warehouseCen.toLowerCase().includes(search.toLowerCase())
   )
 
   const handleCreate = async () => {
-    // Note: Contract currently only specifies GET for warehouses.
-    // Implementing UI for creation as requested, assuming API support might be added or exists.
     if (!newName.trim()) return
-    // await createWarehouse.mutateAsync({ name: newName.trim() })
     setNewName(''); setModalOpen(false)
   }
 
@@ -36,11 +32,11 @@ export default function WarehousesPage() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-              <input 
-                className="input pl-8 w-48 text-xs" 
-                placeholder="Buscar..." 
-                value={search} 
-                onChange={(e: any) => setSearch(e.target.value)} 
+              <input
+                className="input pl-8 w-48 text-xs"
+                placeholder="Buscar..."
+                value={search}
+                onChange={(e: any) => setSearch(e.target.value)}
               />
             </div>
             <button onClick={() => setModalOpen(true)} className="btn-primary text-sm">
@@ -83,18 +79,18 @@ export default function WarehousesPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Nuevo Almacén" size="sm">
         <div className="space-y-4">
-          <Input 
-            label="Nombre del Almacén" 
-            placeholder="Ej: Bodega Principal" 
-            value={newName} 
-            onChange={(e: any) => setNewName(e.target.value)} 
-            autoFocus 
+          <Input
+            label="Nombre del Almacén"
+            placeholder="Ej: Bodega Principal"
+            value={newName}
+            onChange={(e: any) => setNewName(e.target.value)}
+            autoFocus
           />
           <div className="flex justify-end gap-2">
             <Button onClick={() => setModalOpen(false)}>Cancelar</Button>
-            <Button 
-              variant="primary" 
-              onClick={handleCreate} 
+            <Button
+              variant="primary"
+              onClick={handleCreate}
               disabled={!newName.trim()}
             >
               Registrar

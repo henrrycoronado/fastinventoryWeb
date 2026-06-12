@@ -10,39 +10,38 @@ export default function PurchasesDashboard() {
   const { data: suppliers = [], isLoading: loadingSuppliers } = useSuppliers()
 
   const orders = ordersData?.items ?? []
-  
   const pendingOrders = orders.filter((o: any) => o.status === 0).length
   const confirmedOrders = orders.filter((o: any) => o.status === 1).length
 
   return (
     <div className="p-6 space-y-6 animate-fade-in">
-      <SectionHeader 
-        title="Dashboard Compras" 
-        subtitle={`${selectedCompany?.name} · ${selectedWarehouse?.name}`} 
+      <SectionHeader
+        title="Dashboard Compras"
+        subtitle={`${selectedCompany?.name} · ${selectedWarehouse?.name}`}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          label="Proveedores" 
-          value={loadingSuppliers ? '...' : suppliers.length} 
-          icon={Users} 
+        <StatCard
+          label="Proveedores"
+          value={loadingSuppliers ? '...' : suppliers.length}
+          icon={Users}
         />
-        <StatCard 
-          label="Órdenes Pendientes" 
-          value={loadingOrders ? '...' : pendingOrders} 
-          icon={Clock} 
+        <StatCard
+          label="Órdenes Pendientes"
+          value={loadingOrders ? '...' : pendingOrders}
+          icon={Clock}
           variant="warn"
         />
-        <StatCard 
-          label="Órdenes Confirmadas" 
-          value={loadingOrders ? '...' : confirmedOrders} 
-          icon={CheckCircle2} 
+        <StatCard
+          label="Órdenes Confirmadas"
+          value={loadingOrders ? '...' : confirmedOrders}
+          icon={CheckCircle2}
           variant="default"
         />
-        <StatCard 
-          label="Total Órdenes" 
-          value={loadingOrders ? '...' : orders.length} 
-          icon={Truck} 
+        <StatCard
+          label="Total Órdenes"
+          value={loadingOrders ? '...' : orders.length}
+          icon={Truck}
         />
       </div>
 

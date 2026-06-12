@@ -9,15 +9,15 @@ import SectionHeader from '../../../core/components/SectionHeader'
 export default function SalesCatalogPage() {
   const { selectedWarehouse } = useAppStore()
   const [search, setSearch] = useState('')
-  const { data: products = [], isLoading } = useSellableProducts({ 
+  const { data: products = [], isLoading } = useSellableProducts({
     search: search || undefined,
     warehouseCen: selectedWarehouse?.warehouseCen || undefined
   })
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Catálogo de Ventas" 
+      <SectionHeader
+        title="Catálogo de Ventas"
         subtitle={selectedWarehouse ? `Productos disponibles en ${selectedWarehouse.name}` : "Consolidado (Todos los almacenes)"}
         right={
           <div className="relative">

@@ -4,26 +4,25 @@ import { useProducts } from '../../modules/inventory/services'
 import { useSellableProducts } from '../../modules/sales/services'
 import { formatCurrency } from '../utils'
 
-export default function SkuSelector({ 
-  onAdd, 
-  allowCreate = false, 
+export default function SkuSelector({
+  onAdd,
+  allowCreate = false,
   CreateComponent,
   warehouseCen,
   isSellable = false
-}: { 
-  onAdd: (item: any) => void; 
-  allowCreate?: boolean; 
+}: {
+  onAdd: (item: any) => void;
+  allowCreate?: boolean;
   CreateComponent?: React.ElementType;
   warehouseCen?: string;
   isSellable?: boolean;
 }) {
   const [search, setSearch] = useState('')
-  
-  const { data: inventoryProducts = [] } = useProducts({ 
-    search: search || undefined 
+  const { data: inventoryProducts = [] } = useProducts({
+    search: search || undefined
   }, { enabled: !isSellable })
 
-  const { data: sellableProducts = [] } = useSellableProducts({ 
+  const { data: sellableProducts = [] } = useSellableProducts({
     search: search || undefined,
     warehouseCen: warehouseCen || undefined
   }, { enabled: isSellable })
@@ -35,11 +34,11 @@ export default function SkuSelector({
     <div className="space-y-3">
       <div className="relative">
         <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-        <input 
-          className="input pl-8 text-xs" 
-          placeholder="Buscar por SKU o nombre..." 
-          value={search} 
-          onChange={(e: any) => { setSearch(e.target.value); setShowCreate(false) }} 
+        <input
+          className="input pl-8 text-xs"
+          placeholder="Buscar por SKU o nombre..."
+          value={search}
+          onChange={(e: any) => { setSearch(e.target.value); setShowCreate(false) }}
         />
       </div>
       <div className="max-h-52 overflow-y-auto rounded-lg border border-surface-4 divide-y divide-surface-4">
@@ -51,14 +50,14 @@ export default function SkuSelector({
         ) : (
           <>
             {products.map((p: any) => (
-              <button 
+              <button
                 key={p.productCen}
-                onClick={() => onAdd({ 
-                  productCen: p.productCen, 
-                  skuLabel: p.sku || p.productCen, 
+                onClick={() => onAdd({
+                  productCen: p.productCen,
+                  skuLabel: p.sku || p.productCen,
                   productName: p.name,
                   price: p.salePrice || 0
-                })} 
+                })}
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-surface-3 transition-colors text-left"
               >
                 <Package size={13} className="text-accent shrink-0" />

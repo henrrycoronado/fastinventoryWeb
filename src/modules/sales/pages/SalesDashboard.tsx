@@ -6,8 +6,6 @@ import StatCard from '../../../core/components/StatCard'
 
 export default function SalesDashboard() {
   const { selectedCompany } = useAppStore()
-  
-  // Activate SSE notifications
   useRestockNotifications()
 
   const { data: dailyData,   isLoading: loadingDaily }   = useDailySales()
@@ -17,7 +15,7 @@ export default function SalesDashboard() {
   const currentMonth  = monthlyData?.currentMonth
   const previousMonth = monthlyData?.previousMonth
 
-  const formatCurrency = (val: number = 0) => 
+  const formatCurrency = (val: number = 0) =>
     new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(val)
 
   const calculateGrowth = (current: number = 0, previous: number = 0) => {
@@ -36,30 +34,30 @@ export default function SalesDashboard() {
         </p>
       </div>
 
-      {/* Daily Stats */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard 
-          label="Ventas de Hoy" 
-          value={formatCurrency(dailyData?.totalSales)} 
-          icon={DollarSign} 
+        <StatCard
+          label="Ventas de Hoy"
+          value={formatCurrency(dailyData?.totalSales)}
+          icon={DollarSign}
           loading={loadingDaily}
         />
-        <StatCard 
-          label="Tickets Hoy" 
-          value={dailyData?.ticketsCount ?? 0} 
-          icon={ShoppingCart} 
+        <StatCard
+          label="Tickets Hoy"
+          value={dailyData?.ticketsCount ?? 0}
+          icon={ShoppingCart}
           loading={loadingDaily}
         />
-        <StatCard 
-          label="Ticket Promedio" 
-          value={formatCurrency(dailyData?.averageTicket)} 
-          icon={TrendingUp} 
+        <StatCard
+          label="Ticket Promedio"
+          value={formatCurrency(dailyData?.averageTicket)}
+          icon={TrendingUp}
           loading={loadingDaily}
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Monthly Comparison - Addresses Case: Price History */}
+        {}
         <div className="card p-5 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-sm font-bold text-ink-secondary uppercase tracking-wider">Comparativa Mensual</h2>
@@ -93,7 +91,7 @@ export default function SalesDashboard() {
           </div>
         </div>
 
-        {/* Top Products */}
+        {}
         <div className="card p-5">
           <h2 className="font-display text-sm font-bold text-ink-secondary uppercase tracking-wider mb-4">Productos más vendidos</h2>
           {loadingTop ? (

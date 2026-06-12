@@ -19,17 +19,13 @@ export default function MovementsPage() {
   const { data: documents = [], isLoading } = useInventoryDocuments()
   const { data: warehouses = [] } = useWarehouses()
   const createDocument = useCreateInventoryDocument()
-  
   const [modalOpen, setModalOpen] = useState(false)
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  
-  // Create state
   const [docType, setDocType] = useState('INCREASE')
   const [targetWarehouseCen, setTargetWarehouseCen] = useState('')
   const [reason, setReason] = useState('')
   const [lines, setLines] = useState<{productCen: string, productName: string, quantity: number}[]>([])
 
-  // Use global warehouse if available, else use targetWarehouseCen
   const effectiveWarehouseCen = selectedWarehouse?.warehouseCen || targetWarehouseCen
 
   const handleAddProduct = (item: any) => {
@@ -82,7 +78,7 @@ export default function MovementsPage() {
               const isExpanded = expandedId === doc.documentCen
               return (
                 <div key={doc.documentCen}>
-                  <div 
+                  <div
                     className="grid grid-cols-1 md:grid-cols-5 items-center px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer"
                     onClick={() => setExpandedId(isExpanded ? null : doc.documentCen)}
                   >
@@ -120,9 +116,9 @@ export default function MovementsPage() {
             {!selectedWarehouse && (
               <div>
                 <label className="label">Almacén de Destino</label>
-                <select 
-                  className="input text-sm" 
-                  value={targetWarehouseCen} 
+                <select
+                  className="input text-sm"
+                  value={targetWarehouseCen}
                   onChange={(e: any) => setTargetWarehouseCen(e.target.value)}
                 >
                   <option value="">Seleccione un almacén...</option>
@@ -164,16 +160,16 @@ export default function MovementsPage() {
                       <p className="text-[10px] text-ink-muted font-mono">{line.productCen}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <input 
-                        type="number" 
-                        className="input !py-0.5 !px-1.5 w-12 text-xs font-mono text-center" 
-                        value={line.quantity} 
+                      <input
+                        type="number"
+                        className="input !py-0.5 !px-1.5 w-12 text-xs font-mono text-center"
+                        value={line.quantity}
                         onChange={(e: any) => {
                           const val = parseFloat(e.target.value) || 1
                           setLines(prev => prev.map(l => l.productCen === line.productCen ? { ...l, quantity: val } : l))
                         }}
                       />
-                      <button 
+                      <button
                         onClick={() => setLines(prev => prev.filter(l => l.productCen !== line.productCen))}
                         className="text-ink-muted hover:text-red-400"
                       >

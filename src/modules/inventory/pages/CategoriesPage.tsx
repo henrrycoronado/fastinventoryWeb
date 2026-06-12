@@ -10,13 +10,12 @@ import Input from '../../../core/components/atoms/Input'
 export default function CategoriesPage() {
   const { data: categories = [], isLoading } = useCategories()
   const createCategory = useCreateCategory()
-  
   const [search, setSearch]     = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [newName, setNewName]     = useState('')
 
-  const filtered = categories.filter(c => 
-    c.name.toLowerCase().includes(search.toLowerCase()) || 
+  const filtered = categories.filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase()) ||
     (c.description && c.description.toLowerCase().includes(search.toLowerCase()))
   )
 
@@ -75,18 +74,18 @@ export default function CategoriesPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Nueva Categoría" size="sm">
         <div className="space-y-4">
-          <Input 
-            label="Nombre" 
-            placeholder="Ej: Electrónica" 
-            value={newName} 
-            onChange={(e: any) => setNewName(e.target.value)} 
-            autoFocus 
+          <Input
+            label="Nombre"
+            placeholder="Ej: Electrónica"
+            value={newName}
+            onChange={(e: any) => setNewName(e.target.value)}
+            autoFocus
           />
           <div className="flex justify-end gap-2">
             <Button onClick={() => setModalOpen(false)}>Cancelar</Button>
-            <Button 
-              variant="primary" 
-              onClick={handleCreate} 
+            <Button
+              variant="primary"
+              onClick={handleCreate}
               loading={createCategory.isPending}
               disabled={!newName.trim()}
             >

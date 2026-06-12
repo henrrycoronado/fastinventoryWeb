@@ -2,11 +2,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAppStore } from '../../../core/store/useAppStore'
 import { salesApi } from '../hooks'
 import toast from 'react-hot-toast'
-import type { 
-  Ticket, 
-  TicketItem, 
-  TicketTotals, 
-  PayTicketRequest, 
+import type {
+  Ticket,
+  TicketItem,
+  TicketTotals,
+  PayTicketRequest,
   CancelTicketRequest,
   AssignTicketWaiterRequest
 } from '../types'

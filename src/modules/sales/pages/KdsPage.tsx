@@ -18,8 +18,8 @@ export default function KdsPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Cocina (KDS)" 
+      <SectionHeader
+        title="Cocina (KDS)"
         subtitle={selectedCompany?.name}
       />
 
@@ -40,12 +40,12 @@ export default function KdsPage() {
 
       <div className="px-6 py-4 flex gap-2 overflow-x-auto">
         {teams.map(team => (
-          <button 
+          <button
             key={team.teamCen}
             onClick={() => setSelectedTeamCen(team.teamCen)}
             className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all whitespace-nowrap ${
-              selectedTeamCen === team.teamCen 
-                ? 'bg-accent/10 border-accent text-accent' 
+              selectedTeamCen === team.teamCen
+                ? 'bg-accent/10 border-accent text-accent'
                 : 'bg-surface-2 border-surface-4 text-ink-secondary hover:border-surface-5'
             }`}
           >
@@ -72,7 +72,6 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
   const qc = useQueryClient()
   const { selectedCompany } = useAppStore()
   const normalizeStatus = (status?: string | null) => (status ?? '').toLowerCase()
-  
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['kds-items', teamCen],
     queryFn: () => salesApi.kds.listTeamItems(selectedCompany!.companyCen, teamCen),
@@ -80,7 +79,7 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
   })
 
   const updateStatus = useMutation({
-    mutationFn: ({ ticketItemCen, status }: { ticketItemCen: string, status: string }) => 
+    mutationFn: ({ ticketItemCen, status }: { ticketItemCen: string, status: string }) =>
       salesApi.kds.updateItemStatus(selectedCompany!.companyCen, ticketItemCen, { status }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['kds-items', teamCen] })
@@ -99,11 +98,10 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
       ) : items.map((item: KdsItem) => (
         <div key={item.ticketItemCen} className="card p-4 space-y-3 relative overflow-hidden">
           <div className={`absolute top-0 left-0 w-1 h-full ${
-            normalizeStatus(item.status) === 'created' || normalizeStatus(item.status) === 'pending' ? 'bg-yellow-400' : 
-            normalizeStatus(item.status) === 'preparing' ? 'bg-accent' : 
+            normalizeStatus(item.status) === 'created' || normalizeStatus(item.status) === 'pending' ? 'bg-yellow-400' :
+            normalizeStatus(item.status) === 'preparing' ? 'bg-accent' :
             normalizeStatus(item.status) === 'ready' ? 'bg-green-400' : 'bg-slate-500'
           }`} />
-          
           <div className="flex justify-between items-start">
             <div className="min-w-0">
               <p className="text-sm font-bold text-ink-primary truncate">{item.productName}</p>
@@ -128,8 +126,8 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
 
           <div className="flex gap-2 pt-2 border-t border-surface-4">
             {(normalizeStatus(item.status) === 'created' || normalizeStatus(item.status) === 'pending') && (
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 className="flex-1 justify-center text-xs"
                 onClick={() => updateStatus.mutate({ ticketItemCen: item.ticketItemCen, status: 'PREPARING' })}
                 loading={updateStatus.isPending}
@@ -138,8 +136,8 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
               </Button>
             )}
             {normalizeStatus(item.status) === 'preparing' && (
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 className="flex-1 justify-center text-xs bg-green-500 hover:bg-green-600 shadow-green-500/20"
                 onClick={() => updateStatus.mutate({ ticketItemCen: item.ticketItemCen, status: 'READY' })}
                 loading={updateStatus.isPending}
@@ -148,8 +146,8 @@ function TeamItemsList({ teamCen }: { teamCen: string }) {
               </Button>
             )}
             {normalizeStatus(item.status) === 'ready' && (
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="flex-1 justify-center text-xs border border-surface-4"
                 onClick={() => updateStatus.mutate({ ticketItemCen: item.ticketItemCen, status: 'DELIVERED' })}
                 loading={updateStatus.isPending}

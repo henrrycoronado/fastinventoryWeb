@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { useAppStore } from '../../../core/store/useAppStore'
 import { salesApi } from '../hooks'
-import type { 
-  DailySalesDashboard, 
+import type {
+  DailySalesDashboard,
   MonthlySalesDashboard,
-  KdsStatusDashboard, 
-  TopProductDashboard 
+  KdsStatusDashboard,
+  TopProductDashboard
 } from '../types'
 
 export const useDailySales = () => {

@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import type { Product } from '../types'
 
 export const useProducts = (
-  params?: { search?: string; categoryCen?: string; status?: string }, 
+  params?: { search?: string; categoryCen?: string; status?: string },
   options?: Partial<UseQueryOptions<Product[]>>
 ) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)

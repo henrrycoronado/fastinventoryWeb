@@ -15,8 +15,8 @@ export default function WaitersPage() {
   const [modalOpen, setModalOpen] = useState(false)
 
   const filtered = useMemo(() => {
-    return waiters.filter(w => 
-      w.name.toLowerCase().includes(search.toLowerCase()) || 
+    return waiters.filter(w =>
+      w.name.toLowerCase().includes(search.toLowerCase()) ||
       w.waiterCen.toLowerCase().includes(search.toLowerCase())
     )
   }, [waiters, search])
@@ -29,8 +29,8 @@ export default function WaitersPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Meseros" 
+      <SectionHeader
+        title="Meseros"
         subtitle={`${waiters.length} registrados`}
         right={
           <div className="flex items-center gap-2">
@@ -77,12 +77,12 @@ export default function WaitersPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Registrar Mesero" size="sm">
         <div className="space-y-4">
-          <Input 
-            label="Nombre del mesero" 
-            placeholder="Ej: Marco Polo" 
-            value={newName} 
-            onChange={(e: any) => setNewName(e.target.value)} 
-            autoFocus 
+          <Input
+            label="Nombre del mesero"
+            placeholder="Ej: Marco Polo"
+            value={newName}
+            onChange={(e: any) => setNewName(e.target.value)}
+            autoFocus
           />
           <div className="flex justify-end gap-2 pt-2">
             <Button onClick={() => setModalOpen(false)}>Cancelar</Button>

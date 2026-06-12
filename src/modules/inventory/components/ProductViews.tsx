@@ -21,8 +21,8 @@ export function ProductListView({ search }: { search: string }) {
     <div className="divide-y divide-surface-3">
       {products.map((p: Product) => (
         <div key={p.productCen}>
-          <div 
-            className="flex items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer" 
+          <div
+            className="flex items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer"
             onClick={() => setExpandedId(expandedId === p.productCen ? null : p.productCen)}
           >
             <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
@@ -38,7 +38,6 @@ export function ProductListView({ search }: { search: string }) {
             </div>
             <ChevronRight size={14} className={`text-ink-muted transition-transform duration-200 ${expandedId === p.productCen ? 'rotate-90' : ''}`} />
           </div>
-          
           {expandedId === p.productCen && (
             <div className="px-6 py-4 bg-surface-1/60 border-t border-surface-3 animate-slide-up space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

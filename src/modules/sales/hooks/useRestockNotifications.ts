@@ -4,15 +4,12 @@ import { useAppStore } from '../../../core/store/useAppStore'
 
 export const useRestockNotifications = () => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)
-  
   useEffect(() => {
     if (!companyCen) return
 
     const inventoryUrl = import.meta.env.VITE_INVENTORY_API_URL || 'http://localhost:5143'
-    // Ensure we don't have trailing slashes
     const baseUrl = inventoryUrl.endsWith('/') ? inventoryUrl.slice(0, -1) : inventoryUrl
     const url = `${baseUrl}/api/inventory/companies/${companyCen}/restock-events`
-    
     console.log(`Connecting to SSE: ${url}`)
     const eventSource = new EventSource(url)
 

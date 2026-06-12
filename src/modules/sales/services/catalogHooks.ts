@@ -5,7 +5,7 @@ import { salesApi } from '../hooks'
 import type { SellableProduct } from '../types'
 
 export const useSellableProducts = (
-  params?: any, 
+  params?: any,
   options?: Partial<UseQueryOptions<SellableProduct[]>>
 ) => {
   const companyCen = useAppStore(s => s.selectedCompany?.companyCen)

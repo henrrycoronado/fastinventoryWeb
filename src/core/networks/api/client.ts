@@ -43,7 +43,6 @@ const createClient = (baseURL: string) => {
     (error) => {
       const data = error.response?.data as ProblemDetails
       const msg = extractFriendlyMessage(error)
-      
       if (data?.traceId) {
         console.error(`[API Error] TraceId: ${data.traceId}`, {
           status: data.status,

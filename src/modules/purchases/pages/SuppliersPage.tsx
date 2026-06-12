@@ -16,8 +16,8 @@ export default function SuppliersPage() {
   const [modalOpen, setModalOpen] = useState(false)
 
   const filtered = useMemo(() => {
-    return (suppliers as Supplier[]).filter(s => 
-      s.name.toLowerCase().includes(search.toLowerCase()) || 
+    return (suppliers as Supplier[]).filter(s =>
+      s.name.toLowerCase().includes(search.toLowerCase()) ||
       s.supplierCen.toLowerCase().includes(search.toLowerCase())
     )
   }, [suppliers, search])
@@ -30,8 +30,8 @@ export default function SuppliersPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Proveedores" 
+      <SectionHeader
+        title="Proveedores"
         subtitle={`${(suppliers as Supplier[]).length} registrados`}
         right={
           <div className="flex items-center gap-2">
@@ -78,25 +78,25 @@ export default function SuppliersPage() {
         )}
       </div>
 
-      <Modal 
-        open={modalOpen} 
-        onClose={() => setModalOpen(false)} 
-        title="Nuevo proveedor" 
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Nuevo proveedor"
         size="sm"
       >
         <div className="space-y-4">
-          <Input 
+          <Input
             label="Nombre del proveedor"
-            placeholder="Ej: Insumos Global S.A." 
-            value={newName} 
-            onChange={(e: any) => setNewName(e.target.value)} 
-            autoFocus 
+            placeholder="Ej: Insumos Global S.A."
+            value={newName}
+            onChange={(e: any) => setNewName(e.target.value)}
+            autoFocus
           />
           <div className="flex justify-end gap-2">
             <Button onClick={() => setModalOpen(false)}>Cancelar</Button>
-            <Button 
-              variant="primary" 
-              onClick={handleCreate} 
+            <Button
+              variant="primary"
+              onClick={handleCreate}
               loading={createSupplier.isPending}
               disabled={!newName.trim()}
             >

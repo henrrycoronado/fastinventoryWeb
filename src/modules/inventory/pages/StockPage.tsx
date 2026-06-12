@@ -14,7 +14,7 @@ export default function StockPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const filtered = useMemo(() => stockList.filter(s => {
-    return s.productName.toLowerCase().includes(search.toLowerCase()) || 
+    return s.productName.toLowerCase().includes(search.toLowerCase()) ||
            s.productCen.toLowerCase().includes(search.toLowerCase())
   }), [stockList, search])
 
@@ -27,9 +27,9 @@ export default function StockPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Stock" 
-        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name} (Consolidado)`} 
+      <SectionHeader
+        title="Stock"
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name} (Consolidado)`}
         right={
           <div className="relative">
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
@@ -67,7 +67,7 @@ export default function StockPage() {
 
               return (
                 <div key={s.productCen}>
-                  <div 
+                  <div
                     className="grid grid-cols-1 md:grid-cols-6 items-center px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer"
                     onClick={() => setExpandedId(expandedId === s.productCen ? null : s.productCen)}
                   >

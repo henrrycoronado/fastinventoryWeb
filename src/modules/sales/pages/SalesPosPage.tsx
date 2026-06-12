@@ -30,7 +30,6 @@ interface CartItem {
 
 export default function SalesPosPage() {
   useRestockNotifications()
-  
   const {
     selectedCompany,
     selectedWarehouse,
@@ -80,13 +79,12 @@ export default function SalesPosPage() {
 
   const handleProcessSale = async () => {
     if (cart.length === 0) return
-    
     setIsProcessing(true)
     try {
       let ticketCen = activeTicketCen
 
       if (!ticketCen) {
-        const ticket: any = await createTicket.mutateAsync({ 
+        const ticket: any = await createTicket.mutateAsync({
           waiterCen: selectedWaiterCen || undefined
         })
 
@@ -98,7 +96,7 @@ export default function SalesPosPage() {
         throw new Error('No se pudo resolver el ticket activo')
       }
 
-      await Promise.all(cart.map(item => 
+      await Promise.all(cart.map(item =>
         addTicketItem.mutateAsync({
           ticketCen,
           data: {
@@ -107,7 +105,6 @@ export default function SalesPosPage() {
           }
         })
       ))
-      
       toast.success('¡Ticket registrado con éxito!')
       setCart([])
 
@@ -139,14 +136,13 @@ export default function SalesPosPage() {
 
   return (
     <div className="animate-fade-in h-[calc(100vh-64px)] flex flex-col">
-      <SectionHeader 
-        title="Punto de Venta" 
-        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name}`} 
+      <SectionHeader
+        title="Punto de Venta"
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name}`}
       />
 
 
       <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
-        
         <div className="lg:col-span-7 flex flex-col h-full card overflow-hidden">
           <div className="px-5 py-4 border-b border-surface-4">
             <div className="flex items-center justify-between gap-3">
@@ -159,9 +155,9 @@ export default function SalesPosPage() {
             </div>
           </div>
           <div className="p-5 overflow-y-auto flex-1">
-            <SkuSelector 
-              allowCreate={false} 
-              onAdd={handleAddToCart} 
+            <SkuSelector
+              allowCreate={false}
+              onAdd={handleAddToCart}
               isSellable={true}
               warehouseCen={selectedWarehouse?.warehouseCen}
             />
@@ -254,8 +250,8 @@ export default function SalesPosPage() {
             </div>
 
             <div className="flex gap-2">
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 className="flex-1 justify-center py-3"
                 disabled={cart.length === 0 || isProcessing}
                 loading={isProcessing}

@@ -23,7 +23,6 @@ export default function TicketsPage() {
 
   const [search, setSearch] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  
   const [payModalOpen, setPayModalOpen] = useState(false)
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
   const [paymentMethodCode, setPaymentMethodCode] = useState('')
@@ -33,8 +32,8 @@ export default function TicketsPage() {
   const isOpenTicket = (ticket: Ticket) => normalizeStatus(ticket.status) === 'open'
 
   const filtered = useMemo(() => {
-    return tickets.filter(t => 
-      t.ticketCen.toLowerCase().includes(search.toLowerCase()) || 
+    return tickets.filter(t =>
+      t.ticketCen.toLowerCase().includes(search.toLowerCase()) ||
       (t.waiterCen && t.waiterCen.toLowerCase().includes(search.toLowerCase()))
     ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   }, [tickets, search])
@@ -60,8 +59,8 @@ export default function TicketsPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Tickets" 
+      <SectionHeader
+        title="Tickets"
         subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : "Consolidado (Todos los almacenes)"}
       />
 
@@ -95,8 +94,8 @@ export default function TicketsPage() {
               const isExpanded = expandedId === ticket.ticketCen
               return (
                 <div key={ticket.ticketCen}>
-                  <div 
-                    className="grid grid-cols-1 md:grid-cols-6 items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer" 
+                  <div
+                    className="grid grid-cols-1 md:grid-cols-6 items-center gap-4 px-6 py-4 hover:bg-surface-2/50 transition-colors cursor-pointer"
                     onClick={() => setExpandedId(isExpanded ? null : ticket.ticketCen)}
                   >
                     <span className="text-sm font-medium text-ink-primary font-mono">{ticket.ticketCen}</span>
@@ -111,8 +110,8 @@ export default function TicketsPage() {
 
                     <div className="flex justify-end gap-2">
                       {isOpenTicket(ticket) && (
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           className="!px-2 !py-1 text-accent"
                           onClick={(e) => {
                             e.stopPropagation()
@@ -124,8 +123,8 @@ export default function TicketsPage() {
                         </Button>
                       )}
                       {isOpenTicket(ticket) && (
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           className="!px-2 !py-1 text-accent"
                           onClick={(e) => {
                             e.stopPropagation()
@@ -139,7 +138,6 @@ export default function TicketsPage() {
                       <ChevronRight size={15} className={`text-ink-muted transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
                     </div>
                   </div>
-                  
                   {isExpanded && <TicketDetailView ticketCen={ticket.ticketCen} />}
                 </div>
               )

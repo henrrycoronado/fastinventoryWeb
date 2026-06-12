@@ -1,11 +1,11 @@
 import { purchasesClient } from '../../../core/networks/api/client'
-import type { 
-  PurchaseOrderListItem, 
-  PurchaseOrderDetail, 
-  CreatePurchaseOrder, 
-  PurchaseOrderSummary, 
-  PurchaseOrderConfirmation, 
-  PagedResult 
+import type {
+  PurchaseOrderListItem,
+  PurchaseOrderDetail,
+  CreatePurchaseOrder,
+  PurchaseOrderSummary,
+  PurchaseOrderConfirmation,
+  PagedResult
 } from '../types'
 
 export const orderApi = {

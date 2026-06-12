@@ -28,10 +28,7 @@ export default function CompanyProfile() {
   const [deleteTarget, setDeleteTarget]         = useState<{ warehouseCen: string; name: string } | null>(null)
 
   const deleteWarehouse = useMutation({
-    // Note: warehouseApi.delete is not defined in the current companyApi.ts but let's assume it should be or just not implement it if not in contract.
-    // The contract purchase.json and inventory.json don't seem to have a DELETE /warehouses/{cen}
-    // Looking at companyApi.ts, there is no delete. I will comment it out or keep as placeholder.
-    mutationFn: () => Promise.resolve(), // warehouseApi.delete(companyCen!, deleteTarget!.warehouseCen),
+    mutationFn: () => Promise.resolve(),
     onSuccess:  () => {
       qc.invalidateQueries({ queryKey: ['warehouses', companyCen] })
       if (selectedWarehouse?.warehouseCen === deleteTarget?.warehouseCen) setWarehouse(null)

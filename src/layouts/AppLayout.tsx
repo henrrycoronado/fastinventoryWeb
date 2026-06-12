@@ -110,14 +110,14 @@ export default function AppLayout() {
 
       <aside className="w-56 shrink-0 flex flex-col bg-surface-1 border-r border-surface-4">
 
-        {/* Logo */}
+        {}
         <div className="px-4 py-4 border-b border-surface-4">
           <span className="font-display text-lg font-bold text-ink-primary">
             {APP_NAME}<span className="text-accent">.</span>
           </span>
         </div>
 
-        {/* Company + Warehouse context */}
+        {}
         <div className="px-3 py-3 border-b border-surface-4 space-y-1.5">
           <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-surface-3">
             <Building2 size={12} className="text-accent shrink-0" />
@@ -127,7 +127,7 @@ export default function AppLayout() {
         </div>
 
 
-        {/* Module switcher */}
+        {}
         <div className="px-3 py-3 border-b border-surface-4">
           <div className="relative">
             <button
@@ -153,17 +153,17 @@ export default function AppLayout() {
           </div>
         </div>
 
-        {/* Module nav items */}
+        {}
         <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
           {items.map(item => (
             <NavItem key={item.path} {...item} />
           ))}
         </nav>
 
-        {/* Bottom */}
+        {}
         <div className="px-3 py-3 border-t border-surface-4 space-y-0.5">
 
-          {/* Theme + Accent */}
+          {}
           <div className="flex items-center justify-between px-2 py-2 mb-1">
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -203,7 +203,7 @@ export default function AppLayout() {
         </div>
       </aside>
 
-      {/* Main */}
+      {}
       <main className="flex-1 overflow-y-auto bg-surface-0">
         <Outlet />
       </main>

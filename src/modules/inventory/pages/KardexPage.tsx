@@ -16,12 +16,11 @@ export default function KardexPage() {
 
   return (
     <div className="animate-fade-in">
-      <SectionHeader 
-        title="Kardex" 
-        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name} (Global)`} 
-        right={selectedProduct && <button onClick={() => setSelectedProduct(null)} className="btn-ghost text-xs">← Cambiar Producto</button>} 
+      <SectionHeader
+        title="Kardex"
+        subtitle={selectedWarehouse ? `Almacén: ${selectedWarehouse.name}` : `Empresa: ${selectedCompany?.name} (Global)`}
+        right={selectedProduct && <button onClick={() => setSelectedProduct(null)} className="btn-ghost text-xs">← Cambiar Producto</button>}
       />
-      
       <div className="px-6 mt-4">
         {!selectedProduct ? (
           <div className="card overflow-hidden">

@@ -30,28 +30,27 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input 
-          label="SKU / Código *" 
-          placeholder="Ej: PROD-001" 
-          value={form.sku} 
-          onChange={(e: any) => setForm({...form, sku: e.target.value})} 
-          required 
+        <Input
+          label="SKU / Código *"
+          placeholder="Ej: PROD-001"
+          value={form.sku}
+          onChange={(e: any) => setForm({...form, sku: e.target.value})}
+          required
         />
-        <Input 
-          label="Nombre *" 
-          placeholder="Ej: Producto de ejemplo" 
-          value={form.name} 
-          onChange={(e: any) => setForm({...form, name: e.target.value})} 
-          required 
+        <Input
+          label="Nombre *"
+          placeholder="Ej: Producto de ejemplo"
+          value={form.name}
+          onChange={(e: any) => setForm({...form, name: e.target.value})}
+          required
         />
       </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="label">Categoría</label>
-          <select 
-            className="input text-sm" 
-            value={form.categoryCen} 
+          <select
+            className="input text-sm"
+            value={form.categoryCen}
             onChange={(e: any) => setForm({...form, categoryCen: e.target.value})}
           >
             <option value="">Seleccionar...</option>
@@ -60,9 +59,9 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
         </div>
         <div>
           <label className="label">Unidad de medida *</label>
-          <select 
-            className="input text-sm" 
-            value={form.unitCen} 
+          <select
+            className="input text-sm"
+            value={form.unitCen}
             onChange={(e: any) => setForm({...form, unitCen: e.target.value})}
             required
           >
@@ -73,34 +72,34 @@ export default function ProductForm({ onSuccess }: { onSuccess?: () => void }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Input 
-          label="Precio Venta *" 
-          type="number" 
-          step="0.01" 
-          value={form.salePrice} 
-          onChange={(e: any) => setForm({...form, salePrice: parseFloat(e.target.value) || 0})} 
-          required 
+        <Input
+          label="Precio Venta *"
+          type="number"
+          step="0.01"
+          value={form.salePrice}
+          onChange={(e: any) => setForm({...form, salePrice: parseFloat(e.target.value) || 0})}
+          required
         />
-        <Input 
-          label="Costo Unitario" 
-          type="number" 
-          step="0.01" 
-          value={form.costPrice} 
-          onChange={(e: any) => setForm({...form, costPrice: parseFloat(e.target.value) || 0})} 
+        <Input
+          label="Costo Unitario"
+          type="number"
+          step="0.01"
+          value={form.costPrice}
+          onChange={(e: any) => setForm({...form, costPrice: parseFloat(e.target.value) || 0})}
         />
-        <Input 
-          label="Stock Reorden" 
-          type="number" 
-          value={form.reorderLevel} 
-          onChange={(e: any) => setForm({...form, reorderLevel: parseFloat(e.target.value) || 0})} 
+        <Input
+          label="Stock Reorden"
+          type="number"
+          value={form.reorderLevel}
+          onChange={(e: any) => setForm({...form, reorderLevel: parseFloat(e.target.value) || 0})}
         />
       </div>
 
-      <Input 
-        label="Descripción" 
-        placeholder="Breve descripción del producto..." 
-        value={form.description} 
-        onChange={(e: any) => setForm({...form, description: e.target.value})} 
+      <Input
+        label="Descripción"
+        placeholder="Breve descripción del producto..."
+        value={form.description}
+        onChange={(e: any) => setForm({...form, description: e.target.value})}
       />
 
       <div className="flex justify-end gap-2 pt-2">

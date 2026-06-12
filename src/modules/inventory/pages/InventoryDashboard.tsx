@@ -18,12 +18,11 @@ export default function InventoryDashboard() {
   const totalDisponible = dashboardData?.totalStockQuantity ?? stockList.reduce((acc: number, s: StockItem) => acc + s.availableQuantity, 0)
   const sinStock        = dashboardData?.outOfStockCount ?? stockList.filter((s: StockItem) => s.availableQuantity === 0).length
   const stockBajo       = dashboardData?.lowStockCount ?? stockList.filter((s: StockItem) => s.isLowStock).length
-  
   const stockByCategory = useMemo(() => {
     const map: Record<string, number> = {}
-    stockList.forEach((s: StockItem) => { 
-      const catName = s.productName.split(' ')[0] ?? 'General'; // Simplified for now since we don't have cat name directly in stockItem
-      map[catName]  = (map[catName] ?? 0) + s.availableQuantity 
+    stockList.forEach((s: StockItem) => {
+      const catName = s.productName.split(' ')[0] ?? 'General';
+      map[catName]  = (map[catName] ?? 0) + s.availableQuantity
     })
     return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, value]) => ({ name, value }))
   }, [stockList])

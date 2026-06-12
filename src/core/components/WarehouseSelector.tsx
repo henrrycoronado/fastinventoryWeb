@@ -32,9 +32,9 @@ export default function WarehouseSelector() {
             {selectedWarehouse?.name || 'Todos los almacenes'}
           </span>
         </div>
-        <ChevronDown 
-          size={12} 
-          className={`text-ink-muted transition-transform group-hover:text-ink-primary ${isOpen ? 'rotate-180' : ''}`} 
+        <ChevronDown
+          size={12}
+          className={`text-ink-muted transition-transform group-hover:text-ink-primary ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
