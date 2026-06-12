@@ -105,26 +105,34 @@ const extractFriendlyMessage = (payload: unknown, status?: number): string => {
   return candidates[0] ?? getStatusFallbackMessage(status)
 }
 
-export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
-  headers: { 'Content-Type': 'application/json' },
-})
+const createClient = (baseURL: string) => {
+  const client = axios.create({
+    baseURL,
+    headers: { 'Content-Type': 'application/json' },
+  })
 
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const data = error.response?.data
-    const status = error.response?.status
-    const msg = data
-      ? extractFriendlyMessage(data, status)
-      : error.message ?? 'Error de red'
-    
-    if (data?.traceId) {
-      console.error(`[API Error] TraceId: ${data.traceId}`, data)
+  client.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      const data = error.response?.data
+      const status = error.response?.status
+      const msg = data
+        ? extractFriendlyMessage(data, status)
+        : error.message ?? 'Error de red'
+      
+      if (data?.traceId) {
+        console.error(`[API Error] TraceId: ${data.traceId}`, data)
+      }
+
+      toast.error(msg)
+
+      return Promise.reject(error)
     }
+  )
 
-    toast.error(msg)
+  return client
+}
 
-    return Promise.reject(error)
-  }
-)
+export const inventoryClient = createClient(import.meta.env.VITE_INVENTORY_API_URL ?? 'http://localhost:5188')
+export const purchasesClient = createClient(import.meta.env.VITE_PURCHASE_API_URL ?? 'http://localhost:5186')
+export const salesClient     = createClient(import.meta.env.VITE_SALE_API_URL ?? 'http://localhost:5054')
