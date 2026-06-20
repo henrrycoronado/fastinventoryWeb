@@ -16,7 +16,9 @@ export const useRestockNotifications = () => {
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        toast.success(`Restock: ${data.productName} +${data.quantity} unidades`, {
+        const name = data.productName || data.ProductName
+        const qty = data.quantity || data.Quantity
+        toast.success(`Restock: ${name} +${qty} unidades`, {
           duration: 5000,
           icon: '📦',
         })
